@@ -66,7 +66,7 @@ class FileArchive {
 
             try
             {
-                $stmt = $this->db->query("SELECT id, filnavn, dato, mimetype, kode FROM vedlegg_test order by mimetype");
+                $stmt = $this->db->query("SELECT id, filnavn, dato, mimetype, kode FROM vedlegg_test order by filnavn");
                 $alleFiler = $stmt->fetchAll();
 
             }

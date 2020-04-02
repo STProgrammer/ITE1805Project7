@@ -10,6 +10,7 @@ class Db {
     private function __construct() {
         try {
             $this->dbh = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
+            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
 
         }

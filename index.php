@@ -49,7 +49,7 @@
             $oversikt = $arkiv->visOversikt();
             $notification = $arkiv->getNotification();
             echo $twig->render('index.twig', array('filene' => $oversikt, 'user' => $user,
-                'notification' => $notification));
+                'notification' => $notification, 'skript' => $_SERVER['PHP_SELF']));
         }
 
     }
