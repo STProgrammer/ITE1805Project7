@@ -19,7 +19,8 @@ if (isset($_POST['login'])) {
         exit();
     }
     else {
-        header("Location: ".$_SERVER['REQUEST_URI']);
+        $get_info = "?loginfail=1";
+        header("Location: ./login".$get_info);
         exit();
     }
 }

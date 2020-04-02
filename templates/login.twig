@@ -7,7 +7,10 @@
   <title>Welcome</title>
 </head>
 <body>
+<h2>Logg inn</h2>
+{% if fail %}
   <h3>Feil brukernavn eller passord</h3>
+{% endif %}
   <form action="index.php" method="post">
     <table>
       <tr><td>Brukernavn: </td>
