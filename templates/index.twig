@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Filarkiv - viser filer fra database
+    </title>
+		<link type="text/css" rel="stylesheet" href="stilark.css" />
+        <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+  </head>
+  <body>
+  {% if user.loggedIn() %}
+      <p>
+          Du er logget inn som {{user.getFullName()}}
+      </p>
+      <form action="index.php" method="post">
+          <input type="submit" name="logout" value="Logout">
+      </form>
+  {% else %}
+      <h3>Du må logge inn</h3>
+      <form action="index.php" method="post">
+          <table>
+              <tr><td>Brukernavn: </td>
+                  <td><input type="text" name="username"></td></tr>
+              <tr><td>Passord: </td>
+                  <td><input type="password" name="password" size="5"></td></tr>
+              <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
+              </tr>
+          </table>
+      </form>
+      <p>Logg inn med bruker: "donald" & passord: "test"</p>
+  {% endif %}
+   {%if notification %}
+        <h3>{{ notification.strHeader }}</h3>
+        <h3>{{ notification.strMessage }}</h3>
+       <p><a href = "index.php">Tilbake </a></p>
+    {%else%}
+        {% if filene %}
+        <h1>
+            Filarkiv - viser filer fra database
+        </h1>
+        <pre>
+        </pre>
+		<div id="filliste">
+            <ul>
+                  {% for fil in filene %}
+                           {% if fil.mimetype == 'image/jpeg' or  fil.mimetype == 'image/pjpeg' or fil.mimetype == 'image/png' or fil.mimetype == 'image/gif'%}
+                                  <a href="{{skript}}?id={{fil.id}}"><img src="{{skript}}?id={{fil.id}}" width="10%"/></a>
+                           {% elseif fil.mimetype == 'video/mp4' or fil.mimetype == 'video/webm' or fil.mimetype == 'video/ogg' %}
+                          <video width="25%" height="100%" controls>
+                              <source src="{{skript}}?id={{fil.id}}" type="{{fil.mimetype}}">
+                          </video>
+                       {% else %}
+                               <li>
+                                {{fil.dato}}&nbsp;<a href="{{skript}}?id={{fil.id}}">{{fil.filnavn}}</a>
+                               </li>
+                           {% endif %}
+                  {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+      <p>Last opp fil til db: </p>
+        {% if user.loggedIn() %}
+      <form enctype="multipart/form-data" method="post">
+           <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+              <table border="1" cellspacing="0" cellpadding="5" width=
+              "400">
+                <tr>
+                  <td>
+                    <input name="bildeFil" type="file" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" width="400" align="middle">
+                    <input type="submit" name="post_file" value="Post" />
+                  </td>
+                </tr>
+              </table>
+      </form>
+        {% else %}
+            <p>Logg inn for å laste opp fil</p>
+        {% endif %}
+
+    {% endif %}
+  </body>
+</html>
