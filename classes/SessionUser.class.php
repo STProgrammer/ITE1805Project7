@@ -1,10 +1,10 @@
 <?php
 
 
-class SessionUser{
+class SessionUser {
     private $usr_name;          // Holds the users username
     private $usr_full_name;     // Holds the users full name
-    private $IPAddress;         // Holds the users login IP address
+    private $IPAddress;         // Holds the users login2.twig IP address
     private $UserAgent;         // Holds the users user agent (browser ID)
     private $usr_hits;          // Holds the users hitcount
 

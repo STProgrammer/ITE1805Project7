@@ -1,7 +1,7 @@
 <?php
 //logg ut
 if (isset($_POST['logout'])) {
-    unset($_SESSION['innlogget']);
+    unset($_SESSION['loggedin']);
     header("Location: ".$_SERVER['REQUEST_URI']);
     exit();
 }
@@ -12,6 +12,7 @@ if ($db==null) {
     die();  // Abort further execution of the script
 }
 $user = new User($db);
+
 
 if (isset($_POST['login'])) {
     if ($user->loggedIn()) {

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+{% if file %}
+    <h1>
+        Detaljer om fil:
+    </h1>
+    <pre>
+        </pre>
+    <div id="filliste">
+        <ul>
+            {% if file.getType() == 'image/jpeg' or  file.getType() == 'image/pjpeg' or file.getType() == 'image/png' or file.getType() == 'image/gif'%}
+                <a href="index.php/?id={{file.getDocumentId}}"><img src="index.php/?id={{file.getDocumentId}}" width="10%"/></a>
+            {% elseif file.getType() == 'video/mp4' or file.getType() == 'video/webm' or file.getType() == 'video/ogg' %}
+                <video width="25%" height="100%" controls>
+                    <source src="index.php/?id={{file.getDocumentId()}}" type="{{file.getType()}}">
+                </video>
+            {% else %}
+                    <li>
+                        {{file.getDate}}&nbsp;<a href="index.php/?id={{file.getDocumentId}}">{{file.getDocumentName()}}</a>
+                    </li>
+            {% endif %}
+            <li>
+                Size: {{ file.getSize() }}
+            </li>
+        </ul>
+    </div>
+{% endif %}
+
+</body>
+</html>

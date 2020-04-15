@@ -8,50 +8,31 @@
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
   <body>
-  {% if user.loggedIn() %}
-      <p>
-          Du er logget inn som {{user.getFullName()}}
-      </p>
-      <form action="index.php" method="post">
-          <input type="submit" name="logout" value="Logout">
-      </form>
+  {% include 'login2.twig' %}
+  {% if notification %}
+      <h3>{{ notification.strHeader }}</h3>
+      <h3>{{ notification.strMessage }}</h3>
+      <p><a href = "index.php">Tilbake </a></p>
   {% else %}
-      <h3>Du må logge inn</h3>
-      <form action="index.php" method="post">
-          <table>
-              <tr><td>Brukernavn: </td>
-                  <td><input type="text" name="username"></td></tr>
-              <tr><td>Passord: </td>
-                  <td><input type="password" name="password" size="5"></td></tr>
-              <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
-              </tr>
-          </table>
-      </form>
-      <p>Logg inn med bruker: "donald" & passord: "test"</p>
-  {% endif %}
-   {%if notification %}
-        <h3>{{ notification.strHeader }}</h3>
-        <h3>{{ notification.strMessage }}</h3>
-       <p><a href = "index.php">Tilbake </a></p>
-    {%else%}
-        {% if filene %}
+        {% if files %}
         <h1>
-            Filarkiv - viser filer fra database
+            Filarkiv - viser filer fra database:
         </h1>
         <pre>
         </pre>
 		<div id="filliste">
             <ul>
-                  {% for fil in filene %}
-                           {% if fil.mimetype == 'image/jpeg' or  fil.mimetype == 'image/pjpeg' or fil.mimetype == 'image/png' or fil.mimetype == 'image/gif'%}
-                                  <a href="{{skript}}?id={{fil.id}}"><img src="{{skript}}?id={{fil.id}}" width="10%"/></a>
-                           {% elseif fil.mimetype == 'video/mp4' or fil.mimetype == 'video/webm' or fil.mimetype == 'video/ogg' %}
+                  {% for file in files %}
+                           {% if file.mimetype == 'image/jpeg' or  file.mimetype == 'image/pjpeg' or file.mimetype == 'image/png' or file.mimetype == 'image/gif'%}
+                               <a href="{{script}}?id={{file.id}}"><img src="{{script}}?id={{file.id}}" width="10%"/></a>
+                               <a href="{{script}}/file-details/?id={{file.id}}"> Details </a>
+                           {% elseif file.mimetype == 'video/mp4' or file.mimetype == 'video/webm' or file.mimetype == 'video/ogg' %}
                           <video width="25%" height="100%" controls>
-                              <source src="{{skript}}?id={{fil.id}}" type="{{fil.mimetype}}">
+                              <source src="{{script}}?id={{fil.id}}" type="{{file.mimetype}}">
                           </video>
                        {% else %}
                                <li>
-                                {{fil.dato}}&nbsp;<a href="{{skript}}?id={{fil.id}}">{{fil.filnavn}}</a>
+                                {{file.dato}}&nbsp;<a href="{{script}}?id={{file.id}}">{{file.filnavn}}</a>
                                </li>
                            {% endif %}
                   {% endfor %}
@@ -70,6 +51,10 @@
                   </td>
                 </tr>
                 <tr>
+                    <td>
+                        <input type="checkbox" name="access" value="0">
+                        Only accessible for registered users
+                    </td>
                   <td colspan="2" width="400" align="middle">
                     <input type="submit" name="post_file" value="Post" />
                   </td>
