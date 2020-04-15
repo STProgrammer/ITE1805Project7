@@ -4,16 +4,13 @@
     });
 
     require_once '../vendor/autoload.php';
-/*
+
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
 
     $request = Request::createFromGlobals();
     if($request->hasPreviousSession()) $session = $request->getSession();
-    else $session = new Session();*/
-
-    @session_set_cookie_params(0);
-    @session_start();
+    else $session = new Session();
 
     // Twig templates
     $loader = new \Twig\Loader\FilesystemLoader('templates');

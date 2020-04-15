@@ -13,14 +13,16 @@
 
     $reguser = new RegisterUser($db);
 
+    $userData = array();
+
 
     if (isset($_POST['register'])) {
-        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-        $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $password = filter_input(INPUT_POST,'password', FILTER_SANITIZE_EMAIL);
-        $reguser->registerUser($username, $name, $lastname, $email, $password);
+        $userData['username'] = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+        $userData['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $userData['lastname'] = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
+        $userData['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $userData['password'] = filter_input(INPUT_POST,'password', FILTER_SANITIZE_EMAIL);
+        $reguser->registerUser($userData);
 
     } else {
         echo $twig->render('register.twig', array());

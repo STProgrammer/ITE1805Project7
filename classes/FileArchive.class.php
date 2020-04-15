@@ -68,8 +68,10 @@ class FileArchive {
         // Viser oversikt over alle filer i db        
         public function visOversikt()
         {
-            unset($_SESSION['strHeader']);
-            unset($_SESSION['strMessage']);
+            if (isset($_SESSION)) {
+                unset($_SESSION['strHeader']);
+                unset($_SESSION['strMessage']);
+            }
             try
             {
                 $stmt = $this->db->query("SELECT id, filnavn, dato, mimetype, kode, access FROM vedlegg_test order by filnavn");

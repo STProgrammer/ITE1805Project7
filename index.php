@@ -9,12 +9,12 @@
     require_once "login.php";
 
     // opprett nytt filarkiv
-    $archive = new FileArchive($db, $twig);
+    $archive = new FileArchive($db);
 
     //Vis fil
-    if(isset($_GET['id']) && ctype_digit($_GET['id']))
+    if($request->query->has('id') && ctype_digit($request->query->get('id')))
     {
-        $id = intval($_GET['id']);
+        $id = $requeset->query->getInt('id');
         $file = $archive->getFileObject($id);
         if ($file) {
             if ($file->isAccessible() == 0) {
@@ -35,7 +35,7 @@
     else
     {
         // sjekk om en fil er sendt inn OG personen er innlogget
-        if(isset($_POST['post_file']) && $user->loggedIn())
+        if($request->request->has('post_file') && $user->loggedIn())
         {
             $archive->save();
             $get_info = "?fileupload=1";
@@ -43,7 +43,7 @@
             exit();
         }
 
-        elseif(isset($_GET['fileupload'])) {
+        elseif($request->query->has('fileupload')) {
             $notification = $archive->getNotification();
             echo $twig->render('index.twig', array('user' => $user,
                 'notification' => $notification));
