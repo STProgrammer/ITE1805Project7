@@ -48,7 +48,7 @@ class FileArchive {
             }
         }
 
-        public function save($owner) {
+        public function save(string $owner) : int {
 
             if (isset($_SESSION['strHeader']) && isset($_SESSION['strMessage'])) {
                 unset($_SESSION['strHeader']);
@@ -85,13 +85,15 @@ class FileArchive {
                         $id = intval($this->db->lastInsertId());
                         $this->addTags($tagsstr, $id);
                         $this->NotifyUser("Filen er lastet opp !", "");
+                        return $id;
                     }
-                    catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
+                    catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return 0; }
             }
             else {
              //require_once ("hode.php");    
                     if ($size > 0) $this->NotifyUser("Filen er for stor !", "");
                     else $this->NotifyUser("Ingen filvedlegg", "");
+                    return 0;
             }
 
         }        

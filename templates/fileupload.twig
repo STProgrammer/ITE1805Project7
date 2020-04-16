@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Filarkiv - viser filer fra database
+    </title>
+    <link type="text/css" rel="stylesheet" href="stilark.css" />
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+{% include 'login2.twig' %}
+{% if notification %}
+    <h3>{{ notification.strHeader }}</h3>
+    <h3>{{ notification.strMessage }}</h3>
+    <p><a href = "index.php">Tilbake </a></p>
+{% else %}
+    <p>Last opp fil til db: </p>
+    {% if user.loggedIn() %}
+        <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+            <table border="1" cellspacing="0" cellpadding="5" width=
+            "400">
+                <tr>
+                    <td>
+                        <input name="bildeFil" type="file" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" name="access" value="0">
+                        Only accessible for registered users
+                    </td>
+                <tr><td><label>Title: </label>
+                        <input type="text" name="title"></td></tr>
+                <tr><td><label>Description: </label>
+                        <textarea type="text" name="description" rows="2" cols="20"></textarea></table></td>
+            <tr><td><label>Tags: </label>
+                    <input type="text" name="tags" data-role="tagsinput"></td></tr>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+            <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+            <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+            <td colspan="2" width="400" align="middle">
+                <input type="submit" name="post_file" value="Post" />
+            </td>
+            </tr>
+
+            </table>
+        </form>
+    {% else %}
+        <p>Du må logge inn for å laste opp fil</p>
+    {% endif %}
+{% endif %}
+</body>
+</html>

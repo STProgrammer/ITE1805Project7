@@ -6,7 +6,11 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-{% if file %}
+{% if uploaded %}
+    <p>File is uploaded successfully</p>
+{% endif %}
+
+    {% if file %}
     <h1>
         Detaljer om fil:
     </h1>

@@ -41,8 +41,9 @@
         $id = intval($_GET['id']);
         $file = $archive->getFileObject($id);
         $notification = $archive->getNotification();
+        $uploaded = isset($_GET['fileupload']) ? $_GET['fileupload'] : 0;
         echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
-            'notification' => $notification));
+            'notification' => $notification, 'uploaded' => $uploaded));
     }
     else {
         header("Location: .." );

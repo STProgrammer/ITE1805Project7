@@ -12,12 +12,12 @@
     $archive = new FileArchive($db);
 
     //Vis fil
-    if(isset($_GET['id']) && ctype_digit($_GET['id']))
+    if($request->query->has('id') && ctype_digit($request->query->get('id')))
     {
-        $id = intval($_GET['id']);
+        $id = $request->query->getInt('id');
         $file = $archive->getFileObject($id);
         if ($file) {
-            if ($file->getAccess() == 1) {
+            if ($file->getAccess() == 0) {
                 if($user->loggedIn() && $user->verifyUser()) {
                     $file->showFile();
                 }
@@ -31,33 +31,12 @@
                 'notification' => $notification, 'script' => $_SERVER['PHP_SELF']));
         }
     }
-
-    else
-    {
-        // sjekk om en fil er sendt inn OG personen er innlogget
-        if(isset($_POST['post_file']) && $user->loggedIn() && $user->verifyUser())
-        {
-            if (XsrfProtection::verifyMac("File upload")) {
-                $archive->save($_SESSION['bruker']->getUsername());
-                $get_info = "?fileupload=1";
-                header("Location: ".$_SERVER['REQUEST_URI']."?fileupload=1");
-                exit();
-            }
-        }
-
-        elseif(isset($_GET['fileupload'])) {
-            $notification = $archive->getNotification();
-            echo $twig->render('index.twig', array('user' => $user,
-                'notification' => $notification));
-        }
-
-        // vis oversikten
-        else {
-            $mac = XsrfProtection::getMac("File upload");
-            $overview = $archive->visOversikt();
-            $notification = $archive->getNotification();
-            echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-                'notification' => $notification, 'mac' => $mac, 'script' => dirname($_SERVER['PHP_SELF'])));
-        }
+    // vis oversikten
+    else {
+        $overview = $archive->visOversikt();
+        $notification = $archive->getNotification();
+        echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
+            'notification' => $notification, 'script' => dirname($_SERVER['PHP_SELF'])));
     }
+
 ?>
