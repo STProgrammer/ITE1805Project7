@@ -15,18 +15,24 @@
     <div id="filliste">
         <ul>
             {% if file.getType() == 'image/jpeg' or  file.getType() == 'image/pjpeg' or file.getType() == 'image/png' or file.getType() == 'image/gif'%}
-                <a href="index.php/?id={{file.getDocumentId}}"><img src="index.php/?id={{file.getDocumentId}}" width="10%"/></a>
+                <a href="../?id={{file.getFileId}}"><img src="../?id={{file.getFileId}}" width="10%"/></a>
             {% elseif file.getType() == 'video/mp4' or file.getType() == 'video/webm' or file.getType() == 'video/ogg' %}
                 <video width="25%" height="100%" controls>
-                    <source src="index.php/?id={{file.getDocumentId()}}" type="{{file.getType()}}">
+                    <source src="../?id={{file.getFileId()}}" type="{{file.getType()}}">
                 </video>
             {% else %}
                     <li>
-                        {{file.getDate}}&nbsp;<a href="index.php/?id={{file.getDocumentId}}">{{file.getDocumentName()}}</a>
+                        {{file.getDate}}&nbsp;<a href="../?id={{file.getFileId}}">{{file.getFilename()}}</a>
                     </li>
             {% endif %}
             <li>
+                Title: {{ file.getTitle() }}
+            </li>
+            <li>
                 Size: {{ file.getSize() }}
+            </li>
+            <li>
+                Description: {{ file.getDescription() }}
             </li>
         </ul>
     </div>

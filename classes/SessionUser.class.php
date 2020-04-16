@@ -14,7 +14,7 @@ class SessionUser {
         $this->IPAddress = $_SERVER["REMOTE_ADDR"];
         $this->UserAgent = $_SERVER['HTTP_USER_AGENT'];
         $this->usr_hits = 0;
-        $this->loggedIn = false;
+        $this->loggedIn = true;
     }
 
     public function setName($newname) { $this->usr_full_name = $newname; }

@@ -1,7 +1,7 @@
 <?php
 //logg ut
-if ($request->request->has('logout')) {
-    $session->clear('loggedin');
+if (isset($_POST['logout'])) {
+    unset($_SESSION['loggedin']);
     header("Location: ".$_SERVER['REQUEST_URI']);
     exit();
 }
@@ -9,8 +9,8 @@ if ($request->request->has('logout')) {
 $user = new User($db);
 
 
-if ($request->request->has('login')) {
-    if ($user->loggedIn()) {
+if (isset($_POST['login'])) {
+    if ($user->loggedIn() && $user->verifyUser()) {
         header("Location: ".$_SERVER['REQUEST_URI']);
         exit();
     }

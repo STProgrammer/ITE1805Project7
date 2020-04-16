@@ -18,7 +18,7 @@
 
     if (isset($_POST['register'])) {
         $userData['username'] = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-        $userData['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $userData['firstname'] = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $userData['lastname'] = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
         $userData['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $userData['password'] = filter_input(INPUT_POST,'password', FILTER_SANITIZE_EMAIL);

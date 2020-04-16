@@ -23,16 +23,16 @@
 		<div id="filliste">
             <ul>
                   {% for file in files %}
-                           {% if file.mimetype == 'image/jpeg' or  file.mimetype == 'image/pjpeg' or file.mimetype == 'image/png' or file.mimetype == 'image/gif'%}
-                               <a href="{{script}}?id={{file.id}}"><img src="{{script}}?id={{file.id}}" width="10%"/></a>
-                               <a href="{{script}}/file-details/?id={{file.id}}"> Details </a>
-                           {% elseif file.mimetype == 'video/mp4' or file.mimetype == 'video/webm' or file.mimetype == 'video/ogg' %}
+                           {% if file.type == 'image/jpeg' or  file.type == 'image/pjpeg' or file.type == 'image/png' or file.type == 'image/gif'%}
+                               <a href="{{script}}?id={{file.fileId}}"><img src="{{script}}?id={{file.fileId}}" width="10%"/></a>
+                               <a href="{{script}}/file-details/?id={{file.fileId}}"> Details </a>
+                           {% elseif file.type == 'video/mp4' or file.type == 'video/webm' or file.type == 'video/ogg' %}
                           <video width="25%" height="100%" controls>
-                              <source src="{{script}}?id={{fil.id}}" type="{{file.mimetype}}">
+                              <source src="{{script}}?id={{fil.fileId}}" type="{{file.type}}">
                           </video>
                        {% else %}
                                <li>
-                                {{file.dato}}&nbsp;<a href="{{script}}?id={{file.id}}">{{file.filnavn}}</a>
+                                {{file.uploadedDate}}&nbsp;<a href="{{script}}?id={{file.fileId}}">{{file.filename}}</a>
                                </li>
                            {% endif %}
                   {% endfor %}
@@ -55,14 +55,25 @@
                         <input type="checkbox" name="access" value="0">
                         Only accessible for registered users
                     </td>
+                  <tr><td><label>Title: </label>
+                      <input type="text" name="title"></td></tr>
+                  <tr><td><label>Description: </label>
+                          <textarea type="text" name="description" rows="2" cols="20"></textarea></table></td>
+                <tr><td><label>Tags: </label>
+                        <input type="text" name="tags" data-role="tagsinput"></td></tr>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+          <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+          <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
                   <td colspan="2" width="400" align="middle">
                     <input type="submit" name="post_file" value="Post" />
                   </td>
-                </tr>
+          </tr>
+
               </table>
       </form>
         {% else %}
-            <p>Logg inn for å laste opp fil</p>
+            <p>Du må logge inn for å laste opp fil</p>
+            <a href="{{script}}/register/"> Register here </a>
         {% endif %}
 
     {% endif %}

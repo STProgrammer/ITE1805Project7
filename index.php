@@ -12,13 +12,13 @@
     $archive = new FileArchive($db);
 
     //Vis fil
-    if($request->query->has('id') && ctype_digit($request->query->get('id')))
+    if(isset($_GET['id']) && ctype_digit($_GET['id']))
     {
-        $id = $requeset->query->getInt('id');
+        $id = intval($_GET['id']);
         $file = $archive->getFileObject($id);
         if ($file) {
-            if ($file->isAccessible() == 0) {
-                if($user->loggedIn()) {
+            if ($file->getAccess() == 1) {
+                if($user->loggedIn() && $user->verifyUser()) {
                     $file->showFile();
                 }
             }
@@ -35,15 +35,17 @@
     else
     {
         // sjekk om en fil er sendt inn OG personen er innlogget
-        if($request->request->has('post_file') && $user->loggedIn())
+        if(isset($_POST['post_file']) && $user->loggedIn() && $user->verifyUser())
         {
-            $archive->save();
-            $get_info = "?fileupload=1";
-            header("Location: ".$_SERVER['REQUEST_URI']."?fileupload=1");
-            exit();
+            if (XsrfProtection::verifyMac("File upload")) {
+                $archive->save($_SESSION['bruker']->getUsername());
+                $get_info = "?fileupload=1";
+                header("Location: ".$_SERVER['REQUEST_URI']."?fileupload=1");
+                exit();
+            }
         }
 
-        elseif($request->query->has('fileupload')) {
+        elseif(isset($_GET['fileupload'])) {
             $notification = $archive->getNotification();
             echo $twig->render('index.twig', array('user' => $user,
                 'notification' => $notification));
@@ -51,10 +53,11 @@
 
         // vis oversikten
         else {
+            $mac = XsrfProtection::getMac("File upload");
             $overview = $archive->visOversikt();
             $notification = $archive->getNotification();
             echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-                'notification' => $notification, 'script' => dirname($_SERVER['PHP_SELF'])));
+                'notification' => $notification, 'mac' => $mac, 'script' => dirname($_SERVER['PHP_SELF'])));
         }
     }
 ?>

@@ -27,7 +27,28 @@ class FileArchive {
             return $this->notification;
         }
 
-        public function save() {
+        private function addTags(string $tagsstr, int $id) {
+            $tagsstr = preg_replace('{ [^ \w \s \,] }x', '', $tagsstr );
+            $tags = explode(',', $tagsstr);
+            $tags = array_unique($tags);
+            $stmt = $this->db->prepare("INSERT IGNORE INTO Tags (tag) VALUES (:tag);");
+            if(is_array($tags)){
+                foreach ($tags as $tag) {
+                    $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+            }
+            $stmt = $this->db->prepare("INSERT INTO FilesAndTags (tag, fileId) VALUES (:tag, :id);");
+            if(is_array($tags)){
+                foreach ($tags as $tag) {
+                    $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
+                    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                    $stmt->execute();
+                }
+            }
+        }
+
+        public function save($owner) {
 
             if (isset($_SESSION['strHeader']) && isset($_SESSION['strMessage'])) {
                 unset($_SESSION['strHeader']);
@@ -37,6 +58,11 @@ class FileArchive {
             $name = $_FILES[FILNAVN_TAG]['name'];
             $type = $_FILES[FILNAVN_TAG]['type'];
             $size = $_FILES[FILNAVN_TAG]['size'];
+            $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+            $tagsstr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
+
+
             if (isset($_POST['access'])) $access = 0;
             else $access = 1;
             // VIKTIG !  sjekk at vi jobber med riktig fil 
@@ -45,14 +71,19 @@ class FileArchive {
                     try
                     {
                         $data = file_get_contents($file);
-                        $stmt = $this->db->prepare("INSERT INTO `vedlegg_test` (size, dato, mimetype, filnavn, access, kode)
-					                                      VALUES (:size, now(), :mimetype, :filnavn, :access, :kode)");
+                        $stmt = $this->db->prepare("INSERT INTO `Files` (filename, title, description, size, uploadedDate, type, access, data, owner)
+					                                      VALUES (:filename, :title, :description, :size, now(), :type, :access, :data, :owner)");
+                        $stmt->bindParam(':filename', $name, PDO::PARAM_STR);
+                        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+                        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
                         $stmt->bindParam(':size', $size, PDO::PARAM_INT);
-                        $stmt->bindParam(':mimetype', $type, PDO::PARAM_STR);
-                        $stmt->bindParam(':filnavn', $name, PDO::PARAM_STR);
+                        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
                         $stmt->bindParam(':access', $access, PDO::PARAM_INT);
-                        $stmt->bindParam(':kode', $data, PDO::PARAM_LOB);
+                        $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
+                        $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
                         $result = $stmt->execute();
+                        $id = intval($this->db->lastInsertId());
+                        $this->addTags($tagsstr, $id);
                         $this->NotifyUser("Filen er lastet opp !", "");
                     }
                     catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
@@ -68,16 +99,17 @@ class FileArchive {
         // Viser oversikt over alle filer i db        
         public function visOversikt()
         {
+            $allFiles;
             if (isset($_SESSION)) {
                 unset($_SESSION['strHeader']);
                 unset($_SESSION['strMessage']);
             }
             try
             {
-                $stmt = $this->db->query("SELECT id, filnavn, dato, mimetype, kode, access FROM vedlegg_test order by filnavn");
+                $stmt = $this->db->query("SELECT fileId, filename, uploadedDate, type, data, access, title, size, impressions FROM Files order by filename;");
                 $allFiles = $stmt->fetchAll();
             }
-            catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e-getMessage()); }
+            catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
             // bruk av data i video src
             //<source src="data:video/mp4;base64,{{ fil.kode }}">
             //foreach ($alleFiler as &$encode) {
@@ -115,10 +147,10 @@ class FileArchive {
             }
             catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
         }
-    public function getFileObject ($id) {
+    public function getFileObject ($id) : File {
         try
         {
-            $stmt = $this->db->prepare("SELECT * FROM vedlegg_test WHERE id = :id");
+            $stmt = $this->db->prepare("SELECT * FROM Files WHERE fileId = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             if($file = $stmt->fetchObject('File')) {

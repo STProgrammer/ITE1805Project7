@@ -31,16 +31,16 @@ class User {
 
     public function login( $username, $password) : array {
 
-        $stmt = $this->db->prepare("SELECT id, firstname, lastname, password FROM user WHERE username=:username");
+        $stmt = $this->db->prepare("SELECT userId,  email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        if ($rad = $stmt->fetch(PDO::FETCH_ASSOC) )
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC) )
         {
-            if (password_verify($password, $rad["password"])) {
+            if (password_verify($password, $row['password']) && $row['verified'] == 1) {
                 $_SESSION['loggedin'] = true;
                 $this->loggedin = true;
-                $this->id = $rad["id"];
-                $this->sessionUser= $_SESSION['bruker'] = new SessionUser($username , $rad["firstname"]  .  " " . $rad["lastname"] );
+                $this->id = $row["userId"];
+                $this->sessionUser= $_SESSION['bruker'] = new SessionUser($username , $row["firstname"]  .  " " . $row["lastname"] );
                 return array('status'=>'OK');
             }else return array('status'=>'FAIL', 'errorMessage'=>'Bad password');
 
@@ -55,6 +55,11 @@ class User {
 
         return $this->sessionUser->getHits();
     }
+    public function getId() : int {
+
+        return $this->id;
+    }
+
     public function getFullName() : string {
 
         return $this->sessionUser->getFullName();

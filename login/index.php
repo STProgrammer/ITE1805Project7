@@ -4,13 +4,12 @@ spl_autoload_register(function ($class_name) {
 });
 
 require_once '../../vendor/autoload.php';
-
+/*
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
 
-    $request = Request::createFromGlobals();
-    if($request->hasPreviousSession()) $session = $request->getSession();
-    else $session = new Session();
+    $request = Request::createFromGlobals();*/
+    @session_start();
 
 $db = Db::getDBConnection();
 
@@ -26,15 +25,15 @@ $twig = new \Twig\Environment($loader);
 error_reporting(E_ALL);
 
 //logg ut
-if ($request->request->has('logout')) {
-    $session->clear('loggedin');
+if (isset($_POST['logout'])) {
+    unset($_SESSION['loggedin']);
     header("Location: ".$_SERVER['REQUEST_URI']);
     exit();
 }
 
 $user = new User($db);
 
-if ($request->query->has('loginfail')) {
+if (isset($_GET['loginfail'])) {
     echo $twig->render('login.twig', array('user' => $user, 'fail' => true));
 }
 
@@ -43,7 +42,7 @@ else {
         header("Location: ..");
         exit();
     }
-    elseif ($request->request->has('login')) {
+    elseif (isset($_POST['login'])) {
         if ($user->loggedIn() && $user->verifyUser()) {
             header("Location: ..");
             exit();

@@ -4,8 +4,8 @@
 class File
 {
     private $db;
-    private $documentId;
-    private $documentName;
+    private $fileId;
+    private $filename;
     private $type;
     private $description;
     private $upLoadedDate;
@@ -21,134 +21,201 @@ class File
 
     public function showFile() {
         Header( "Content-type: $this->type" );
-        Header("Content-Disposition: filename=\"$this->filnavn\"");
+        Header("Content-Disposition: filename=\"$this->filename\"");
         // Skriv bildet/filen til klienten
-        echo $this->kode;
+        echo $this->data;
         }
 
-    public function getDocumentId()
+    /**
+     * @return mixed
+     */
+    public function getFileId()
     {
-        return $this->documentId;
+        return $this->fileId;
     }
 
-    public function setDocumentId($documentId)
+    /**
+     * @param mixed $fileId
+     */
+    public function setFileId($fileId)
     {
-        $this->documentId = $documentId;
+        $this->fileId = $fileId;
     }
 
-    public function getDocumentName()
+    /**
+     * @return mixed
+     */
+    public function getFilename()
     {
-        return $this->documentName;
+        return $this->filename;
     }
 
-    public function setDocumentName($documentName)
+    /**
+     * @param mixed $filename
+     */
+    public function setFilename($filename)
     {
-        $this->documentName = $documentName;
+        $this->filename = $filename;
     }
 
+    /**
+     * @return mixed
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param mixed $type
+     */
     public function setType($type)
     {
         $this->type = $type;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
-
+    /**
+     * @param mixed $description
+     */
     public function setDescription($description)
     {
         $this->description = $description;
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getUpLoadedDate()
     {
         return $this->upLoadedDate;
     }
 
-
+    /**
+     * @param mixed $upLoadedDate
+     */
     public function setUpLoadedDate($upLoadedDate)
     {
         $this->upLoadedDate = $upLoadedDate;
     }
 
+    /**
+     * @return mixed
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
-
+    /**
+     * @param mixed $title
+     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSize()
     {
         return $this->size;
     }
 
+    /**
+     * @param mixed $size
+     */
     public function setSize($size)
     {
         $this->size = $size;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCatalogId()
     {
         return $this->catalogId;
     }
 
+    /**
+     * @param mixed $catalogId
+     */
     public function setCatalogId($catalogId)
     {
         $this->catalogId = $catalogId;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserId()
     {
         return $this->userId;
     }
 
+    /**
+     * @param mixed $userId
+     */
     public function setUserId($userId)
     {
         $this->userId = $userId;
     }
 
+    /**
+     * @return mixed
+     */
     public function getImpressions()
     {
         return $this->impressions;
     }
 
+    /**
+     * @param mixed $impressions
+     */
     public function setImpressions($impressions)
     {
         $this->impressions = $impressions;
     }
 
+    /**
+     * @return mixed
+     */
     public function getAccess()
     {
         return $this->access;
     }
 
+    /**
+     * @param mixed $access
+     */
     public function setAccess($access)
     {
         $this->access = $access;
     }
 
-    public function getKode()
+    /**
+     * @return mixed
+     */
+    public function getData()
     {
-        return $this->kode;
+        return $this->data;
     }
 
-    public function setKode($kode)
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
     {
-        $this->kode = $kode;
+        $this->data = $data;
     }
-
 
 }

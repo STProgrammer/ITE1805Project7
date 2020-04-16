@@ -12,8 +12,14 @@
         if($request->hasPreviousSession()) $session = $request->getSession();
         else $session = new Session();*/
 
-    @session_set_cookie_params(0);
     @session_start();
+
+    $db = Db::getDBConnection();
+    if ($db==null) {
+        echo $twig->render('error.twig', array('msg' => 'Unable to connect to the database!'));
+        die();  // Abort further execution of the script
+    }
+
 
     require_once '../login.php';
 
