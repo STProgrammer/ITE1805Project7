@@ -15,7 +15,7 @@
     <p><a href = "index.php">Tilbake </a></p>
 {% else %}
     <p>Last opp fil til db: </p>
-    {% if user.loggedIn() %}
+    {% if user %}
         <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
             <table border="1" cellspacing="0" cellpadding="5" width=

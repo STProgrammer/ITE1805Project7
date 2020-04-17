@@ -13,31 +13,33 @@
       <h3>{{ notification.strHeader }}</h3>
       <h3>{{ notification.strMessage }}</h3>
       <p><a href = "index.php">Tilbake </a></p>
-  {% elseif files %}
-        <h1>
-            Filearchive - showing files
-        </h1>
-        <pre>
-            <p><a href="{{script}}/file-upload/"> Add new </a> </p>
+      {% else %}
+          <h1>
+              Filearchive - showing files
+          </h1>
+          <pre>
+            <p><a href="{{homepath}}file-upload/">Add new</a> </p>
         </pre>
+  {% if files %}
 		<div id="filliste">
             <ul>
                   {% for file in files %}
                            {% if file.type == 'image/jpeg' or  file.type == 'image/pjpeg' or file.type == 'image/png' or file.type == 'image/gif'%}
-                               <a href="{{script}}?id={{file.fileId}}"><img src="{{script}}?id={{file.fileId}}" width="10%"/></a>
-                               <a href="{{script}}/file-details/?id={{file.fileId}}"> Details </a>
+                               <a href="{{homepath}}?id={{file.fileId}}"><img src="{{homepath}}?id={{file.fileId}}" width="10%"/></a>
+                               <a href="{{homepath}}file-details/?id={{file.fileId}}"> Details </a>
                            {% elseif file.type == 'video/mp4' or file.type == 'video/webm' or file.type == 'video/ogg' %}
                           <video width="25%" height="100%" controls>
                               <source src="{{script}}?id={{fil.fileId}}" type="{{file.type}}">
                           </video>
                        {% else %}
                                <li>
-                                {{file.uploadedDate}}&nbsp;<a href="{{script}}?id={{file.fileId}}">{{file.filename}}</a>
+                                {{file.uploadedDate}}&nbsp;<a href="{{homepath}}?id={{file.fileId}}">{{file.filename}}</a>
                                </li>
                            {% endif %}
                   {% endfor %}
             </ul>
         </div>
     {% endif %}
+  {% endif %}
   </body>
 </html>

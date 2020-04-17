@@ -1,4 +1,4 @@
-{% if user.loggedIn() %}
+{% if user %}
     <p>
         Du er logget inn som {{user.getFullName()}}
     </p>
@@ -18,5 +18,5 @@
         </table>
     </form>
     <p>Logg inn med bruker: "donald" & passord: "test"</p>
-    <p><a href="/ite1805project7/register/"> Register </a> </p>
+    <p><a href="{{homepath}}register/"> Register </a> </p>
 {% endif %}

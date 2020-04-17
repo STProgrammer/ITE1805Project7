@@ -2,7 +2,7 @@
 
     require_once "includes.php";
 
-    error_reporting(E_ALL);
+
     define('FILNAVN_TAG', 'bildeFil');
 
     //Håndterer login
@@ -18,7 +18,7 @@
         $file = $archive->getFileObject($id);
         if ($file) {
             if ($file->getAccess() == 0) {
-                if($user->loggedIn() && $user->verifyUser()) {
+                if($user->loggedIn() && $user->verifyUser($request)) {
                     $file->showFile();
                 }
             }
@@ -28,7 +28,7 @@
         else {
             $notification = $archive->getNotification();
             echo $twig->render('index.twig', array('user' => $user,
-                'notification' => $notification, 'script' => $_SERVER['PHP_SELF']));
+                'notification' => $notification, 'homepath' => $homepath));
         }
     }
     // vis oversikten
@@ -36,7 +36,7 @@
         $overview = $archive->visOversikt();
         $notification = $archive->getNotification();
         echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-            'notification' => $notification, 'script' => dirname($_SERVER['PHP_SELF'])));
+            'notification' => $notification, 'homepath' => $homepath));
     }
 
 ?>

@@ -1,49 +1,22 @@
 <?php
-    spl_autoload_register(function ($class_name) {
-        require_once "../classes/" .$class_name . '.class.php';
-    });
 
-    require_once '../vendor/autoload.php';
-    /*
-        use Symfony\Component\HttpFoundation\Request;
-        use Symfony\Component\HttpFoundation\Session\Session;
+require_once '../includes.php';
 
-        $request = Request::createFromGlobals();
-        if($request->hasPreviousSession()) $session = $request->getSession();
-        else $session = new Session();*/
-
-    @session_start();
-
-    $db = Db::getDBConnection();
-    if ($db==null) {
-        echo $twig->render('error.twig', array('msg' => 'Unable to connect to the database!'));
-        die();  // Abort further execution of the script
-    }
-
-
-    require_once '../login.php';
-
-    // Twig templates
-    $loader = new \Twig\Loader\FilesystemLoader('../templates');
-    $twig = new \Twig\Environment($loader);
-
-    error_reporting(E_ALL);
-
-    error_reporting(E_ALL);
     define('FILNAVN_TAG', 'bildeFil');
+
+require_once '../login.php';
 
 
     $archive = new FileArchive($db);
-    $user = new User($db);
 
-    if(isset($_GET['id']) && ctype_digit($_GET['id']))
+    if($request->query->has('id') && ctype_digit($request->query->get('id')))
     {
-        $id = intval($_GET['id']);
+        $id = $request->query->getInt('id');
         $file = $archive->getFileObject($id);
         $notification = $archive->getNotification();
         $uploaded = isset($_GET['fileupload']) ? $_GET['fileupload'] : 0;
         echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
-            'notification' => $notification, 'uploaded' => $uploaded));
+            'notification' => $notification, 'uploaded' => $uploaded, 'homepath' => $homepath));
     }
     else {
         header("Location: .." );

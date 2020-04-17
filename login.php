@@ -1,23 +1,30 @@
 <?php
 //logg ut
 if ($request->request->has('logout')) {
-    $session->clear('loggedin');
-    header("Location: ". $request->server->get('REQUEST_URI'));
+    $session->clear();
+    header("Location:. ");
     exit();
 }
 
-$user = new User($db);
-
-
-if ($request->request->has('login')) {
-    if ($user->loggedIn() && $user->verifyUser()) {
-        header("Location: ".$request->server->get('REQUEST_URI'));
-        exit();
-    }
+// if logged in
+if ($session->has('loggedin')) {
+    $user = $session->get('User'); // get the user data
+}
+// if login submitted
+elseif ($request->request->has('login')) {
+    if(User::login($db, $request, $session)) {
+        $user = $session->get('User');
+        if ($session->get('loggedin') && $user->verifyUser($request)) {
+            header("Location: .");
+            exit();
+        }
+    } //if login submitted but failed to login
     else {
         $get_info = "?loginfail=1";
-        header("Location: ./login".$get_info);
+        header("Location: ".$homepath."login/".$get_info);
         exit();
     }
 }
+else $user = null;
+
 ?>
