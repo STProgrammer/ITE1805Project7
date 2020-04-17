@@ -2,12 +2,12 @@
 
 require_once '../includes.php';
 
-define('FILNAVN_TAG', 'bildeFil');
+define('FILENAME_TAG', 'image');
 
 //Håndterer login
 require_once "../login.php";
 
-$archive = new FileArchive($db);
+$archive = new FileArchive($db, $request, $session);
 
     // sjekk om en fil er sendt inn OG personen er innlogget
     if($request->request->has('post_file') && $session->has('loggedin') && $user->verifyUser($request))
@@ -26,9 +26,8 @@ $archive = new FileArchive($db);
         }
     }
     elseif($request->query->has('fileupload')) {
-        $notification = $archive->getNotification();
         echo $twig->render('fileupload.twig', array('user' => $user,
-            'notification' => $notification, 'script' => $homedir));
+            'session' => $session, 'script' => $homedir));
     }
 
     // vis formen

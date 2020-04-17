@@ -3,13 +3,13 @@
     require_once "includes.php";
 
 
-    define('FILNAVN_TAG', 'bildeFil');
+    define('FILENAME_TAG', 'image');
 
     //Håndterer login
     require_once "login.php";
 
     // opprett nytt filarkiv
-    $archive = new FileArchive($db);
+    $archive = new FileArchive($db, $request, $session);
 
     //Vis fil
     if($request->query->has('id') && ctype_digit($request->query->get('id')))
@@ -34,9 +34,8 @@
     // vis oversikten
     else {
         $overview = $archive->visOversikt();
-        $notification = $archive->getNotification();
         echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-            'notification' => $notification, 'homepath' => $homepath));
+            'session' => $session, 'homepath' => $homepath));
     }
 
 ?>

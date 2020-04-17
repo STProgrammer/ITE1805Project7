@@ -4,32 +4,25 @@ class FileArchive {
         
         private $db;
         private $notification = array();
+        private $request;
+        private $session;
    
-        function __construct($db) {
+        function __construct($db, $request, $session) {
            
             $this->db = $db;
+            $this->request = $request;
+            $this->session = $session;
         } 
                 
         private function NotifyUser($strHeader, $strMessage)
         {
-            $this->notification['strHeader'] = $strHeader;
-            $this->notification['strMessage'] = $strMessage;
-            $_SESSION['strHeader'] = $strHeader;
-            $_SESSION['strMessage'] = $strMessage;
+            $this->session->set('strHeader', $strHeader);
+            $this->session->set('strMessage', $strMessage);
         }
 
-        function getNotification()
-        {
-            if (isset($_SESSION['strHeader']) && isset($_SESSION['strMessage'])) {
-                $this->notification['strHeader'] = $_SESSION['strHeader'];
-                $this->notification['strMessage'] = $_SESSION['strMessage'];
-            }
-            return $this->notification;
-        }
-
-        private function addTags(string $tagsstr, int $id) {
-            $tagsstr = preg_replace('{ [^ \w \s \,] }x', '', $tagsstr );
-            $tags = explode(',', $tagsstr);
+        private function addTags(string $tagsStr, int $id) {
+            $tagsStr = preg_replace('{ [^ \w \s \,] }x', '', $tagsStr );
+            $tags = explode(',', $tagsStr);
             $tags = array_unique($tags);
             $stmt = $this->db->prepare("INSERT IGNORE INTO Tags (tag) VALUES (:tag);");
             if(is_array($tags)){
@@ -50,20 +43,20 @@ class FileArchive {
 
         public function save(string $owner) : int {
 
-            if (isset($_SESSION['strHeader']) && isset($_SESSION['strMessage'])) {
-                unset($_SESSION['strHeader']);
-                unset($_SESSION['strMessage']);
-            }
-            $file = $_FILES[FILNAVN_TAG]['tmp_name'];
-            $name = $_FILES[FILNAVN_TAG]['name'];
-            $type = $_FILES[FILNAVN_TAG]['type'];
-            $size = $_FILES[FILNAVN_TAG]['size'];
+            $this->session->clear('strHeader');
+            $this->session->clear('strMessage');
+
+            $fileTags = $this->request->files->get('image');
+            $file = $fileTags->getPathname();
+            $name = $fileTags->getClientOriginalName();
+            $type = $fileTags->getClientMimeType();
+            $size = $fileTags->getSize();
             $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-            $tagsstr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
+            $tagsStr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
 
 
-            if (isset($_POST['access'])) $access = 0;
+            if ($this->request->request->has('access')) $access = 0;
             else $access = 1;
             // VIKTIG !  sjekk at vi jobber med riktig fil 
             if(is_uploaded_file($file) && $size != 0 && $size <= 5512000)
@@ -83,7 +76,7 @@ class FileArchive {
                         $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
                         $result = $stmt->execute();
                         $id = intval($this->db->lastInsertId());
-                        $this->addTags($tagsstr, $id);
+                        $this->addTags($tagsStr, $id);
                         $this->NotifyUser("Filen er lastet opp !", "");
                         return $id;
                     }
@@ -102,10 +95,8 @@ class FileArchive {
         public function visOversikt()
         {
             $allFiles;
-            if (isset($_SESSION)) {
-                unset($_SESSION['strHeader']);
-                unset($_SESSION['strMessage']);
-            }
+            $this->session->remove('strHeader');
+            $this->session->remove('strMessage');
             try
             {
                 $stmt = $this->db->query("SELECT fileId, filename, uploadedDate, type, data, access, title, size, impressions FROM Files order by filename;");

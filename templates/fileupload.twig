@@ -9,9 +9,9 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-{% if notification %}
-    <h3>{{ notification.strHeader }}</h3>
-    <h3>{{ notification.strMessage }}</h3>
+{% if session.has('strHeader') %}
+    <h3>{{ session.get('strHeader') }}</h3>
+    <h3>{{ session.get('strMessage') }}</h3>
     <p><a href = "index.php">Tilbake </a></p>
 {% else %}
     <p>Last opp fil til db: </p>
@@ -22,7 +22,7 @@
             "400">
                 <tr>
                     <td>
-                        <input name="bildeFil" type="file" />
+                        <input name="image" type="file" />
                     </td>
                 </tr>
                 <tr>

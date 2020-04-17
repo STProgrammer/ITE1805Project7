@@ -6,7 +6,7 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-{% if uploaded %}
+{% if request.request.has('uploaded') %}
     <p>File is uploaded successfully</p>
 {% endif %}
     {% if file %}

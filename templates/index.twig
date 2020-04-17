@@ -9,7 +9,7 @@
   </head>
   <body>
   {% include 'login2.twig' %}
-  {% if notification %}
+  {% if session.has('strHeader') %}
       <h3>{{ notification.strHeader }}</h3>
       <h3>{{ notification.strMessage }}</h3>
       <p><a href = "index.php">Tilbake </a></p>
