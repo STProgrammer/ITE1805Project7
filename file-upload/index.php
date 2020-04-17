@@ -27,13 +27,13 @@ $archive = new FileArchive($db, $request, $session);
     }
     elseif($request->query->has('fileupload')) {
         echo $twig->render('fileupload.twig', array('user' => $user,
-            'session' => $session, 'script' => $homedir));
+            'session' => $session, 'rel' => $rel));
     }
 
     // vis formen
     else {
         $mac = XsrfProtection::getMac("File upload");
         echo $twig->render('fileupload.twig', array('user' => $user,
-            'mac' => $mac, 'homepath' => $homepath));
+            'mac' => $mac, 'rel' => $rel));
     }
 ?>

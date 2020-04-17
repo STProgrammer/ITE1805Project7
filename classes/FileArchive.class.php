@@ -43,8 +43,8 @@ class FileArchive {
 
         public function save(string $owner) : int {
 
-            $this->session->clear('strHeader');
-            $this->session->clear('strMessage');
+            $this->session->remove('strHeader');
+            $this->session->remove('strMessage');
 
             $fileTags = $this->request->files->get('image');
             $file = $fileTags->getPathname();

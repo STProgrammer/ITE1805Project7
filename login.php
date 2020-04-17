@@ -21,7 +21,7 @@ elseif ($request->request->has('login')) {
     } //if login submitted but failed to login
     else {
         $get_info = "?loginfail=1";
-        header("Location: ".$homepath."login/".$get_info);
+        header("Location: ".$rel."login/".$get_info);
         exit();
     }
 }

@@ -28,14 +28,14 @@
         else {
             $notification = $archive->getNotification();
             echo $twig->render('index.twig', array('user' => $user,
-                'notification' => $notification, 'homepath' => $homepath));
+                'notification' => $notification, 'rel' => $rel));
         }
     }
     // vis oversikten
     else {
         $overview = $archive->visOversikt();
         echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-            'session' => $session, 'homepath' => $homepath));
+            'session' => $session, 'rel' => $rel));
     }
 
 ?>

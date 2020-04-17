@@ -14,7 +14,7 @@ require_once '../login.php';
         $id = $request->query->getInt('id');
         $file = $archive->getFileObject($id);
         echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
-            'request' => $request, 'session' => $session, 'homepath' => $homepath));
+            'request' => $request, 'session' => $session, 'rel' => $rel));
     }
     else {
         header("Location: .." );

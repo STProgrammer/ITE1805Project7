@@ -1,8 +1,13 @@
 <?php
 
     $homedir = __DIR__ . '/';
-    $homepath = str_replace("\\", "/", $homedir);
-    $homepath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $homepath);
+
+    //Generate relative path string "../"
+    $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']),"ite1805project7"));
+    $rel = str_replace('/', '../', $rel);
+    $rel = preg_replace('~[^\.\.\/]*~', '', $rel);
+
+
 
     spl_autoload_register(function ($class_name) {
         $homedir = __DIR__ . '/';
