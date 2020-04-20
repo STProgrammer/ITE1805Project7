@@ -7,19 +7,55 @@
 		<link type="text/css" rel="stylesheet" href="stilark.css" />
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
-  <body>
-  {% include 'login2.twig' %}
-  {% if session.has('strHeader') %}
-      <h3>{{ notification.strHeader }}</h3>
-      <h3>{{ notification.strMessage }}</h3>
-      <p><a href = "index.php">Tilbake </a></p>
+      {% include 'login2.twig' %}
+  {% if app.session.hasFlash('header') %}
+      <div class="flash-notice">
+          {{ app.session.flash('header') }}
+          {{ app.session.flash('message') }}
+      </div>
+  {% endif %}
+  {% if status %}
+      <h3>{{ status }}</h3>
+      <h3>{{ statusMessage }}</h3>
+      <p><a href = "./">Tilbake </a></p>
       {% else %}
+      <p><form method = "get">
+          <input type="text" name="query" placeholder="Search" maxlength="45">
+          <br><button type="submit" name="search" value="search">Search</button>
+      <br></p>
+      </form>
+      <form method = "get">
+          <label for="tags">Write tags here separated by comma: </label><br>
+          <input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3"></td></tr>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+          <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+          <button type="submit" name="search" value="tagssearch">Search by tags</button></form>
+          <br>
+
+
           <h1>
               Filearchive - showing files
           </h1>
           <pre>
             <p><a href="{{rel}}file-upload/">Add new</a> </p>
         </pre>
+      {% if catalog %}
+          <h2>
+              {{ catalog.getCatalogName() }}
+          </h2>
+      {% endif %}
+  {% if catalogs %}
+      <div id="filliste">
+          <ul>
+              {% for catalog in catalogs %}
+                      <li>
+                          <a href="{{rel}}?catalogid={{catalog.catalogId}}">{{catalog.catalogName}}</a> {{catalog.date}}
+                          <a href="{{rel}}catalog/?id={{catalog.catalogId}}"> Details </a>&nbsp;
+                      </li>
+              {% endfor %}
+          </ul>
+      </div>
+  {% endif %}
   {% if files %}
 		<div id="filliste">
             <ul>
@@ -33,7 +69,8 @@
                           </video>
                        {% else %}
                                <li>
-                                {{file.uploadedDate}}&nbsp;<a href="{{rel}}?id={{file.fileId}}">{{file.filename}}</a>
+                                <a href="{{rel}}?id={{file.fileId}}">{{file.filename}}</a> {{file.uploadedDate}}&nbsp;
+                               <a href="{{rel}}file-details/?id={{file.fileId}}"> Details </a>
                                </li>
                            {% endif %}
                   {% endfor %}

@@ -7,24 +7,57 @@ class File
     private $fileId;
     private $filename;
     private $type;
+    private $tags;
     private $description;
     private $upLoadedDate;
     private $title;
     private $size;
     private $catalogId;
-    private $userId;
+    private $catalogName;
+    private $owner;
     private $impressions;
     private $access;
     private $data;
 
-    function __construct() { }
+    function __construct() {
+    }
 
-    public function showFile() {
-        Header( "Content-type: $this->type" );
-        Header("Content-Disposition: filename=\"$this->filename\"");
-        // Skriv bildet/filen til klienten
-        echo $this->data;
-        }
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCatalogName()
+    {
+        return $this->catalogName;
+    }
+
+    /**
+     * @param mixed $catalogName
+     */
+    public function setCatalogName($catalogName)
+    {
+        $this->catalogName = $catalogName;
+    }
+
+
+
+    /**
+     * @param mixed $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+
+
 
     /**
      * @return mixed
@@ -157,17 +190,17 @@ class File
     /**
      * @return mixed
      */
-    public function getUserId()
+    public function getOwner()
     {
-        return $this->userId;
+        return $this->owner;
     }
 
     /**
-     * @param mixed $userId
+     * @param mixed $owner
      */
-    public function setUserId($userId)
+    public function setOwner($owner)
     {
-        $this->userId = $userId;
+        $this->owner = $owner;
     }
 
     /**

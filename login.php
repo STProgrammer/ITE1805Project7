@@ -2,7 +2,7 @@
 //logg ut
 if ($request->request->has('logout')) {
     $session->clear();
-    header("Location:. ");
+    header("Location: .");
     exit();
 }
 

@@ -18,6 +18,7 @@
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
+    use Symfony\Bridge\Twig;
 
     $request = Request::createFromGlobals();
 
@@ -35,5 +36,5 @@
     if ($db==null) {
         echo $twig->render('error.twig', array('msg' => 'Unable to connect to the database!'));
         die();  // Abort further execution of the script
-}
+    }
 ?>

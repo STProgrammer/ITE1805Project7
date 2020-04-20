@@ -7,7 +7,7 @@ class Catalog
     private $parentId;
     private $catalogName;
     private $date;
-    private $userId;
+    private $owner;
     private $access;
 
     public function getCatalogId()
@@ -50,14 +50,14 @@ class Catalog
         $this->date = $date;
     }
 
-    public function getUserId()
+    public function getOwner()
     {
-        return $this->userId;
+        return $this->owner;
     }
 
-    public function setUserId($userId)
+    public function setOwner($owner)
     {
-        $this->userId = $userId;
+        $this->userId = $owner;
     }
 
     public function getAccess()

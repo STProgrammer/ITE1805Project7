@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+<form method="post">
+    <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+    <table border="1" cellspacing="0" cellpadding="5" width=
+    "400">
+        <tr>
+            <td>
+                <input type="checkbox" name="access" value="0">
+                Only accessible for registered users
+            </td>
+        <tr><td><label>Title: </label>
+                <input type="text" name="title" required maxlength=45 value="{{ file.getTitle() }}"></td></tr>
+        <tr><td><br><label>Catalog:</label>
+        <br><select name="catalogId">
+            <option value="1"> Main </option>
+            {% if catalogsList %}
+                {% for catalog in catalogsList %}
+                    <option value="{{ catalog.catalogId }}" {% if catalog.catalogId == file.getCatalogId() %} selected {% endif %}>{{ catalog.catalogName }} </option>
+                {% endfor %}
+            {% endif %}
+        </select>
+        <tr><td><label>Description: </label>
+                <textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea></table></td>
+    <tr><td><label>Tags: </label>
+            <input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}"></td></tr>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+    <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+    <td colspan="2" width="400" align="middle">
+        <input type="submit" name="edit_file" value="Edit" />
+    </td>
+    </tr>
+    </table>
+</form>
+</body>
+</html>

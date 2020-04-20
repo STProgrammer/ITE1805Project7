@@ -6,8 +6,11 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-{% if request.request.has('uploaded') %}
-    <p>File is uploaded successfully</p>
+
+{% if session.has('strHeader') %}
+<h3>{{ session.get('strHeader') }}</h3>
+<h3>{{ session.get('strMessage') }}</h3>
+<p><a href = "../"> Tilbake </a></p>
 {% endif %}
     {% if file %}
     <h1>
@@ -35,10 +38,64 @@
                 Size: {{ file.getSize() }}
             </li>
             <li>
+                Owner: {{ file.getOwner() }}
+            </li>
+            <li>
                 Description: {{ file.getDescription() }}
             </li>
+            <li>
+                Catalogname: {{ file.getCatalogName() }}
+            </li>
+            <li>
+                <p id="tags"></p>
+            </li>
+            <li>
+                <script>
+                    <!-- koden er tatt fra http://jsfiddle.net/UH5U9/3/ found in StackOverflow
+                        https://stackoverflow.com/questions/10022781/generate-search-links-for-comma-separated-words -->
+                    var tags = "{{ file.getTags() }}";
+                    tags = tags.split(', ');
+                    var temp = '';
+                    for (var i = 0; i < tags.length; i++) {
+                        temp = temp + '<a href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
+                    }
+                    document.getElementById("tags").innerHTML = temp;
+                </script>
+            </li>
+
         </ul>
     </div>
+        {% if isOwner %}
+            <p><a href="file-edit/?id={{file.getFileId}}">Edit file</a></p>
+            {% endif %}
+        {% if user.isAdmin() or isOwner %}
+            <form method="post">
+                <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+            <input type="submit" name="Delete_file" value="Delete file" />
+            </form>
+            {% endif %}
+        {% for comment in comments %}
+        {{ comment['date'] }}
+        {{ comment['username'] }}
+        <p>{{ comment['comment'] }}</p>
+            {% if comment['username'] == user.getUsername() or user.isAdmin() == 0 %}
+                <form method="post">
+                    <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+                    <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
+                    <input type="submit" name="Delete_comment" value="Delete comment" />
+                </form>
+            {% endif %}
+
+        {% endfor %}
+
+        {% if user %}
+            <form  method="post">
+            <label>Comment: </label>
+                <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+            <textarea type="text" name="commenttext" rows="2" cols="20" maxlength=255 ></textarea>
+                <input type="submit" name="comment" value="Comment" />
+            </form>
+            {% endif %}
 {% endif %}
 
 </body>

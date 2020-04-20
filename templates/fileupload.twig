@@ -9,12 +9,7 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-{% if session.has('strHeader') %}
-    <h3>{{ session.get('strHeader') }}</h3>
-    <h3>{{ session.get('strMessage') }}</h3>
-    <p><a href = "index.php">Tilbake </a></p>
-{% else %}
-    <p>Last opp fil til db: </p>
+    <p>Upload new file to the database: </p>
     {% if user %}
         <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
@@ -31,9 +26,18 @@
                         Only accessible for registered users
                     </td>
                 <tr><td><label>Title: </label>
-                        <input type="text" name="title"></td></tr>
+                        <input type="text" name="title" required maxlength=45></td></tr>
                 <tr><td><label>Description: </label>
-                        <textarea type="text" name="description" rows="2" cols="20"></textarea></table></td>
+                        <textarea type="text" name="description" rows="2" cols="20" maxlength=255 ></textarea></td>
+            <tr><td><br><label>Catalog:</label>
+                    <br><select name="catalogId">
+                        <option value="1"> Main </option>
+                        {% if catalogsList %}
+                            {% for catalog in catalogsList %}
+                                <option value="{{ catalog.catalogId }}">{{ catalog.catalogName }} </option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
             <tr><td><label>Tags: </label>
                     <input type="text" name="tags" data-role="tagsinput"></td></tr>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -43,12 +47,36 @@
                 <input type="submit" name="post_file" value="Post" />
             </td>
             </tr>
-
+            </table>
+        </form>
+        <p>Add new catalog: </p>
+        <form method="post">
+            <table border="1" cellspacing="0" cellpadding="5" width="400">
+                <tr>
+                    <td>
+                        <input type="checkbox" name="access" value="0">
+                        Only accessible for registered users
+                    </td>
+                <tr><td><label>Catalog name: </label>
+                        <input type="text" name="catalogname" required></td></tr>
+                <tr><td><br><label>Catalog:</label>
+                        <br><select name="catalogId">
+                            <option value="1"> Main </option>
+                            {% if catalogsList %}
+                                {% for catalog in catalogsList %}
+                                    <option value="{{ catalog.catalogId }}">{{ catalog.catalogName }} </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+            <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+            <tr><td colspan="2" width="400" align="middle">
+                <input type="submit" name="post_catalog" value="Post" />
+            </td>
+            </tr>
             </table>
         </form>
     {% else %}
         <p>Du må logge inn for å laste opp fil</p>
     {% endif %}
-{% endif %}
 </body>
 </html>

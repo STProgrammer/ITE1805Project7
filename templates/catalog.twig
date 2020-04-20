@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+{% if request.request.has('uploaded') %}
+    <p>File is uploaded successfully</p>
+{% endif %}
+{% if catalog %}
+    <h1>
+        Catalog name: {{ catalog.getCatalogName() }}
+    </h1>
+{% endif %}
+{% if isOwner %}
+    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
+{% endif %}
+{% if user.isAdmin() or isOwner %}
+    <form method="post">
+        <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+        <input type="submit" name="Delete_catalog" value="Delete catalog" />
+    </form>
+{% endif %}
+</body>
+</html>
