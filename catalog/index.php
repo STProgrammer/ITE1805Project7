@@ -44,10 +44,9 @@ if(ctype_digit($request->query->get('id')))
 
     // just show the details
     else {
-        $mac = XsrfProtection::getMac("Delete");
         echo $twig->render('catalog.twig', array('catalog' => $catalog, 'user' => $user,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-            'mac' => $mac));
+            'xsrfMac' => $xsrfMac));
     }
 }
 

@@ -17,6 +17,7 @@
         <td><input type="text" name="username"></td></tr>
       <tr><td><label>Passord:</label> </td>
         <td><input type="password" name="password" size="15"></td></tr>
+      <input type="hidden" value="{{ xsrfMac.getMac("Login") }}" name="XSRFPreventionToken">
       <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
       </tr>
     </table>

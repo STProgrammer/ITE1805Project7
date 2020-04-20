@@ -85,7 +85,6 @@ class FileArchive {
                     $parentId = $parent['parentId'];
                     $access = $parent['access'];
                     if ($access == 0) {
-                        $this->NotifyUser("Access denied", "");
                         return false;
                     }
                     else return $this->isCatalogAccessible($parentId);
@@ -359,7 +358,7 @@ class FileArchive {
                     $impressions = $item['impressions'];
                     $catalogId = $item['catalogId'];
 
-                    // sett opp Mime type og Filnavn i header i henhold til verdier fra databasen
+                    // check if public or not
                     if ($access == 0 or !$this->isCatalogAccessible($catalogId)) {
                         if ($this->session->has('User') && $this->session->has('loggedin')) {
                             $user = $this->session->get('User');
@@ -427,7 +426,7 @@ class FileArchive {
             $sth->bindParam(':catalogId', $catalogId);
             $sth->bindParam(':access', $access);
             $sth->execute();
-            if ($sth->rowCount() != 1 | !$this->addTags($tagsStr, $fileId)) {
+            if ($sth->rowCount() == 1 | $this->addTags($tagsStr, $fileId)) {
                 $this->NotifyUser('File details changed', '');
             } else {
                 $this->NotifyUser('Failed to change file details', "");
@@ -529,6 +528,9 @@ class FileArchive {
         }
         return $files;
     } //* END SEARCH BY MULTIPLE TAGS
+
+
+
 
 
 

@@ -12,6 +12,8 @@ require_once "../../includes.php";
 
 $session->getFlashBag()->add('notice', "Test message");
 
+echo $session->getFlashBag()->has('sss');
+
 echo  $twig->render('thiss.twig', array('session' => $session));
 
 

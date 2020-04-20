@@ -7,13 +7,13 @@
     </form>
 {% else %}
     <h3>Du må logge inn</h3>
-    <p>{{rel}}</p>
     <form action="index.php" method="post">
         <table>
             <tr><td><label>Brukernavn: </label> </td>
                 <td><input type="text" name="username"></td></tr>
             <tr><td><label>Passord:</label> </td>
                 <td><input type="password" name="password" size="15"></td></tr>
+            <input type="hidden" value="{{ xsrfMac.getMac("Login") }}" name="XSRFPreventionToken">
             <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
             </tr>
         </table>

@@ -7,9 +7,10 @@ if ($session->has('loggedin')) {
     header("Location: ..");
     exit();
 }
+
 // if login submitted
 elseif ($request->request->has('login')) {
-    if(User::login($db, $request, $session)) {
+    if(XsrfProtection::verifyMac("Login") && User::login($db, $request, $session)) {
         $user = $session->get('User');
         if ($session->get('loggedin') && $user->verifyUser($request)) {
             header("Location: ..");
@@ -24,9 +25,9 @@ elseif ($request->request->has('login')) {
 }
 
 if ($request->query->has('loginfail')) {
-    echo $twig->render('login.twig', array('fail' => true));
+    echo $twig->render('login.twig', array('fail' => true, 'xsrfMac' => $xsrfMac));
 } else {
-    echo $twig->render('login.twig', array());
+    echo $twig->render('login.twig', array('xsrfMac' => $xsrfMac));
 }
 
 ?>

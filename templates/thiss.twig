@@ -5,14 +5,12 @@
     <title>$Title$</title>
 </head>
 <body>
-{% if app.session.flashBag.has('notice') %}
     <div class="alert alert-success fade in" role="alert">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        {% for msg in app.session.flashBag.get('notice') %}
-            {{ msg }}
+        {% for message in session.getFlashBag.get('notice', []) %}
+            {{ message }}
         {% endfor %}
     </div>
-{% endif %}
 {% if app.session.flashBag.has('error') %}
     <div class="alert alert-error fade in" role="alert">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

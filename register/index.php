@@ -7,7 +7,7 @@
     $userData = array();
 
 
-    if ($request->request->has('register')) {
+    if ($request->request->has('register') && XsrfProtection::verifyMac("Register")) {
         $userData['username'] = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
         $userData['firstname'] = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $userData['lastname'] = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);

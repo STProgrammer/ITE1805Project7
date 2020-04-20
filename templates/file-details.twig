@@ -7,11 +7,14 @@
 <body>
 {% include 'login2.twig' %}
 
-{% if session.has('strHeader') %}
-<h3>{{ session.get('strHeader') }}</h3>
-<h3>{{ session.get('strMessage') }}</h3>
-<p><a href = "../"> Tilbake </a></p>
-{% endif %}
+    <div class="flash-notice">
+        {% for header in session.getFlashBag.get('header', []) %}
+            <h2>{{ header }}</h2>
+        {% endfor %}
+        {% for message in session.getFlashBag.get('message', []) %}
+            <h2>{{ message }}</h2>
+        {% endfor %}
+    </div>
     {% if file %}
     <h1>
         Detaljer om fil:
@@ -70,7 +73,7 @@
             {% endif %}
         {% if user.isAdmin() or isOwner %}
             <form method="post">
-                <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+                <input type="hidden" value="{{ xsrfMac.getMac("Delete file") }}" name="XSRFPreventionToken">
             <input type="submit" name="Delete_file" value="Delete file" />
             </form>
             {% endif %}
@@ -80,7 +83,7 @@
         <p>{{ comment['comment'] }}</p>
             {% if comment['username'] == user.getUsername() or user.isAdmin() == 0 %}
                 <form method="post">
-                    <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+                    <input type="hidden" value="{{ xsrfMac.getMac("Delete comment") }}" name="XSRFPreventionToken">
                     <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
                     <input type="submit" name="Delete_comment" value="Delete comment" />
                 </form>
@@ -91,7 +94,7 @@
         {% if user %}
             <form  method="post">
             <label>Comment: </label>
-                <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+                <input type="hidden" value="{{ xsrfMac.getMac("Post comment") }}" name="XSRFPreventionToken">
             <textarea type="text" name="commenttext" rows="2" cols="20" maxlength=255 ></textarea>
                 <input type="submit" name="comment" value="Comment" />
             </form>

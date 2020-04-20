@@ -8,17 +8,18 @@
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
       {% include 'login2.twig' %}
-  {% if app.session.hasFlash('header') %}
+          {% if session.getFlashBag.has('header') %}
       <div class="flash-notice">
-          {{ app.session.flash('header') }}
-          {{ app.session.flash('message') }}
+          {% for header in session.getFlashBag.get('header', []) %}
+          <h2>{{ header }}</h2>
+          {% endfor %}
+          {% for message in session.getFlashBag.get('message', []) %}
+              <h2>{{ message }}</h2>
+          {% endfor %}
+              <p><a href = "./">Back </a></p>
       </div>
-  {% endif %}
-  {% if status %}
-      <h3>{{ status }}</h3>
-      <h3>{{ statusMessage }}</h3>
-      <p><a href = "./">Tilbake </a></p>
-      {% else %}
+          {% else %}
+
       <p><form method = "get">
           <input type="text" name="query" placeholder="Search" maxlength="45">
           <br><button type="submit" name="search" value="search">Search</button>
@@ -77,6 +78,6 @@
             </ul>
         </div>
     {% endif %}
-  {% endif %}
+          {% endif %}
   </body>
 </html>

@@ -23,7 +23,7 @@ require_once '../login.php';
             if ($user->verifyUser($request)) {  //check if user logged in and verify user
                 // Since User is verified, all users can post comment. So we can now check if someone posted comment
                 if ($request->request->get('comment') == "Comment") {
-                    if (XsrfProtection::verifyMac("Delete")) {
+                    if (XsrfProtection::verifyMac("Post comment")) {
                         $username = $user->getUserName();
                         $fileId = $file->getFileId();
                         Comment::addComment($db, $username, $fileId);
@@ -47,7 +47,7 @@ require_once '../login.php';
             //Check if user is owner of comment or admin
             if (Comment::checkOwner($db, $user->getUserName(), $commentId) or $isAdmin) {
                 //Xsrf check
-                if (XsrfProtection::verifyMac("Delete")) {
+                if (XsrfProtection::verifyMac("Delete comment")) {
                     $username = $user->getUserName();
                     $fileId = $file->getFileId();
                     Comment::deleteComment($db, $commentId);
@@ -62,7 +62,7 @@ require_once '../login.php';
         elseif ($request->request->has('Delete_file') && $request->request->get('Delete_file') == "Delete file") {
             //is owner or admin
             if ($isOwner or $isAdmin) {
-                if (XsrfProtection::verifyMac("Delete")) {
+                if (XsrfProtection::verifyMac("Delete file")) {
                     $archive->deleteFile($id);
                     $get_info = "?filedeleted=1";
                     header("Location: ../" . $get_info);
@@ -72,10 +72,10 @@ require_once '../login.php';
         } //End delete file
         // just show the details
         else {
-            $mac = XsrfProtection::getMac("Delete");
+            $mac = XsrfProtection::getMac("Delete file");
             echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
                 'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-                'mac' => $mac, 'comments' => $comments));
+                'xsrfMac' => $xsrfMac, 'comments' => $comments));
         }
     }
 

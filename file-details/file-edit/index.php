@@ -43,10 +43,9 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
     }
 
     else {
-        $mac = XsrfProtection::getMac("Edit file");
         echo $twig->render('file-edit.twig', array('file' => $file,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-            'mac' => $mac, 'user' => $user, 'catalogsList' => $catalogsList));
+            'xsrfMac' => $xsrfMac, 'user' => $user, 'catalogsList' => $catalogsList));
     }
 
 }

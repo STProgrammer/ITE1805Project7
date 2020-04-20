@@ -17,6 +17,7 @@
     <br><input type="email" name="email" value="" maxlength=45 required />
     <br><label>Password:</label>
     <br><input type="password" name="password" value="" maxlength=60 required />
+    <input type="hidden" value="{{ xsrfMac.getMac("Register") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="register" value="Register"></form>
 </body>
 </html>

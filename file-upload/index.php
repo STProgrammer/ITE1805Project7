@@ -30,7 +30,7 @@ $archive = new FileArchive($db, $request, $session, $twig);
     // Add catalog
     elseif($request->request->has('post_catalog') && $session->has('loggedin') && $user->verifyUser($request))
     {
-        if (XsrfProtection::verifyMac("File upload")) {
+        if (XsrfProtection::verifyMac("Catalog upload")) {
             $id = $archive->addCatalog($user->getUsername());
             $get_info = "addcatalog=1";
             header("Location: ./?" . $get_info);
@@ -46,9 +46,14 @@ $archive = new FileArchive($db, $request, $session, $twig);
 
     // vis formen
     else {
-        $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
-        $mac = XsrfProtection::getMac("File upload");
-        echo $twig->render('fileupload.twig', array('user' => $user,
-            'mac' => $mac, 'rel' => $rel, 'catalogsList' => $catalogsList));
+        if ($session->get('loggedin') && $user = $session->get('User')) {
+            $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
+            echo $twig->render('fileupload.twig', array('user' => $user,
+                'xsrfMac' => $xsrfMac, 'rel' => $rel, 'catalogsList' => $catalogsList));
+        }
+        else {
+            echo $twig->render('fileupload.twig', array('user' => $user,
+                'xsrfMac' => $xsrfMac, 'rel' => $rel));
+        }
     }
 ?>

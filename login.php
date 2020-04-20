@@ -12,7 +12,7 @@ if ($session->has('loggedin')) {
 }
 // if login submitted
 elseif ($request->request->has('login')) {
-    if(User::login($db, $request, $session)) {
+    if(XsrfProtection::verifyMac("Login") && User::login($db, $request, $session)) {
         $user = $session->get('User');
         if ($session->get('loggedin') && $user->verifyUser($request)) {
             header("Location: .");

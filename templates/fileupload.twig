@@ -38,11 +38,13 @@
                             {% endfor %}
                         {% endif %}
                     </select>
+                        <input type="hidden" value="{{ xsrfMac.getMac("File upload") }}" name="XSRFPreventionToken">
             <tr><td><label>Tags: </label>
-                    <input type="text" name="tags" data-role="tagsinput"></td></tr>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-            <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-            <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+                    <input type="text" name="tags" data-role="tagsinput">
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+                        <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+                    </td></tr>
+
             <td colspan="2" width="400" align="middle">
                 <input type="submit" name="post_file" value="Post" />
             </td>
@@ -68,7 +70,7 @@
                                 {% endfor %}
                             {% endif %}
                         </select>
-            <input type="hidden" value="{{ mac }}" name="XSRFPreventionToken">
+            <input type="hidden" value="{{ xsrfMac.getMac("Catalog upload") }}" name="XSRFPreventionToken">
             <tr><td colspan="2" width="400" align="middle">
                 <input type="submit" name="post_catalog" value="Post" />
             </td>

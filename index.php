@@ -61,6 +61,7 @@
         $catalogId = $request->query->getInt('catalogid');
         $catalogId = $catalogId == 0 ? 1: $catalogId;
         $catalog = $archive->getCatalogObject($catalogId);
+
         if(!$archive->showCatalog($catalogId)) {
             echo $twig->render('index.twig', array('user' => $user,
                 'session' => $session, 'rel' => $rel));

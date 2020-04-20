@@ -2,6 +2,10 @@
 
 class XsrfProtection
 {
+    public function __construct()
+    {
+    }
+
     public static function getMac($action_name) {
         $key = "sha1";
         $secret = "g45jf722e";

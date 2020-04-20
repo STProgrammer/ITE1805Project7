@@ -16,6 +16,8 @@
 
     require_once $homedir . 'vendor/autoload.php';
 
+    $xsrfMac = new XsrfProtection();
+
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
     use Symfony\Bridge\Twig;
@@ -30,7 +32,8 @@
 
     // Twig templates
     $loader = new \Twig\Loader\FilesystemLoader($homedir . 'templates');
-    $twig = new \Twig\Environment($loader);
+    $twig = new \Twig\Environment($loader, ['debug' => true]);
+    $twig->addExtension(new \Twig\Extension\DebugExtension());
 
     $db = Db::getDBConnection();
     if ($db==null) {
