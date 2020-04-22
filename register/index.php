@@ -2,7 +2,7 @@
 
     require_once('../includes.php');
 
-    $reguser = new RegisterUser($db);
+    $reguser = new RegisterUser($db, $request, $session);
 
     $userData = array();
 
@@ -16,7 +16,7 @@
         $reguser->registerUser($userData);
 
     } else {
-        echo $twig->render('register.twig', array('script' => $homedir));
+        echo $twig->render('register.twig', array('script' => $homedir, 'xsrfMac' => $xsrfMac,));
     }
 
 

@@ -9,6 +9,8 @@ class User {
     private $usr_hits;         // Holds the users hitcount
     private $admin;
     private $verified;
+    private $date;
+    private $email;
 
     function __construct(string $n, string $fn, string $ip, string $browser, array $row ) {
         $this->usr_name = $n;
@@ -18,6 +20,8 @@ class User {
         $this->usr_hits = 0;
         $this->admin = $row['admin'];
         $this->verified = $row['verified'];
+        $this->date = $row['date'];
+        $this->email = $row['email'];
 
     }
 
@@ -40,6 +44,7 @@ class User {
         else
             return false;
     }
+
 
     public static function login(PDO $db,  $request,  $session) {
         $username = $request->request->get('username');

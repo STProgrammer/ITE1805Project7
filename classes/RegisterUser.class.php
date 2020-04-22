@@ -4,9 +4,11 @@
 class RegisterUser
 {
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
         $this->dbase = $db;
+        $this->request = $request;
+        $this->session = $session;
     }
 
     //Register user
@@ -31,11 +33,11 @@ class RegisterUser
 
         $ch = curl_init();
         $email = $userData['email'];
-        $url = $_SERVER['DOCUMENT_ROOT']."/verify.php/";
+        $url = "/verify.php/";
 
 
         $id = md5(uniqid(rand(), 1));
-        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=http://uit.no/?id=" . $id);
+        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url".$url . $id);
 
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
