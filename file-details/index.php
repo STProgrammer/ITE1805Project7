@@ -72,7 +72,6 @@ require_once '../login.php';
         } //End delete file
         // just show the details
         else {
-            $mac = XsrfProtection::getMac("Delete file");
             echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
                 'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
                 'xsrfMac' => $xsrfMac, 'comments' => $comments));

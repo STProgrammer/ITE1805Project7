@@ -10,6 +10,14 @@
     // opprett nytt filarkiv
     $archive = new FileArchive($db, $request, $session, $twig);
 
+    //Get the page number for pagination, metoden er delvis tatt fra https://www.myprogrammingtutorials.com/create-pagination-with-php-and-mysql.html
+    if (!($pageno = $request->query->getInt('pageno')) || $pageno < 1) {
+        $pageno = 1;
+    }
+
+    $nrOfElementsPerPage = 4;
+    $offset = ($pageno-1) * $nrOfElementsPerPage;
+
     //Vis fil
     if(ctype_digit($request->query->get('id')))
     {
@@ -21,6 +29,8 @@
     }
 
 
+
+
     //Search made
     elseif($request->query->get('search') == "search")
         {
@@ -29,8 +39,12 @@
             if (!$session->get('loggedin')) {
                 $files = $archive->getOnlyPublicFiles($files);
             }
-            echo $twig->render('index.twig', array('files' => $files, 'user' => $user,
-                'session' => $session, 'request' => $request, 'rel' => $rel));
+            $sizeOfList = sizeof($files);
+            $totalPages = ($sizeOfList == 0) ? 1 : ceil($sizeOfList / $nrOfElementsPerPage);
+            $pagination = range(1, $totalPages, 1);
+            $files = array_slice($files, $offset, $nrOfElementsPerPage);
+            echo $twig->render('index.twig', array('elements' => $files, 'user' => $user,
+                'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
         }
 
     //Tag search
@@ -41,8 +55,10 @@
         if (!$session->get('loggedin')) {
             $files = $archive->getOnlyPublicFiles($files);
         }
-        echo $twig->render('index.twig', array('files' => $files, 'user' => $user,
-            'session' => $session, 'request' => $request, 'rel' => $rel));
+        $files = array_slice($files, $offset, $nrOfElementsPerPage);
+        $pagination = range(1, sizeof($files), 1);
+        echo $twig->render('index.twig', array('elements' => $files, 'user' => $user,
+            'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
     }
 
     //Multiple tags search
@@ -53,8 +69,10 @@
         if (!$session->get('loggedin')) {
             $files = $archive->getOnlyPublicFiles($files);
         }
+        $files = array_slice($files, $offset, $nrOfElementsPerPage);
+        $pagination = range(1, sizeof($files), 1);
         echo $twig->render('index.twig', array('files' => $files, 'user' => $user,
-            'session' => $session, 'request' => $request, 'rel' => $rel));
+            'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
     }
 
     elseif (ctype_digit($request->query->get('catalogid'))) {
@@ -66,19 +84,19 @@
             echo $twig->render('index.twig', array('user' => $user,
                 'session' => $session, 'rel' => $rel));
         } else {
-            $overview = $archive->getFilesOverview($catalogId);
-            $catalogs = $archive->getCatalogs($catalogId);
-            echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-                'session' => $session, 'request' => $request, 'catalogs' => $catalogs,
-                'catalog' => $catalog, 'rel' => $rel));
+            $elements = $archive->getOverview($catalogId, $offset, $nrOfElementsPerPage);
+            echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
+                'session' => $session, 'request' => $request, 'rel' => $rel));
         }
     }
 
     // vis oversikten
     else {
-        $overview = $archive->getFilesOverview(1);
-        $catalogs = $archive->getCatalogs(1);
-        echo $twig->render('index.twig', array('files' => $overview, 'user' => $user,
-            'session' => $session, 'request' => $request, 'catalogs' => $catalogs, 'rel' => $rel));
+        $totalPages = $archive->totalNrOfPages($nrOfElementsPerPage);
+        $pagination = range(1, $totalPages, 1);
+        $elements = $archive->getOverview(1, $offset, $nrOfElementsPerPage);
+
+        echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
+            'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
     }
 ?>

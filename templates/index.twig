@@ -45,39 +45,45 @@
               {{ catalog.getCatalogName() }}
           </h2>
       {% endif %}
-  {% if catalogs %}
+  {% if elements %}
       <div id="filliste">
           <ul>
-              {% for catalog in catalogs %}
+              {% for element in elements %}
+                  {% if element.isFile == 0 %}
                       <li>
-                          <a href="{{rel}}?catalogid={{catalog.catalogId}}">{{catalog.catalogName}}</a> {{catalog.date}}
-                          <a href="{{rel}}catalog/?id={{catalog.catalogId}}"> Details </a>&nbsp;
+                          <a href="{{rel}}?catalogid={{element.id}}">{{element.Title}}</a> {{element.date}}
+                          <a href="{{rel}}catalog/?id={{element.id}}"> Details </a>&nbsp;
                       </li>
+                  {% else %}
+                      {% if element.type == 'image/jpeg' or  element.type == 'image/pjpeg' or element.type == 'image/png' or element.type == 'image/gif'%}
+                          <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}?id={{element.id}}" width="10%"/></a>
+                          <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
+                      {% elseif element.type == 'video/mp4' or element.type == 'video/webm' or element.type == 'video/ogg' %}
+                          <video width="25%" height="100%" controls>
+                              <source src="?id={{element.id}}" type="{{element.type}}">
+                          </video>
+                      {% else %}
+                          <li>
+                              <a href="{{rel}}?id={{element.id}}">{{element.Title}}</a> {{element.date}}
+                              <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
+                          </li>
+                      {% endif %}
+                  {% endif %}
               {% endfor %}
           </ul>
       </div>
   {% endif %}
-  {% if files %}
-		<div id="filliste">
-            <ul>
-                  {% for file in files %}
-                           {% if file.type == 'image/jpeg' or  file.type == 'image/pjpeg' or file.type == 'image/png' or file.type == 'image/gif'%}
-                               <a href="{{rel}}?id={{file.fileId}}"><img src="{{rel}}?id={{file.fileId}}" width="10%"/></a>
-                               <a href="{{rel}}file-details/?id={{file.fileId}}"> Details </a>
-                           {% elseif file.type == 'video/mp4' or file.type == 'video/webm' or file.type == 'video/ogg' %}
-                          <video width="25%" height="100%" controls>
-                              <source src="{{script}}?id={{fil.fileId}}" type="{{file.type}}">
-                          </video>
-                       {% else %}
-                               <li>
-                                <a href="{{rel}}?id={{file.fileId}}">{{file.filename}}</a> {{file.uploadedDate}}&nbsp;
-                               <a href="{{rel}}file-details/?id={{file.fileId}}"> Details </a>
-                               </li>
-                           {% endif %}
+              {{ dump(pagination) }}
+              {{ dump('pageno') }}
+              {% if pagination %} <div id="pagination">
+                  {% for page in pagination %}
+                  {% if request.query.get('pageno') == page %} {{ page }}
+                      {% else %} <a href="?pageno={{ page }}">{{ page }}</a>
+                      {% endif %}
                   {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
+              </div>
+              {% endif %}
+
           {% endif %}
   </body>
 </html>

@@ -33,7 +33,7 @@ $archive = new FileArchive($db, $request, $session, $twig);
         if (XsrfProtection::verifyMac("Catalog upload")) {
             $id = $archive->addCatalog($user->getUsername());
             $get_info = "addcatalog=1";
-            header("Location: ./?" . $get_info);
+            header("Location: ../catalog/?id=". $id . "&" . $get_info);
             exit();
         }
     }

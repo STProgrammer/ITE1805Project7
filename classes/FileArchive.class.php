@@ -182,14 +182,16 @@ class FileArchive {
             $stmt = $this->db->prepare("SELECT * FROM Catalogs WHERE catalogId = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-            if($file = $stmt->fetchObject('Catalog')) {
-                return $file;
+            if($catalog = $stmt->fetchObject('Catalog')) {
+                return $catalog;
             }
             else {
                 $this->NotifyUser("Catalog not found", "");
+                return new Catalog();
             }
         }
-        catch(Exception $e) { $this->NotifyUser("Error 7", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("Error 7", $e->getMessage());
+        return new Catalog();}
 
     }
 
@@ -335,6 +337,29 @@ class FileArchive {
             return $allFiles;
         }     //END FILES OVERVIEW
 
+    public function getOverview(int $catalogId, int $offset, int $nrOfElementsPerPage)
+    {
+        $allElements = null;
+        try
+        {
+            $stmt = $this->db->prepare("SELECT Catalogs.catalogId as id, Catalogs.catalogName as Title, Catalogs.date as date, Catalogs.owner as author, 0 as Size, '' as Filename, Catalogs.access as access, 'catalog' as type, 0 as isFile FROM Catalogs WHERE Catalogs.parentId = :catalogId 
+           UNION
+           (SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile FROM Files WHERE Files.catalogId = :catalogId) order by isFile, Title LIMIT :offset, :nrOfElementsPerPage;");
+            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':nrOfElementsPerPage', $nrOfElementsPerPage, PDO::PARAM_INT);
+            $stmt->execute();
+            $allElements = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
+        // bruk av data i video src
+        //<source src="data:video/mp4;base64,{{ fil.kode }}">
+        //foreach ($alleFiler as &$encode) {
+        //    $encode['kode'] = base64_encode($encode['kode']);
+        //}
+        return $allElements;
+    }     //END FILES OVERVIEW
+
 
 
         /*
@@ -384,6 +409,8 @@ class FileArchive {
                 return false;
             }
         }
+
+
 
 
 
@@ -490,7 +517,7 @@ class FileArchive {
         $searchQuery = "%".$searchQuery."%";
         try
         {
-            $stmt = $this->db->prepare("SELECT * FROM Files where title like :query or `description` like :query or `data` like :query;");
+            $stmt = $this->db->prepare("SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile FROM Files where title like :query or `description` like :query or `data` like :query;");
             $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
@@ -505,7 +532,7 @@ class FileArchive {
     public function searchFilesByTag($tag) {
         try
         {
-            $stmt = $this->db->prepare("SELECT Files.*, FilesAndTags.tag FROM Files INNER JOIN `FilesAndTags` ON FilesAndTags.fileId = Files.fileId WHERE FilesAndTags.tag = :tag;");
+            $stmt = $this->db->prepare("SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile, FilesAndTags.tag FROM Files INNER JOIN `FilesAndTags` ON FilesAndTags.fileId = Files.fileId WHERE FilesAndTags.tag = :tag;");
             $stmt->bindParam(':tag',  $tag, PDO::PARAM_STR);
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
@@ -528,6 +555,25 @@ class FileArchive {
         }
         return $files;
     } //* END SEARCH BY MULTIPLE TAGS
+
+
+    public function totalNrOfPages($nrOfElementsPerPage) : int {
+        $totalPages = 1;
+        try
+        {
+            $stmt = $this->db->query("SELECT (SELECT count(*) FROM Catalogs) + (SELECT count(*) From Files) - 1;");
+            $stmt->execute();
+            $totalRows = $stmt->fetch();
+            $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
+        }
+        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        // bruk av data i video src
+        //<source src="data:video/mp4;base64,{{ fil.kode }}">
+        //foreach ($alleFiler as &$encode) {
+        //    $encode['kode'] = base64_encode($encode['kode']);
+        //}
+        return $totalPages;
+    }
 
 
 
