@@ -6,13 +6,14 @@ define('FILENAME_TAG', 'image');
 
 require_once '../login.php';
 
+$comment = new Comment($db, $session);
 
     $archive = new FileArchive($db, $request, $session, $twig);
 
     if(ctype_digit($request->query->get('id'))) {
         $id = $request->query->getInt('id');
         $file = $archive->getFileObject($id);
-        $comments = Comment::getComments($db, $id);
+        $comments = $comment->getComments($id);
 
         // Check if user owns the file. Only owner of the file can edit the file.
         // Admin can delete files, but can't edit files
@@ -26,7 +27,7 @@ require_once '../login.php';
                     if (XsrfProtection::verifyMac("Post comment")) {
                         $username = $user->getUserName();
                         $fileId = $file->getFileId();
-                        Comment::addComment($db, $username, $fileId);
+                        $comment->addComment($db, $username, $fileId);
                         $get_info = "?id=" . $id . "&comment=1";
                         header("Location: ." . $get_info);
                         exit();
@@ -45,12 +46,11 @@ require_once '../login.php';
             //Get the comment id;
             $commentId = $request->request->getInt('commentid');
             //Check if user is owner of comment or admin
-            if (Comment::checkOwner($db, $user->getUserName(), $commentId) or $isAdmin) {
+            if ($comment->checkOwner($db, $user->getUserName(), $commentId) or $isAdmin) {
                 //Xsrf check
                 if (XsrfProtection::verifyMac("Delete comment")) {
                     $username = $user->getUserName();
-                    $fileId = $file->getFileId();
-                    Comment::deleteComment($db, $commentId);
+                    $comment->deleteComment($db, $commentId);
                     $get_info = "?id=" . $id . "&deletecomment=1";
                     header("Location: ." . $get_info);
                     exit();
@@ -74,7 +74,7 @@ require_once '../login.php';
         else {
             echo $twig->render('file-details.twig', array('file' => $file, 'user' => $user,
                 'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-                'xsrfMac' => $xsrfMac, 'comments' => $comments));
+                'comments' => $comments));
         }
     }
 

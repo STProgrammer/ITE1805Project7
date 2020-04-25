@@ -11,7 +11,7 @@
     <table border="1" cellspacing="0" cellpadding="5" width="400">
         <tr>
             <td>
-                <input type="checkbox" name="access" value="0">
+                <input type="checkbox" name="access" value="0" {% if catalog.getAccess == 1 %} checked {% endif %}>
                 Only accessible for registered users
             </td>
         <tr><td><label>Catalog name: </label>
@@ -20,12 +20,12 @@
                 <br><select name="catalogId">
                     <option value="1"> Main </option>
                     {% if catalogsList %}
-                        {% for catalog in catalogsList %}
-                            <option value="{{ catalog.catalogId }}" {% if catalog.catalogId == catalog.getParentId() %} selected {% endif %}>{{ catalog.catalogName }} </option>
+                        {% for catalogdata in catalogsList %}
+                            <option value="{{ catalogdata.catalogId }}" {% if catalogdata.catalogId == catalog.getParentId() %} selected {% endif %}>{{ archive.getCatalogPath(catalogdata.catalogId) }} </option>
                         {% endfor %}
                     {% endif %}
                 </select>
-    <input type="hidden" value="{{ xsrfMac.getMac("Edit catalog") }}" name="XSRFPreventionToken">
+    <input type="hidden" value="{{ getMac("Edit catalog") }}" name="XSRFPreventionToken">
     <td colspan="2" width="400" align="middle">
         <input type="submit" name="edit_catalog" value="Edit" />
     </td>

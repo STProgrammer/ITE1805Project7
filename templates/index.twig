@@ -7,6 +7,8 @@
 		<link type="text/css" rel="stylesheet" href="stilark.css" />
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
+  <!-- Denne Javascript koden er modifisert fra https://stackoverflow.com/questions/5413899/search-and-replace-specific-query-string-parameter-value-in-javascript-->
+  <body>
       {% include 'login2.twig' %}
           {% if session.getFlashBag.has('header') %}
       <div class="flash-notice">
@@ -19,9 +21,18 @@
               <p><a href = "./">Back </a></p>
       </div>
           {% else %}
-
+              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>
       <p><form method = "get">
-          <input type="text" name="query" placeholder="Search" maxlength="45">
+          <input type="search" name="query" placeholder="Search" maxlength="45">
+              <br><label for="start">Uploaded date (dateformat Month/Day/Year):</label>
+              <br><label for="start">From date:</label>
+              <input type="date" id="from date" name="from-date"
+                     value=""
+                     min="2020-03-01" max="">
+              <label for="start">To date:</label>
+              <input type="date" id="to date" name="to-date"
+                     value=""
+                     min="2020-03-01" max="">
           <br><button type="submit" name="search" value="search">Search</button>
       <br></p>
       </form>
@@ -30,6 +41,8 @@
           <input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3"></td></tr>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
           <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+          <label>Check if you want each file to include all tags (AND condition)</label>
+          <input type="checkbox" name="andcondition" value="1"><br>
           <button type="submit" name="search" value="tagssearch">Search by tags</button></form>
           <br>
 
@@ -37,6 +50,9 @@
           <h1>
               Filearchive - showing files
           </h1>
+              <h2>
+                  {{ catalogPath }}
+              </h2>
           <pre>
             <p><a href="{{rel}}file-upload/">Add new</a> </p>
         </pre>
@@ -55,16 +71,16 @@
                           <a href="{{rel}}catalog/?id={{element.id}}"> Details </a>&nbsp;
                       </li>
                   {% else %}
-                      {% if element.type == 'image/jpeg' or  element.type == 'image/pjpeg' or element.type == 'image/png' or element.type == 'image/gif'%}
+                      {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
                           <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}?id={{element.id}}" width="10%"/></a>
                           <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
-                      {% elseif element.type == 'video/mp4' or element.type == 'video/webm' or element.type == 'video/ogg' %}
+                      {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
                           <video width="25%" height="100%" controls>
-                              <source src="?id={{element.id}}" type="{{element.type}}">
+                              <source src="?id={{element.id}}" type="{{element.Type}}">
                           </video>
                       {% else %}
                           <li>
-                              <a href="{{rel}}?id={{element.id}}">{{element.Title}}</a> {{element.date}}
+                              <a href="{{rel}}?id={{element.id}}">{{element.Title}}</a> {{element.Date}}
                               <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
                           </li>
                       {% endif %}
@@ -73,17 +89,20 @@
           </ul>
       </div>
   {% endif %}
-              {{ dump(pagination) }}
-              {{ dump('pageno') }}
+                   {{ dump('pageno') }}
               {% if pagination %} <div id="pagination">
+
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page %} {{ page }}
-                      {% else %} <a href="?pageno={{ page }}">{{ page }}</a>
+                      {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}">{{ page }}</a>
                       {% endif %}
                   {% endfor %}
               </div>
-              {% endif %}
+
 
           {% endif %}
+  {{ dump(request.server.get('REQUEST URL')) }}
+  {{ dump(request.server.get('QUERY_STRING')) }}
+  {% endif %}
   </body>
 </html>

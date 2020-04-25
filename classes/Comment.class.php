@@ -8,13 +8,16 @@ class Comment
     private $username;
     private $fileId;
     private $date;
+    private $db;
+    private $session;
 
-    public function __construct()
+    public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
-
+        $this->session = $session;
+        $this->db = $db;
     }
 
-    public static function addComment(PDO $db, $username, $fileId) {
+    public function addComment(PDO $db, $username, $fileId) {
 
         $comment = filter_input(INPUT_POST, 'commenttext', FILTER_SANITIZE_STRING);
 
@@ -25,35 +28,36 @@ class Comment
             $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
+            self::NotifyUser("Commend added", "");
         }
-        catch(Exception $e) { self::NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
     }
 
-    public static function getComments (PDO $db, $fileId) {
+    public function getComments ($fileId) {
         try {
-            $stmt = $db->prepare("SELECT * FROM Comments WHERE fileId = :fileId;");
+            $stmt = $this->db->prepare("SELECT * FROM Comments WHERE fileId = :fileId;");
             $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
             $stmt->execute();
             if($comments = $stmt->fetchAll()) {
                 return $comments;
             }
         }
-        catch(Exception $e) { self::NotifyUser("Fail to submit comment", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
     }
 
-    public static function getCommentObject (PDO $db, $commentId) {
+    public function getCommentObject ($commentId) {
         try {
-            $stmt = $db->prepare("SELECT * FROM Comments WHERE commentId = :commentId;");
+            $stmt = $this->db->prepare("SELECT * FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
             $stmt->execute();
             if($comment = $stmt->fetchObject('Comment')) {
                 return $comment;
-            } else { self::NotifyUser("En feil oppstod", ""); }
+            } else { $this->NotifyUser("En feil oppstod", ""); }
         }
-        catch(Exception $e) { self::NotifyUser("Fail to submit comment", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
     }
 
-    public static function checkOwner (PDO $db, $username, $commentId) {
+    public function checkOwner (PDO $db, $username, $commentId) {
         try {
             $stmt = $db->prepare("SELECT username FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
@@ -65,30 +69,32 @@ class Comment
                 return false;
             }
         } catch
-            (Exception $e) { self::NotifyUser("Fail to submit comment", $e->getMessage()); }
+            (Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
             return false;
     }
 
 
-    public static function deleteComment(PDO $db, $commentId) {
+    public function deleteComment(PDO $db, $commentId) {
         try {
             $stmt = $db->prepare("DELETE FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount()==1) {
+                $this->NotifyUser("Comment deleted", "");
                 return true;
             } else {
-                self::NotifyUser( "Error 3", "");
+                $this->NotifyUser( "Error 3", "");
                 return false;
             }
         }
-        catch(Exception $e) { self::NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
 
     }
 
-    public static function NotifyUser($strHeader, $strMessage)
+    public function NotifyUser($strHeader, $strMessage)
     {
-        exit();
+        $this->session->getFlashBag()->add('header', $strHeader);
+        $this->session->getFlashBag()->add('message', $strMessage);
     }
 
     /**

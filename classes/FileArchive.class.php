@@ -31,10 +31,15 @@ class FileArchive {
 
     //* ADD TAGS
 
+    private function fixTagsString(string $tagsStr) : string {
+        $tagsStr = preg_replace("/[^\w\s\,]+/", "", $tagsStr);  //Only alphanumerics and spaces
+        $tagsStr = preg_replace("/\s*,\s*/", ",", $tagsStr);  //Get rid of spaces before or after comma ,
+        $tagsStr = preg_replace("/\,*,\,*/", ",", $tagsStr); //Get rid of stuff like ",," or ",,,,"
+        return $tagsStr;
+    }
+
         private function addTags(string $tagsStr, int $fileId) : bool {
-            $tagsStr = preg_replace("/[^\w\s\,]+/", "", $tagsStr);
-            $tagsStr = preg_replace("/\s*,\s*/", ",", $tagsStr);
-            $tagsStr = preg_replace("/\,*,\,*/", ",", $tagsStr);
+            $tagsStr = $this->fixTagsString($tagsStr);
             $tags = explode(',', $tagsStr);
             $tags = array_unique($tags);
             $tags = array_filter($tags);
@@ -60,12 +65,33 @@ class FileArchive {
         } //* END ADD TAGS
 
     private function getTags($id) {
-        $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        $tags = implode(", ", $tags);
-        return $tags;
+            try {
+                $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+                $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                $tags = implode(", ", $tags);
+                return $tags;
+            }
+            catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return false; }
+
+    }
+
+
+    public function getCatalogPath($catalogId) : String {
+        if ($catalogId <= 1 ) {
+            return "Main";
+        }
+        try {
+            $stmt = $this->db->prepare("SELECT catalogName, parentId FROM Catalogs WHERE catalogId = :catalogId;");
+            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+            $parentId = $row['parentId'];
+            $catalogPath = $this->getCatalogPath($parentId) . " / " . $row['catalogName'];
+            return $catalogPath;
+        }
+        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return false; }
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -128,7 +154,7 @@ class FileArchive {
             }
             try
             {
-                $stmt = $this->db->prepare("INSERT INTO Catalogs (catalogName, parentId, date, owner, access) VALUES (:catalogname, :parentid, now(), :owner, :access);");
+                $stmt = $this->db->prepare("INSERT INTO Catalogs (catalogName, parentId, date, owner, access) VALUES (:catalogname, :parentid, curdate(), :owner, :access);");
                 $stmt->bindParam(':catalogname', $catalogname, PDO::PARAM_STR);
                 $stmt->bindParam(':parentid', $parentId, PDO::PARAM_INT);
                 $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
@@ -197,8 +223,6 @@ class FileArchive {
 
     public function deleteCatalog($id) : bool {
         $result = false;
-        $this->session->remove('strHeader');
-        $this->session->remove('strMessage');
         try
         {
             $stmt = $this->db->prepare("DELETE FROM Catalogs WHERE CatalogId = :id");
@@ -271,6 +295,7 @@ class FileArchive {
             $name = $fileTags->getClientOriginalName();
             $type = $fileTags->getClientMimeType();
             $size = $fileTags->getSize();
+            $imgsize = getimagesize($file);
             $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
             $tagsStr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
@@ -288,7 +313,7 @@ class FileArchive {
                 {
                     $data = file_get_contents($file);
                     $stmt = $this->db->prepare("INSERT INTO `Files` (filename, title, description, catalogId, size, uploadedDate, type, access, data, owner)
-                                                      VALUES (:filename, :title, :description, :catalogId, :size, now(), :type, :access, :data, :owner)");
+                                                      VALUES (:filename, :title, :description, :catalogId, :size, curdate(), :type, :access, :data, :owner)");
                     $stmt->bindParam(':filename', $name, PDO::PARAM_STR);
                     $stmt->bindParam(':title', $title, PDO::PARAM_STR);
                     $stmt->bindParam(':description', $description, PDO::PARAM_STR);
@@ -342,9 +367,7 @@ class FileArchive {
         $allElements = null;
         try
         {
-            $stmt = $this->db->prepare("SELECT Catalogs.catalogId as id, Catalogs.catalogName as Title, Catalogs.date as date, Catalogs.owner as author, 0 as Size, '' as Filename, Catalogs.access as access, 'catalog' as type, 0 as isFile FROM Catalogs WHERE Catalogs.parentId = :catalogId 
-           UNION
-           (SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile FROM Files WHERE Files.catalogId = :catalogId) order by isFile, Title LIMIT :offset, :nrOfElementsPerPage;");
+            $stmt = $this->db->prepare("SELECT * FROM Elements where Catalog = :catalogId order by isFile, Title LIMIT :offset, :nrOfElementsPerPage;");
             $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
             $stmt->bindParam(':nrOfElementsPerPage', $nrOfElementsPerPage, PDO::PARAM_INT);
@@ -402,6 +425,36 @@ class FileArchive {
                         echo $data;
                         return true;
                     } else {$this->NotifyUser("Access denied, login to view file", ""); return false;}
+                }
+            }
+            catch(Exception $e) {
+                $this->NotifyUser("En feil oppstod", $e->getMessage());
+                return false;
+            }
+        }
+
+
+        public function showThumbnail($id) {
+            try {
+                $stmt = $this->db->prepare("SELECT type, impressions, filename, data FROM Files WHERE fileId = :id");
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+                if (!$item = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    throw new InvalidArgumentException('Invalid id: ' . $id);
+                } else {
+                    $filename = $item['filename'];
+                    $type = $item['type'];
+                    $data = $item['data'];
+                    $size = getimagesize($filename);
+
+                    $image = imagecreate(3,3);
+                    $image = imagecreatefromjpeg($filename);
+                    Header("Content-type: $type");
+                    Header("Content-Disposition: filename=\"$filename\"");
+                    Header("Content-size: 10%");
+                    // Skriv bildet/filen til klienten
+                    echo $data;
+                    return true;
                 }
             }
             catch(Exception $e) {
@@ -499,6 +552,8 @@ class FileArchive {
             if($file = $stmt->fetchObject('File')) {
                 $tags = $this->getTags($id);
                 $file->setTags($tags);
+                $catalogPath = $this->GetCatalogPath($file->getCatalogId());
+                $file->setCatalogName($catalogPath);
                 return $file;
             }
             else {
@@ -515,10 +570,21 @@ class FileArchive {
     public function searchFiles($searchQuery) {
         $searchQuery = str_replace('%','\\%', $searchQuery);
         $searchQuery = "%".$searchQuery."%";
+        $fromDate = $this->request->query->has('from-date');
+        $toDate = $this->request->query->has('to-date');
+
         try
         {
-            $stmt = $this->db->prepare("SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile FROM Files where title like :query or `description` like :query or `data` like :query;");
-            $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
+            if (DateTime::createFromFormat('Y-m-d', $toDate) && DateTime::createFromFormat('Y-m-d', $fromDate)) {
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
+                $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
+                $stmt->bindParam(':fromdate', $searchQuery, PDO::PARAM_STR);
+                $stmt->bindParam(':todate', $searchQuery, PDO::PARAM_STR);
+            }
+            else {
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet')));");
+                $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
+            }
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
@@ -532,7 +598,7 @@ class FileArchive {
     public function searchFilesByTag($tag) {
         try
         {
-            $stmt = $this->db->prepare("SELECT Files.fileId as id, Files.title as Title, Files.uploadedDate as date, Files.owner as author, Files.size as Size, Files.filename as Filename, Files.access as access, Files.type as type, 1 as isFile, FilesAndTags.tag FROM Files INNER JOIN `FilesAndTags` ON FilesAndTags.fileId = Files.fileId WHERE FilesAndTags.tag = :tag;");
+            $stmt = $this->db->prepare("SELECT * FROM FilesWithTagsView WHERE tag = :tag;");
             $stmt->bindParam(':tag',  $tag, PDO::PARAM_STR);
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
@@ -541,10 +607,54 @@ class FileArchive {
         return $allFiles;
     } //* END SEARCH BY TAG
 
+
+
+
+    public function searchByTagsWithOrCondition($tagsStr) {
+        $tagsStr = $this->fixTagsString($tagsStr);
+        $tagsArray = explode(",", $tagsStr);
+        $placeHolder = ":" . str_replace(",", ", :", $tagsStr);
+        $placeHolderArray = explode(", ", $placeHolder);
+        $query ="SELECT * FROM FilesWithTagsView WHERE tag IN (". $placeHolder . ") GROUP BY id;";
+        $size = sizeof($tagsArray);
+        try
+        {
+            $stmt = $this->db->prepare($query);
+            for ($i = 0; $i < $size; $i++) {
+                $stmt->bindParam($placeHolderArray[$i], $tagsArray[$i], PDO::PARAM_STR);
+            }
+            $stmt->execute();
+            $filesByTags = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        return $filesByTags;
+    } //* END SEARCH BY MULTIPLE TAGS
+
+
+    public function searchByTagsWithAndCondition($tagsStr) {
+        $tagsStr = $this->fixTagsString($tagsStr);
+        $tagsArray = explode(",", $tagsStr);
+        $placeHolder = ":" . str_replace(",", ", :", $tagsStr);
+        $placeHolderArray = explode(", ", $placeHolder);
+        $size = sizeof($tagsArray);
+        $query ="SELECT * FROM (SELECT * FROM FilesWithTagsView WHERE tag IN (".$placeHolder.")) as TagsTemp group by id having count(id)>=".$size.";";
+        $size = sizeof($tagsArray);
+        try
+        {
+            $stmt = $this->db->prepare($query);
+            for ($i = 0; $i < $size; $i++) {
+                $stmt->bindParam($placeHolderArray[$i], $tagsArray[$i], PDO::PARAM_STR);
+            }
+            $stmt->execute();
+            $filesByTags = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        return $filesByTags;
+    } //* END SEARCH BY MULTIPLE TAGS AND CONDITION
+
+
     public function searchByMultipleTags($tagsStr) {
-        $tagsStr = preg_replace("/[^\w\s\,]+/", "", $tagsStr);
-        $tagsStr = preg_replace("/\s*,\s*/", ",", $tagsStr);
-        $tagsStr = preg_replace("/\,*,\,*/", ",", $tagsStr);
+        $tagsStr = $this->fixTagsString($tagsStr);
         $tags = explode(',', $tagsStr);
         $tags = array_unique($tags);
         $tags = array_filter($tags);
@@ -554,14 +664,30 @@ class FileArchive {
             $files = array_merge($files, $temp);
         }
         return $files;
-    } //* END SEARCH BY MULTIPLE TAGS
+    } //* END SEARCH BY MULTIPLE TAGS OR CONDITION
+
+    public function searchByMultipleTagsAndCondition($tagsStr) {
+        $tagsStr = $this->fixTagsString($tagsStr);
+        $tags = explode(',', $tagsStr);
+        $tags = array_unique($tags);
+        $tags = array_filter($tags);
+        $files = array();
+        foreach($tags as $tag) {
+            $temp = $this->searchFilesByTag($tag);
+            $files = array_merge($files, $temp);
+        }
+        return $files;
+    } //* END SEARCH BY MULTIPLE TAGS OR CONDITION
 
 
-    public function totalNrOfPages($nrOfElementsPerPage) : int {
+
+
+    public function totalNrOfPages($nrOfElementsPerPage, $catalogId) : int {
         $totalPages = 1;
         try
         {
-            $stmt = $this->db->query("SELECT (SELECT count(*) FROM Catalogs) + (SELECT count(*) From Files) - 1;");
+            $stmt = $this->db->prepare("SELECT count(*) FROM Elements WHERE Catalog = :catalogId;");
+            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
             $stmt->execute();
             $totalRows = $stmt->fetch();
             $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
@@ -584,7 +710,7 @@ class FileArchive {
             $publicFiles = array();
             $i = 0;
             foreach($files as $file) {
-                if ($file['access'] == 1 && $this->isCatalogAccessible($file['catalogId'])) {
+                if ($file['Access'] == 1 && $this->isCatalogAccessible($file['Catalog'])) {
                     $publicFiles[$i] = $file;
                     $i++;
                 }

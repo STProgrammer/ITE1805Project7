@@ -49,11 +49,10 @@ $archive = new FileArchive($db, $request, $session, $twig);
         if ($session->get('loggedin') && $user = $session->get('User')) {
             $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
             echo $twig->render('fileupload.twig', array('user' => $user,
-                'xsrfMac' => $xsrfMac, 'rel' => $rel, 'catalogsList' => $catalogsList));
+                'rel' => $rel, 'catalogsList' => $catalogsList));
         }
         else {
-            echo $twig->render('fileupload.twig', array('user' => $user,
-                'xsrfMac' => $xsrfMac, 'rel' => $rel));
+            echo $twig->render('fileupload.twig', array('user' => $user, 'rel' => $rel));
         }
     }
 ?>

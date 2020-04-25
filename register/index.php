@@ -16,7 +16,7 @@
         $reguser->registerUser($userData);
 
     } else {
-        echo $twig->render('register.twig', array('script' => $homedir, 'xsrfMac' => $xsrfMac,));
+        echo $twig->render('register.twig', array('script' => $homedir));
     }
 
 

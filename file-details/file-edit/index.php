@@ -45,7 +45,7 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
     else {
         echo $twig->render('file-edit.twig', array('file' => $file,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-            'xsrfMac' => $xsrfMac, 'user' => $user, 'catalogsList' => $catalogsList));
+            'user' => $user, 'catalogsList' => $catalogsList, 'archive' => $archive));
     }
 
 }

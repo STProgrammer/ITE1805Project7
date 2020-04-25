@@ -25,9 +25,9 @@ elseif ($request->request->has('login')) {
 }
 
 if ($request->query->has('loginfail')) {
-    echo $twig->render('login.twig', array('fail' => true, 'xsrfMac' => $xsrfMac));
+    echo $twig->render('login.twig', array('fail' => true));
 } else {
-    echo $twig->render('login.twig', array('xsrfMac' => $xsrfMac));
+    echo $twig->render('login.twig', array());
 }
 
 ?>

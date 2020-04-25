@@ -39,9 +39,10 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
     }
 
     else {
+
         echo $twig->render('catalog-edit.twig', array('catalog' => $catalog,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-            'xsrfMac' => $xsrfMac, 'user' => $user));
+            'user' => $user, 'catalogsList' => $catalogsList, 'archive' => $archive));
     }
 
 }
