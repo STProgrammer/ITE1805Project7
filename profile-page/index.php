@@ -13,9 +13,9 @@ if(ctype_digit($request->query->get('id')))
 {
     $id = $request->query->getInt('id');
     $catalog = $archive->getCatalogObject($id);
-    // Check if user owns the file. Only owner of the file can edit the file.
-    // Admin can delete files, but can't edit files
-    $isOwner = false;  //isOwner controls if the user owns the file or not, this is to avoid repeated checks
+    // Check if user owns the profile. Only owner of the profile can edit the profile.
+    // // Admin can delete the information of user, but can't edit it
+    $isOwner = false;  //isOwner controls if the user owns the profile or not, this is to avoid repeated checks
     $isAdmin = false;  //isAdmin controls if the user is admin or not, this is to avoid repeated checks
     if ($session->has('User') && $session->get('loggedin')) {
         $user = $session->get('User');
@@ -23,13 +23,13 @@ if(ctype_digit($request->query->get('id')))
             if ($user->isAdmin() == 1) {
                 $isAdmin = true;
             }  //check if user is Admin
-            if ($user->getUsername() == $catalog->getOwner()) {  //check if user owns the file
+            if ($user->getUsername() == $catalog->getOwner()) {  //check if user owns the profile
                 $isOwner = true;
             }
         } //End if user verified
-    } // End checking file owner and admin
+    } // End checking profile owner and admin
 
-    // Catalog delete submitted
+    // Information delete submitted
     if ($request->request->has('Delete_catalog') && $request->request->get('Delete_catalog') == "Delete catalog") {
         //is owner or admin
         if ($isOwner or $isAdmin) {
