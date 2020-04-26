@@ -45,7 +45,7 @@ class RegisterUser
         $url .= "/verify.php/";
 
         $id = md5(uniqid(rand(), 1));
-        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?=". $id);
+        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
 
