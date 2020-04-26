@@ -33,17 +33,23 @@ class RegisterUser
 
         $ch = curl_init();
         $email = $userData['email'];
-        $url = "/verify.php/";
-
+        //Koden for å hente URL adresse er tatt og modifisert fra https://www.javatpoint.com/how-to-get-current-page-url-in-php
+        if($this->request->server->get('HTTPS') === 'on')
+            $url = "https://";
+        else
+            $url = "http://";
+        // Append the host(domain name, ip) to the URL.
+        $url .= $this->request->server->get('HTTP_HOST');
+        // Append the requested resource location to the URL
+        $url .= dirname($this->request->server->get('PHP_SELF'));
+        $url .= "/verify.php/";
 
         $id = md5(uniqid(rand(), 1));
-        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url".$url . $id);
-
+        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?=". $id);
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
         $output = curl_exec($ch);
 
