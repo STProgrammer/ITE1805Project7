@@ -2,13 +2,17 @@
 
 
 class RegisterUser
+
+
 {
 
+    public $id;
     public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
         $this->dbase = $db;
         $this->request = $request;
         $this->session = $session;
+
     }
 
     private function NotifyUser($strHeader, $strMessage)
@@ -51,6 +55,16 @@ class RegisterUser
         $url .= "/verify.php/";
 
         $id = md5(uniqid(rand(), 1));
+
+        try{
+            $sth = $this->dbase->prepare("insert into Users verCode value :id ;");
+            $sth->bindParam(':id', $userData['verCode']);
+            $sth->execute();
+        }catch (Exception $e){
+            print $e->getMessage() . PHP_EOL;
+        }
+
+
         curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -62,6 +76,7 @@ class RegisterUser
         echo $output;
 
         curl_close($ch);
+
     }
 
     public function getUserData($username){
@@ -150,6 +165,23 @@ class RegisterUser
             $this->NotifyUser( "En feil oppstod", $e->getMessage() . PHP_EOL);
         }
         return $result;
+    }
+
+    public function verifyUser($request) : bool {
+
+        if($request->query->get('id')){
+            try{
+                $sql= query("select * from Users where 'verCode'= 'id'");
+                query($sql);
+                if($sql != null ){
+                    return true;
+                }
+                else
+                    return false;
+            }catch (Exception $e){
+                $this->NotifyUser("En feil oppstod", $e->getMessage() . PHP_EOL);
+            }
+        }
     }
 
 }
