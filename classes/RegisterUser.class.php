@@ -58,4 +58,101 @@ class RegisterUser
         curl_close($ch);
     }
 
+    public function getUserData($username){
+        $stmt = $this->db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+        $stmt->execute();
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return $row;
+        }
+    }
+
+    public function getUserObject ($username) : User {
+        try
+        {
+            $stmt = $this->db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            if($usr = $stmt->fetchObject('User')) {
+                return $usr;
+            }
+            else {
+                $this->NotifyUser("User not found", "");
+                return new User();
+            }
+        }
+        catch(Exception $e) { $this->NotifyUser("Error 7", $e->getMessage());
+            return new User();}
+
+    }
+
+    public function getAllUsers(string $username){
+        $allUsers = null;
+        try{
+            $stmt = $this->db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $allUsers = $stmt->fetchAll();
+        }  catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
+
+        return $allUsers;
+    }
+
+    public function editUser(User $user): bool {
+        $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
+        $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+        $verified = filter_input(INPUT_POST, 'verified', FILTER_SANITIZE_NUMBER_INT);
+
+        if ($verified == null) $verified = 1;
+
+        try {
+            $sth = $this->db->prepare("update Users set firstname = :firstname, lastname = :lastname, email = :email, password = :password, verified = :verified where username = :username");
+            $sth->bindParam(':firstname', $firstname);
+            $sth->bindParam(':lastname', $lastname);
+            $sth->bindParam(':email', $email);
+            $sth->bindParam(':password', $password);
+            $sth->bindParam(':verified', $verified);
+
+            $sth->execute();
+            if ($sth->rowCount() == 1) {
+                $this->NotifyUser('User details changed', '');
+            } else {
+                $this->NotifyUser('Failed to change catalog details', "");
+            }
+        } catch (Exception $e) {
+            $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+        }
+    }
+
+    public function deleteUser($username): bool{
+        $result = false;
+        $this->session->remove('strHeader');
+        $this->session->remove('strMessage');
+
+        try
+        {
+            $stmt = $this->db->prepare("DELETE FROM Users WHERE username = :username");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount()==1) {
+                $this->NotifyUser( "User deleted", "");
+                $result = true;
+            } else {
+                $this->NotifyUser( "Error 3", "");
+                $result = false;
+            }
+        }
+        catch (Exception $e) {
+            $this->NotifyUser( "En feil oppstod", $e->getMessage() . PHP_EOL);
+        }
+        return $result;
+    }
+
+    public static function NotifyUser($strHeader, $strMessage)
+    {
+        exit();
+    }
+
 }
