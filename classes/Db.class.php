@@ -22,4 +22,5 @@ class Db {
         return Db::$db->dbh;
     }
 
+
 }

@@ -40,4 +40,6 @@
         echo $twig->render('error.twig', array('msg' => 'Unable to connect to the database!'));
         die();  // Abort further execution of the script
     }
+
+
 ?>

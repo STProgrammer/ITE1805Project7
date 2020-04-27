@@ -12,6 +12,7 @@
   "require": {
     "twig/twig": "v3.0.3",
     "symfony/http-foundation": "v5.0.7",
-    "symfony/twig-bridge": "v5.0.7"
+    "symfony/twig-bridge": "v5.0.7",
+    "ext-mysql": "*"
   }
 }
