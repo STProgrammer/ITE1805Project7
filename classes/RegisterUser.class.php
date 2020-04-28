@@ -5,8 +5,7 @@ class RegisterUser
 
 
 {
-
-    public $id;
+    
     public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
         $this->dbase = $db;
@@ -26,7 +25,7 @@ class RegisterUser
     {
         try{
             $hash = password_hash($userData['password'], PASSWORD_DEFAULT);
-            $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 1);");
+            $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
             $sth->bindParam(':email', $userData['email']);
             $sth->bindParam(':hash', $hash);
             $sth->bindParam(':username', $userData['username'] );
@@ -57,9 +56,11 @@ class RegisterUser
         $id = md5(uniqid(rand(), 1));
 
         try{
-            $sth = $this->dbase->prepare("insert into Users verCode value :id ;");
-            $sth->bindParam(':id', $userData['verCode']);
+            $sth = $this->dbase->prepare("update Users set verCode = :id where email = :email;");
+            $sth->bindParam(':email', $email);
+            $sth->bindParam(':id', $id);
             $sth->execute();
+//            $this->sendEmail($userData);    //kunne ikke skrive den her, det fører til at program kjører uendelig.
         }catch (Exception $e){
             print $e->getMessage() . PHP_EOL;
         }
@@ -167,19 +168,22 @@ class RegisterUser
         return $result;
     }
 
-    public function verifyUser($request) : bool {
+    public function verifyUser() : bool {
 
-        if($request->query->get('id')){
+        if($this->request->query->get('id')){
+            $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
             try{
-                $sql= query("select * from Users where 'verCode'= 'id'");
-                query($sql);
-                if($sql != null ){
+                $sth  = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
+                $sth ->bindParam(':id',$id);
+                $sth ->execute();
+                if($sth->rowCount() >= 1 ){
                     return true;
                 }
                 else
                     return false;
             }catch (Exception $e){
                 $this->NotifyUser("En feil oppstod", $e->getMessage() . PHP_EOL);
+                return false;
             }
         }
     }
