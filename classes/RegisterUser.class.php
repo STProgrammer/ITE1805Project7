@@ -5,7 +5,7 @@ class RegisterUser
 
 
 {
-    
+
     public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
         $this->dbase = $db;

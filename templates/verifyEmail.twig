@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Email</title>
+
+</head>
+<body>
+<h1>Here is the result of E-mail activation</h1>
+
+{% if verify %}
+    <p>Your account has been activated successfully</p>
+    <p><a href="../login/index.php">click here and login</a></p>
+
+{% else %}
+    <p>Account activation failed, please try again.</p>
+    <p><a href="../register/index.php">click here and try again</a></p>
+{% endif %}
+
+
+
+</body>
+</html>
