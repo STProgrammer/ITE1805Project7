@@ -60,7 +60,6 @@ class RegisterUser
             $sth->bindParam(':email', $email);
             $sth->bindParam(':id', $id);
             $sth->execute();
-//            $this->sendEmail($userData);    //kunne ikke skrive den her, det fører til at program kjører uendelig.
         }catch (Exception $e){
             print $e->getMessage() . PHP_EOL;
         }
