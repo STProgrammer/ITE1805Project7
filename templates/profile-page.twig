@@ -16,19 +16,53 @@
     <p><a href = "./">Back </a></p>
 </div>
 
-<p>Hello {{ User.getUserName()}} </p>
+<p>Hello {{ User.getUsername()}} </p>
 <p>This is your profile.</p>
 
+{% if user %}
+    <h1>User Profile</h1>
+    <ul>
+        <li>User Name: {{ user.getUserName() }}</li>
+    </ul>
+    <ul>
+        <li>Email: {{ user.getEmail() }}</li>
+    </ul>
+{% endif %}
 
+{% if isAdmin %}
+    <ul>
+        <li>Status: Admin </li>
+    </ul>
+{% else %}
+    <ul>
+        <li>Status: General user </li>
+    </ul>
+{% endif %}
 
 {% if isOwner %}
-    <p><a href="profile-edit/">Edit information</a></p>
+    <p><a href="user-edit/">Edit information</a></p>
 {% endif %}
-{% if user.isAdmin() or isOwner %}
+
+{% if isAdmin() or isOwner %}
     <form method="post">
         <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
-        <input type="submit" name="Delete_user" value="Delete user" />
+        <input type="submit" name="Delete_user" value="Delete User" />
     </form>
 {% endif %}
+
+{% if catalog %}
+    <h1>
+        Catalog name: {{ catalog.getCatalogName() }}
+    </h1>
+    <ul>
+        <li>
+            Catalog owner: {{ catalog.getOwner() }}
+        </li>
+    </ul>
+{% endif %}
+{% if isOwner %}
+    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
+{% endif %}
+
 </body>
 </html>

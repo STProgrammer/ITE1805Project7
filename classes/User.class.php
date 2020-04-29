@@ -35,6 +35,7 @@ class User {
     public function setVerified() { $this->verified = 1; }
     public function getHits() { return $this->usr_hits; }
     public function getIPAddress() { return $this->IPAddress; }
+    public function getEmail(){return $this->email;}
     public function verifyUser($request) {
         //$request = Request::createFromGlobals();
         if(($this->IPAddress == $request->server->get('REMOTE_ADDR')) && ($this->UserAgent == $request->server->get('HTTP_USER_AGENT') )){
