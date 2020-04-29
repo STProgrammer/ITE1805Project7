@@ -6,10 +6,11 @@ require_once '../includes.php';
 require_once "../login.php";
 
 $archive = new FileArchive($db, $request, $session, $twig);
+$usr = new RegisterUser($db, $request, $session);
 
 if (ctype_digit($request->query->get('id'))) {
     $id = $request->query->getInt('id');
-    $username = $request->query->get('username');
+    $users = $request->query->get('username');
 
     //  Only user can edit information.
     // Admin can delete user, but can't edit user information
@@ -25,13 +26,13 @@ if (ctype_digit($request->query->get('id'))) {
         } //End if user verified
     } // End checking user and admin
 
-    // User delete submitted
+    // User change password
     if ($request->request->has('Delete_user') && $request->request->get('Delete_user') == "Delete user") {
         //is  admin
-        if ($isAdmin) {
+        if ($isAdmin or $isUser) {
             if (XsrfProtection::verifyMac("Delete")) {
-                $isUser = true;
-                RegisterUser::deleteUser($username);
+                $username = $user->getUserName();
+                $usr -> deleteUser($username);
                 $get_info = "?userdeleted=1";
                 header("Location: ../" . $get_info);
                 exit();
@@ -41,7 +42,7 @@ if (ctype_digit($request->query->get('id'))) {
 
     // just show the details
     else {
-        echo $twig->render('user.twig', array('username' => $username, 'user' => $user,
+        echo $twig->render('user.twig', array('users' => $users, 'user' => $user,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isUser' => $isUser,
             'xsrfMac' => $xsrfMac));
     }

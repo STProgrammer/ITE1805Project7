@@ -11,6 +11,12 @@ class RegisterUser
         $this->session = $session;
     }
 
+    private function NotifyUser($strHeader, $strMessage)
+    {
+        $this->session->getFlashBag()->add('header', $strHeader);
+        $this->session->getFlashBag()->add('message', $strMessage);
+    }
+
     //Register user
     public function registerUser ($userData)
     {
@@ -59,7 +65,7 @@ class RegisterUser
     }
 
     public function getUserData($username){
-        $stmt = $this->db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+        $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -89,7 +95,7 @@ class RegisterUser
     public function getAllUsers(string $username){
         $allUsers = null;
         try{
-            $stmt = $this->db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+            $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             $allUsers = $stmt->fetchAll();
@@ -98,39 +104,35 @@ class RegisterUser
         return $allUsers;
     }
 
-    public function editUser(User $user): bool {
+    public function editUser(User $user) {
         $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
         $verified = filter_input(INPUT_POST, 'verified', FILTER_SANITIZE_NUMBER_INT);
+        $hash = password_hash($password, PASSWORD_DEFAULT);
 
         if ($verified == null) $verified = 1;
 
         try {
-            $sth = $this->db->prepare("update Users set firstname = :firstname, lastname = :lastname, email = :email, password = :password, verified = :verified where username = :username");
+            $sth = $this->db->prepare("update Users set firstname = :firstname, lastname = :lastname, password = :hash where username = :username");
             $sth->bindParam(':firstname', $firstname);
             $sth->bindParam(':lastname', $lastname);
-            $sth->bindParam(':email', $email);
-            $sth->bindParam(':password', $password);
-            $sth->bindParam(':verified', $verified);
+            $sth->bindParam(':hash', $hash);
 
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->NotifyUser('User details changed', '');
             } else {
-                $this->NotifyUser('Failed to change catalog details', "");
+                $this->NotifyUser('Failed to change user details', "");
             }
         } catch (Exception $e) {
             $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
         }
     }
 
-    public function deleteUser($username): bool{
+    public function deleteUser($username): bool {
         $result = false;
-        $this->session->remove('strHeader');
-        $this->session->remove('strMessage');
-
         try
         {
             $stmt = $this->db->prepare("DELETE FROM Users WHERE username = :username");
@@ -150,9 +152,36 @@ class RegisterUser
         return $result;
     }
 
-    public static function NotifyUser($strHeader, $strMessage)
+    //source code: https://phpgurukul.com/change-password-php/
+    //https://stackoverflow.com/questions/34320881/php-pdo-how-do-i-change-password-of-logged-in-user-via-php-and-pdo-and-refresh?fbclid=IwAR1IeTq9403lCm9SFjwtzUYuq-_8sN7EoLGPaWlYhRYEV7FJFg8LuXXTrag
+
+    public function changePassword($username): array
     {
-        exit();
+        $password = null;
+        $old_password = filter_input(INPUT_POST, 'oldpassword', FILTER_SANITIZE_STRING);
+        $oldhash = password_hash($old_password, PASSWORD_DEFAULT);
+        $new_password = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_STRING);
+        $newhash = password_hash($new_password, PASSWORD_DEFAULT);
+
+        try {
+            $sth = $this->db->prepare("SELECT password FROM Users WHERE password =:oldhash && username = :username");
+            $sth->bindParam(':oldhash', $oldhash);
+            $sth->bindParam(':newhash', $newhash);
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            if ($row > 0) {
+                $sth = $this->db->prepare("UPDATE Users set password =:newhash WHERE username = :username");
+                $sth->execute();
+                $password = $sth->fetchAll();
+                return $password;
+            } else {
+                $this->NotifyUser('Password does not match', "");
+            }
+        } catch (Exception $e){
+            $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+        }
     }
 
+
 }
+
+?>

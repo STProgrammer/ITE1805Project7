@@ -26,17 +26,17 @@
     </ul>
     <ul>
         <li>
-            Hits: {{ user.getHits() }}
+            Email: {{ user.getEmail() }}
         </li>
     </ul>
     <ul>
         <li>
-            IP address: {{ user.getIPAdress() }}
+            Password: {{ user.getPassword() }}
         </li>
     </ul>
 {% endif %}
 {% if isUser %}
-    <p><a href="edit-user/?id={{user.getUsername}}">Edit user</a></p>
+    <p><a href="user-edit/?id={{user.getUsername}}">Edit user</a></p>
 {% endif %}
 {% if user.isAdmin() or isUser %}
     <form method="post">
