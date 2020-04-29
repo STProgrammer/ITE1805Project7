@@ -185,6 +185,8 @@ class RegisterUser
                 return false;
             }
         }
+        else
+            return false;
     }
 
 }
