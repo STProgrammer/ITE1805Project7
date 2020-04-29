@@ -16,11 +16,9 @@
     <p><a href = "./">Back </a></p>
 </div>
 
-<p>Hello {{ User.getUsername()}} </p>
-<p>This is your profile.</p>
+<h1>User Profile</h1>
 
 {% if user %}
-    <h1>User Profile</h1>
     <ul>
         <li>User Name: {{ user.getUserName() }}</li>
     </ul>
@@ -60,6 +58,7 @@
         </li>
     </ul>
 {% endif %}
+
 {% if isOwner %}
     <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
 {% endif %}
