@@ -5,7 +5,7 @@
     <form action="index.php" method="post">
         <input type="submit" name="logout" value="Logout">
     </form>
-    <p><a href="{{rel}}profile-page/">Profile page</a></p>
+    <p><a href="{{rel}}profile-page/?username={{ user.getUsername() }}">Profile page</a></p>
 {% else %}
     <h3>Du må logge inn</h3>
     <form action="index.php" method="post">

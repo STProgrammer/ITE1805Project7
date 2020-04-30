@@ -93,7 +93,7 @@ class RegisterUser
 
 
     public function getUserData($username){
-        $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+        $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -123,7 +123,7 @@ class RegisterUser
     public function getAllUsers(string $username){
         $allUsers = null;
         try{
-            $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+            $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             $allUsers = $stmt->fetchAll();
@@ -132,19 +132,38 @@ class RegisterUser
         return $allUsers;
     }
 
-    public function editUser(User $user): bool {
+    public function editUser($username): bool {
+        $newUsername = $this->request->request->get('username');
         $firstname = $this->request->request->get('firstname');
         $lastname = $this->request->request->get('lastname');
         $password = $this->request->request->get('password');
         $verified = $this->request->request->get('verified');
-        $hash = password_hash($password, PASSWORD_DEFAULT);
 
         if ($verified == null) $verified = 1;
 
         try {
-            $sth = $this->db->prepare("update Users set firstname = :firstname, lastname = :lastname, password = :hash where username = :username");
+            $sth = $this->dbase->prepare("update Users set firstname = :firstname, lastname = :lastname, username = :newUsername where username = :username");
+            $sth->bindParam(':newUsername', $newUsername);
+            $sth->bindParam(':username', $username);
             $sth->bindParam(':firstname', $firstname);
             $sth->bindParam(':lastname', $lastname);
+            $sth->execute();
+            if ($sth->rowCount() == 1) {
+                $this->NotifyUser('User details changed', '');
+            } else {
+                $this->NotifyUser('Failed to change user details', "");
+            }
+        } catch (Exception $e) {
+            $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+        }
+    }
+
+    public function editPassword($password, $username) {
+        if ($password == "") {return;}
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            $sth = $this->dbase->prepare("update Users set password = :hash where username = :username");
+            $sth->bindParam(':username', $username);
             $sth->bindParam(':hash', $hash);
             $sth->execute();
             if ($sth->rowCount() == 1) {
@@ -161,7 +180,7 @@ class RegisterUser
         $result = false;
         try
         {
-            $stmt = $this->db->prepare("DELETE FROM Users WHERE username = :username");
+            $stmt = $this->dbase->prepare("DELETE FROM Users WHERE username = :username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             if ($stmt->rowCount()==1) {

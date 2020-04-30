@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+{% if user %}
+<form method="post">
+    <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+    <table border="1" cellspacing="0" cellpadding="5" width="400">
+        <tr><td><label>User name:</label>
+                <input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}" required></td></tr>
+        <tr><td><br><label>First name:</label>
+                <input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}" required></td></tr>
+        <tr><td><br><label>Last name:</label>
+                <input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}" required></td></tr>
+        <tr><td><br><label>Password (if left empty password won't be edited):</label>
+                <input type="password" name="password" required maxlength=45 value=""></td></tr>
+        <input type="hidden" value="{{ getMac("Edit user information") }}" name="XSRFPreventionToken">
+        <td colspan="2" width="400" align="middle">
+            <input type="submit" name="edit_user" value="Edit" />
+        </td>
+        </tr>
+    </table>
+</form>
+<form method="post">
+    <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
+    <input type="submit" name="Delete_user" value="Delete user" />
+</form>
+{% endif %}
+</body>
+</html>
