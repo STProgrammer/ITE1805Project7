@@ -11,6 +11,7 @@ class User {
     private $verified;
     private $date;
     private $email;
+    private $password;
 
     function __construct(string $n, string $fn, string $ip, string $browser, array $row ) {
         $this->usr_name = $n;
@@ -25,17 +26,43 @@ class User {
 
     }
 
-    public function setName($newname) { $this->usr_full_name = $newname; }
-    public function getUsername() { return $this->usr_name; }
-    public function getFullName() { return $this->usr_full_name; }
-    public function isAdmin() { return $this->admin; }
-    public function makeAdmin() { $this->admin = 1; }
-    public function undoAdmin() { $this->admin = 0; }
-    public function isVerified() { return $this->verified; }
-    public function setVerified() { $this->verified = 1; }
-    public function getHits() { return $this->usr_hits; }
-    public function getIPAddress() { return $this->IPAddress; }
-    public function getEmail(){return $this->email;}
+    public function setName($newname) {
+        $this->usr_full_name = $newname;
+    }
+    public function getUsername() {
+        return $this->usr_name;
+    }
+    public function getFullName() {
+        return $this->usr_full_name;
+    }
+    public function isAdmin() {
+        return $this->admin;
+    }
+    public function makeAdmin() {
+        $this->admin = 1;
+    }
+    public function undoAdmin() {
+        $this->admin = 0;
+    }
+    public function isVerified() {
+        return $this->verified;
+    }
+    public function setVerified() {
+        $this->verified = 1;
+    }
+    public function getHits() {
+        return $this->usr_hits;
+    }
+    public function getIPAddress() {
+        return $this->IPAddress;
+    }
+    public function getEmail(){
+        return $this->email;
+    }
+    public function getPassword(){
+        return $this->password;
+    }
+
     public function verifyUser($request) {
         //$request = Request::createFromGlobals();
         if(($this->IPAddress == $request->server->get('REMOTE_ADDR')) && ($this->UserAgent == $request->server->get('HTTP_USER_AGENT') )){

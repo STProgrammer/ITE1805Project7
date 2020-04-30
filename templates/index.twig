@@ -8,101 +8,124 @@
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
   <!-- Denne Javascript koden er modifisert fra https://stackoverflow.com/questions/5413899/search-and-replace-specific-query-string-parameter-value-in-javascript-->
+
   <body>
+
       {% include 'login2.twig' %}
-          {% if session.getFlashBag.has('header') %}
-      <div class="flash-notice">
-          {% for header in session.getFlashBag.get('header', []) %}
-          <h2>{{ header }}</h2>
-          {% endfor %}
-          {% for message in session.getFlashBag.get('message', []) %}
-              <h2>{{ message }}</h2>
-          {% endfor %}
+
+      {% if session.getFlashBag.has('header') %}
+          <div class="flash-notice">
+
+              {% for header in session.getFlashBag.get('header', []) %}
+
+                  <h2>{{ header }}</h2>
+              {% endfor %}
+
+              {% for message in session.getFlashBag.get('message', []) %}
+
+                  <h2>{{ message }}</h2>
+              {% endfor %}
+
               <p><a href = "./">Back </a></p>
-      </div>
-          {% else %}
-              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>
-      <p><form method = "get">
+          </div>
+      {% else %}
+          <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>
+
+          <p><form method = "get">
           <input type="search" name="query" placeholder="Search" maxlength="45">
-              <br><label for="start">Uploaded date (dateformat Month/Day/Year):</label>
-              <br><label for="start">From date:</label>
-              <input type="date" id="from date" name="from-date"
-                     value=""
-                     min="2020-03-01" max="">
-              <label for="start">To date:</label>
-              <input type="date" id="to date" name="to-date"
-                     value=""
-                     min="2020-03-01" max="">
-          <br><button type="submit" name="search" value="search">Search</button>
-      <br></p>
-      </form>
-      <form method = "get">
-          <label for="tags">Write tags here separated by comma: </label><br>
-          <input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3"></td></tr>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-          <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-          <label>Check if you want each file to include all tags (AND condition)</label>
-          <input type="checkbox" name="andcondition" value="1"><br>
-          <button type="submit" name="search" value="tagssearch">Search by tags</button></form>
+
+          <br><label for="start">Uploaded date (dateformat Month/Day/Year):</label>
+
+          <br><label for="start">From date:</label>
+          <input type="date" id="from date" name="from-date"
+                    value=""
+                    min="2020-03-01" max="">
+          <label for="start">To date:</label>
+
+          <input type="date" id="to date" name="to-date"
+                    value=""
+                    min="2020-03-01" max="">
           <br>
 
+          <button type="submit" name="search" value="search">Search</button>
+
+          <br></form></p>
+
+          <form method = "get">
+              <label for="tags">Write tags here separated by comma: </label>
+              <br>
+              <input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3"></td></tr>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+              <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+              <label>Check if you want each file to include all tags (AND condition)</label>
+              <input type="checkbox" name="andcondition" value="1"><br>
+              <button type="submit" name="search" value="tagssearch">Search by tags</button>
+          </form><br>
 
           <h1>
               Filearchive - showing files
           </h1>
-              <h2>
-                  {{ catalogPath }}
-              </h2>
-          <pre>
-            <p><a href="{{rel}}file-upload/">Add new</a> </p>
-        </pre>
-      {% if catalog %}
+
           <h2>
-              {{ catalog.getCatalogName() }}
+              {{ catalogPath }}
           </h2>
-      {% endif %}
-  {% if elements %}
-      <div id="filliste">
-          <ul>
-              {% for element in elements %}
-                  {% if element.isFile == 0 %}
-                      <li>
-                          <a href="{{rel}}?catalogid={{element.id}}">{{element.Title}}</a> {{element.date}}
-                          <a href="{{rel}}catalog/?id={{element.id}}"> Details </a>&nbsp;
-                      </li>
-                  {% else %}
-                      {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
-                          <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}?id={{element.id}}" width="10%"/></a>
-                          <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
-                      {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
-                          <video width="25%" height="100%" controls>
-                              <source src="?id={{element.id}}" type="{{element.Type}}">
-                          </video>
-                      {% else %}
-                          <li>
-                              <a href="{{rel}}?id={{element.id}}">{{element.Title}}</a> {{element.Date}}
-                              <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
-                          </li>
-                      {% endif %}
+
+          <pre>
+              <h3><a href="{{rel}}file-upload/">Add new</a> </h3>
+          </pre>
+
+          {% if catalog %}
+              <h2>
+                  {{ catalog.getCatalogName() }}
+              </h2>
+          {% endif %}
+
+          {% if elements %}
+              <div id="filliste">
+                  <ul>
+                      {% for element in elements %}
+                          {% if element.isFile == 0 %}
+                              <li>
+                                  <a href="{{rel}}?catalogid={{element.id}}">{{element.Title}}</a> {{element.date}}
+                                  <a href="{{rel}}catalog/?id={{element.id}}"> Details </a>&nbsp;
+                              </li>
+                          {% else %}
+                              {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png'
+                                                                    or element.Type == 'image/gif'%}
+                                  <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}?id={{element.id}}" width="10%"/></a>
+                                  <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
+                              {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
+                                  <video width="25%" height="100%" controls>
+                                      <source src="?id={{element.id}}" type="{{element.Type}}">
+                                  </video>
+                              {% else %}
+                                  <li>
+                                      <a href="{{rel}}?id={{element.id}}">{{element.Title}}</a> {{element.Date}}
+                                      <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
+                                  </li>
+                              {% endif %}
+                          {% endif %}
+                      {% endfor %}
+                  </ul>
+              </div>
+          {% endif %}
+
+          {{ dump('pageno') }}
+          {% if pagination %}
+              <div id="pagination">
+              {% for page in pagination %}
+                  {% if request.query.get('pageno') == page %} {{ page }}
+                  {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}">{{ page }}</a>
                   {% endif %}
               {% endfor %}
-          </ul>
-      </div>
-  {% endif %}
-                   {{ dump('pageno') }}
-              {% if pagination %} <div id="pagination">
-
-                  {% for page in pagination %}
-                  {% if request.query.get('pageno') == page %} {{ page }}
-                      {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}">{{ page }}</a>
-                      {% endif %}
-                  {% endfor %}
               </div>
-
-
           {% endif %}
-  {{ dump(request.server.get('REQUEST URL')) }}
-  {{ dump(request.server.get('QUERY_STRING')) }}
-  {% endif %}
+
+          {{ dump(request.server.get('REQUEST URL')) }}
+
+          {{ dump(request.server.get('QUERY_STRING')) }}
+      {% endif %}
+
   </body>
+
 </html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+<div class="flash-notice">
+    {% for header in session.getFlashBag.get('header', []) %}
+        <h2>{{ header }}</h2>
+    {% endfor %}
+    {% for message in session.getFlashBag.get('message', []) %}
+        <h2>{{ message }}</h2>
+    {% endfor %}
+    <p><a href = "./">Back </a></p>
+</div>
+{% if username %}
+    <h1>
+        Username: {{ user.getUsername() }}
+    </h1>
+    <ul>
+        <li>
+            Full name: {{ user.getFullName() }}
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Email: {{ user.getEmail() }}
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Password: {{ user.getPassword() }}
+        </li>
+    </ul>
+{% endif %}
+{% if isUser %}
+    <p><a href="user-edit/?id={{user.getUsername}}">Edit user</a></p>
+{% endif %}
+{% if user.isAdmin() or isUser %}
+    <form method="post">
+        <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
+        <input type="submit" name="Delete_user" value="Delete user" />
+    </form>
+{% endif %}
+</body>
+</html>

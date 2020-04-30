@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+{% include 'login2.twig' %}
+<form method="post">
+    <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+    <table border="1" cellspacing="0" cellpadding="5" width="400">
+        <tr>
+            <td>
+                <input type="checkbox" name="access" value="0">
+                Only accessible for registered users
+            </td>
+        <tr><td><label>Username: </label>
+                <input type="text" name="Username" required maxlength=45 value="{{ user.getUsername() }}"></td></tr>
+        <tr><td><br><label>Fullname:</label>
+                <input type="text" name="Fullname" required maxlength=45 value="{{ user.getFullName() }}"></td></tr>
+        <tr><td><br><label>Email:</label>
+                <input type="text" name="Email" required maxlength=45 value="{{ user.getEmail() }}"></td></tr>
+        <tr><td><br><label>Password:</label>
+                <input type="text" name="Password" required maxlength=45 value="{{ user.getPassword() }}"></td></tr>
+        <input type="hidden" value="{{ xsrfMac.getMac("Edit user information") }}" name="XSRFPreventionToken">
+        <td colspan="2" width="400" align="middle">
+            <input type="submit" name="edit_user" value="Edit" />
+        </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

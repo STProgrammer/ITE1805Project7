@@ -37,6 +37,26 @@
     </ul>
 {% endif %}
 
+{% if catalog %}
+    <h1>
+        Catalog name: {{ catalog.getCatalogName() }}
+    </h1>
+    <ul>
+        <li>
+            Catalog owner: {{ catalog.getOwner() }}
+        </li>
+    </ul>
+{% endif %}
+{% if isOwner %}
+    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
+{% endif %}
+{% if user.isAdmin() or isOwner %}
+    <form method="post">
+        <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
+        <input type="submit" name="Delete_catalog" value="Delete catalog" />
+    </form>
+{% endif %}
+
 {% if isOwner %}
     <p><a href="user-edit/">Edit information</a></p>
 {% endif %}

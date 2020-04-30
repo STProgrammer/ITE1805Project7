@@ -10,12 +10,13 @@ require_once "../login.php";
 
 $archive = new FileArchive($db, $request, $session, $twig);
 
+//user information
 if($request->query->get('username')){
     $isOwner = false;  //isOwner controls if the user owns this account or not, this is to avoid repeated checks
     $isAdmin = false;  //isAdmin controls if the user is admin or not, this is to avoid repeated checks
     if ($session->has('User') && $session->get('loggedin')) {
         $user = $session->get('User');
-        $userData = $regUser->getUserData($username);
+        $userData = $regUser->getUserData('username');
 
         if ($user->verifyUser($request)) {  //check if user logged in and verify user
             if ($user->isAdmin() == 1) {
@@ -27,6 +28,7 @@ if($request->query->get('username')){
         } //End if user verified
     } // End checking owner and admin
 
+    //show catalogs and files
     if (ctype_digit($request->query->get('id'))){
 
         $id = $request->query->getInt('id');
