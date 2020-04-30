@@ -5,12 +5,13 @@
     <form action="index.php" method="post">
         <input type="submit" name="logout" value="Logout">
     </form>
+    <p><a href="{{rel}}profile-page/">Profile page</a></p>
 {% else %}
     <h3>Du må logge inn</h3>
     <form action="index.php" method="post">
         <table>
-            <tr><td><label>Brukernavn: </label> </td>
-                <td><input type="text" name="username"></td></tr>
+            <tr><td><label>Email: </label> </td>
+                <td><input type="text" name="email"></td></tr>
             <tr><td><label>Passord:</label> </td>
                 <td><input type="password" name="password" size="15"></td></tr>
             <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
@@ -18,6 +19,6 @@
             </tr>
         </table>
     </form>
-    <p>Logg inn med bruker: "donald" & passord: "test"</p>
+    <p>Logg inn med bruker: "aka160@post.uit.no" & passord: "test"</p>
     <p><a href="{{rel}}register/"> Register </a> </p>
 {% endif %}

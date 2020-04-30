@@ -8,7 +8,7 @@
     require_once "login.php";
 
     // opprett nytt filarkiv
-    $archive = new FileArchive($db, $request, $session, $twig);
+    $archive = new FileArchive($db, $request, $session);
 
 
 /* Denne Twig funksjonen er tatt fra https://stackoverflow.com/questions/61407758/how-to-change-one-value-in-get-by-clicking-a-link-or-button-from-twig-with/61407993#61407993 */

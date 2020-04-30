@@ -5,14 +5,12 @@ class FileArchive {
         private $db;
         private $request;
         private $session;
-        private $twig;
    
-        function __construct($db, $request, $session, $twig) {
+        function __construct($db, $request, $session) {
            
             $this->db = $db;
             $this->request = $request;
             $this->session = $session;
-            $this->twig = $twig;
         }
 
         //* NOTIFY USER

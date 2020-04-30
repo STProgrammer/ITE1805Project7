@@ -8,7 +8,7 @@ require_once '../login.php';
 
 $comment = new Comment($db, $session);
 
-    $archive = new FileArchive($db, $request, $session, $twig);
+    $archive = new FileArchive($db, $request, $session);
 
     if(ctype_digit($request->query->get('id'))) {
         $id = $request->query->getInt('id');

@@ -7,7 +7,7 @@ define('FILENAME_TAG', 'image');
 //Håndterer login
 require_once "../login.php";
 
-$archive = new FileArchive($db, $request, $session, $twig);
+$archive = new FileArchive($db, $request, $session);
 
 
     // sjekk om en fil er sendt inn OG personen er innlogget

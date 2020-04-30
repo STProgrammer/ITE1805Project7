@@ -7,7 +7,7 @@ define('FILENAME_TAG', 'image');
 //Håndterer login
 require_once "../login.php";
 
-$archive = new FileArchive($db, $request, $session, $twig);
+$archive = new FileArchive($db, $request, $session);
 
 if(ctype_digit($request->query->get('id')))
 {

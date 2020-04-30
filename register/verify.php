@@ -2,6 +2,10 @@
 
 require_once('../includes.php');
 
-$reguser = new RegisterUser($db, $request, $session);
+$regUser = new RegisterUser($db, $request, $session);
 
-$userData = array();
+$verified = $regUser->verifyUser();
+
+echo $twig->render('verifyEmail.twig', array('verified'=>$verified));
+
+?>

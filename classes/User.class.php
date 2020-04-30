@@ -12,8 +12,9 @@ class User {
     private $date;
     private $email;
 
-    function __construct(string $n, string $fn, string $ip, string $browser, array $row ) {
-        $this->usr_name = $n;
+    function __construct(string $email, string $fn, string $ip, string $browser, array $row ) {
+        $this->email = $email;
+        $this->usr_name = $row['username'];
         $this->usr_full_name = $fn;
         $this->IPAddress = $ip;
         $this->UserAgent = $browser;
@@ -21,12 +22,13 @@ class User {
         $this->admin = $row['admin'];
         $this->verified = $row['verified'];
         $this->date = $row['date'];
-        $this->email = $row['email'];
+
 
     }
 
     public function setName($newname) { $this->usr_full_name = $newname; }
     public function getUsername() { return $this->usr_name; }
+    public function getEmail() { return $this->email;}
     public function getFullName() { return $this->usr_full_name; }
     public function isAdmin() { return $this->admin; }
     public function makeAdmin() { $this->admin = 1; }
@@ -47,9 +49,9 @@ class User {
 
 
     public static function login(PDO $db,  $request,  $session) {
-        $username = $request->request->get('username');
-        $stmt = $db->prepare("SELECT email, password, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $email = $request->request->get('email');
+        $stmt = $db->prepare("SELECT username, password, username, firstname, lastname, date, verified, admin FROM Users WHERE email=:email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
@@ -59,7 +61,7 @@ class User {
                 $session->set('loggedin', true);
                 $ip = $request->server->get('REMOTE_ADDR');
                 $browser = $request->server->get('HTTP_USER_AGENT');
-                $session->set('User', new User($request->request->get('username'), $firstname . " " . $lastname, $ip, $browser, $row));
+                $session->set('User', new User($request->request->get('email'), $firstname . " " . $lastname, $ip, $browser, $row));
                 return true;
             }
         }

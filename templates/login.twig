@@ -9,12 +9,12 @@
 <body>
 <h2>Logg inn</h2>
 {% if fail %}
-  <h3>Feil brukernavn eller passord</h3>
+  <h3>Failed to login</h3>
 {% endif %}
   <form action="../login/index.php" method="post">
     <table>
-      <tr><td><label>Brukernavn: </label> </td>
-        <td><input type="text" name="username"></td></tr>
+      <tr><td><label>Email: </label> </td>
+        <td><input type="email" name="email"></td></tr>
       <tr><td><label>Passord:</label> </td>
         <td><input type="password" name="password" size="15"></td></tr>
       <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
@@ -22,7 +22,7 @@
       </tr>
     </table>
   </form>
-  <p>Logg inn med bruker: "donald" & passord: "test"</p>
+  <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
 
 </body>
 </html>

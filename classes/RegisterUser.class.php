@@ -20,9 +20,14 @@ class RegisterUser
     //Register user
     public function registerUser ($userData)
     {
+        $userData['username'] = $this->request->request->get('username');
+        $userData['firstname'] = $this->request->request->get('firstname');
+        $userData['lastname'] = $this->request->request->get('lastname');
+        $userData['email'] = $this->request->request->get('email');
+        $userData['password'] = $this->request->request->get('password');
         try{
             $hash = password_hash($userData['password'], PASSWORD_DEFAULT);
-            $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 1);");
+            $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
             $sth->bindParam(':email', $userData['email']);
             $sth->bindParam(':hash', $hash);
             $sth->bindParam(':username', $userData['username'] );
@@ -31,12 +36,11 @@ class RegisterUser
             $sth->execute() or exit();
             $this->sendEmail($userData);
         } catch (Exception $e) {
-            print $e->getMessage() . PHP_EOL;
+            $this->NotifyUser("",$e->getMessage() . PHP_EOL);
         }
     }
 
     private function sendEmail($userData) {
-
         $ch = curl_init();
         $email = $userData['email'];
         //Koden for å hente URL adresse er tatt og modifisert fra https://www.javatpoint.com/how-to-get-current-page-url-in-php
@@ -51,18 +55,42 @@ class RegisterUser
         $url .= "/verify.php/";
 
         $id = md5(uniqid(rand(), 1));
+        try{
+            $sth = $this->dbase->prepare("update Users set verCode = :id where username = :email;");
+            $sth->bindParam(':email', $email);
+            $sth->bindParam(':id',  $id);
+            $sth->execute() or exit();
+            $this->sendEmail($userData);
+        } catch (Exception $e) {
+            $this->NotifyUser("",$e->getMessage() . PHP_EOL);
+        }
+
         curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
-
         curl_setopt($ch, CURLOPT_HEADER, 0);
-
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
         $output = curl_exec($ch);
-
         echo $output;
-
         curl_close($ch);
     }
+
+    public function verifyUser() : bool {
+
+        if($id = $this->request->query->get('id')) {
+            try{
+                $sth = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
+                $sth->bindParam(':id', $id);
+                $sth->execute();
+                if($sth->rowCount() == 1) {
+                    return true;
+                }
+                else {return false; }
+            }catch (Exception $e){
+                $this->NotifyUser("En feil oppstod", $e->getMessage() . PHP_EOL);
+                return false;
+            }
+        }
+    }
+
 
     public function getUserData($username){
         $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
@@ -105,11 +133,10 @@ class RegisterUser
     }
 
     public function editUser(User $user): bool {
-        $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
-        $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-        $verified = filter_input(INPUT_POST, 'verified', FILTER_SANITIZE_NUMBER_INT);
+        $firstname = $this->request->request->get('firstname');
+        $lastname = $this->request->request->get('lastname');
+        $password = $this->request->request->get('password');
+        $verified = $this->request->request->get('verified');
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         if ($verified == null) $verified = 1;
@@ -119,7 +146,6 @@ class RegisterUser
             $sth->bindParam(':firstname', $firstname);
             $sth->bindParam(':lastname', $lastname);
             $sth->bindParam(':hash', $hash);
-
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->NotifyUser('User details changed', '');
