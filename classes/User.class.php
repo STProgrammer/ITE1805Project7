@@ -23,7 +23,6 @@ class User {
         $this->verified = $row['verified'];
         $this->date = $row['date'];
         $this->email = $row['email'];
-
     }
 
     public function setName($newname) {
@@ -72,7 +71,6 @@ class User {
         else
             return false;
     }
-
 
     public static function login(PDO $db,  $request,  $session) {
         $username = $request->request->get('username');

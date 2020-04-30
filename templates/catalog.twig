@@ -15,6 +15,7 @@
     {% endfor %}
     <p><a href = "./">Back </a></p>
 </div>
+
 {% if catalog %}
     <h1>
         Catalog name: {{ catalog.getCatalogName() }}
@@ -25,14 +26,17 @@
         </li>
     </ul>
 {% endif %}
+
 {% if isOwner %}
     <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
 {% endif %}
+
 {% if user.isAdmin() or isOwner %}
     <form method="post">
         <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
         <input type="submit" name="Delete_catalog" value="Delete catalog" />
     </form>
 {% endif %}
+
 </body>
 </html>
