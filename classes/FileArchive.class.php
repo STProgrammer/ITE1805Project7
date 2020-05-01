@@ -351,7 +351,7 @@ class FileArchive {
                 $this->notifyUser("File uploaded", "");
                 return $id;
             }
-            catch(Exception $e) { $this->notifyUser("", $e->getMessage()); return 0; }
+            catch(Exception $e) { $this->notifyUser("Failed to upload file", $e->getMessage()); return 0; }
         }
         else {
             //require_once ("hode.php");
