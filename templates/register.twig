@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <title>Register User</title>
 </head>
+<script>
+    var check = function() {
+        if (document.getElementById('password').value ==
+            document.getElementById('password2').value) {
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'matching';
+        } else {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'not matching';
+        }
+    }
+    function validate(){
+        var pass1 = document.getElementById("password").value;
+        var pass2 = document.getElementById("password2").value;
+        if (pass1 != pass2) {
+            alert("Passwords don't match!")
+        }
+        return pass1 == pass2;
+    }
+</script>
 <body>
 <h1>Register user</h1>
-<form method="post">
+<form method="post" onsubmit="return validate();" >
     <label>Username:</label>
     <br><input type="text" name="username" value="" maxlength=30 required />
-    <br><label>First name:</label>
+    <br><label>Name:</label>
     <br><input type="text" name="firstname" value="" maxlength=45 required />
     <br><label>Last name:</label>
     <br><input type="text" name="lastname" value="" maxlength=45 required />
     <br><label>Epost:</label>
     <br><input type="email" name="email" value="" maxlength=45 required />
-    <br><label>Password:</label>
-    <br><input type="password" name="password" value="" maxlength=60 required />
+    <br><label>Change password: </label>
+    <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
+    <br><label>Confirm password:</label>
+    <br><input type="password" name="password2" id="password2" required placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
+    <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="register" value="Register"></form>
 </body>

@@ -18,6 +18,7 @@ require_once '../includes.php';
 $validation=false;
 $username = "";
 $email = "";
+$password = new RegisterUser($db, $request, $session);
 
 if(isset($_POST['submit']) &&  !empty($_POST['submit'])) {
     $username = htmlspecialchars($_POST['username']);
@@ -27,8 +28,12 @@ if(isset($_POST['submit']) &&  !empty($_POST['submit'])) {
     $stmt->bindParam(':email', $email);
     $stmt->execute();
     if($stmt->rowCount() >= 1 ){
-        echo $twig->render('change-password.twig', array()); //change-password.twig er bare en midlertidig hoppside for å teste om koden er korrekt. Den blir skrevet om senere.
         $validation = true;
+        $password -> changePassword($username);
+        $get_info = "&changepassword=1";
+        header("Location: ." . $get_info);
+        exit();
+//        echo $twig->render('lost-password.twig', array()); //change-password.twig er bare en midlertidig hoppside for å teste om koden er korrekt. Den blir skrevet om senere.
     }
     else
         echo 'You must enter your username and E-mail address correctly to reset your password.';

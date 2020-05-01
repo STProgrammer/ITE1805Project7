@@ -16,7 +16,7 @@ if(ctype_digit($request->query->get('id'))) {
     if ($session->has('User') && $session->get('loggedin')) {
         $user = $session->get('User');
         if ($user->verifyUser($request)) {  //check if user logged in and verify user
-            // Since User is verified, all users can change passwords. So we can now check if someone wants to change their passwors
+            // Since User is verified, all users can change passwords. So we can now check if someone wants to change their password
             if ($request->request->get('Change_password') == "Change_password") {
                 if (XsrfProtection::verifyMac("Change password")) {
                     $username = $user -> getUserName();

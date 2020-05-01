@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile Page</title>
+    <title>Profile page</title>
 </head>
 <body>
 {% include 'login2.twig' %}
@@ -15,73 +15,24 @@
     {% endfor %}
     <p><a href = "./">Back </a></p>
 </div>
-
-<h1>User Profile</h1>
-
-{% if user %}
-    <ul>
-        <li>User Name: {{ user.getUserName() }}</li>
-    </ul>
-    <ul>
-        <li>Email: {{ user.getEmail() }}</li>
-    </ul>
-{% endif %}
-
-{% if isAdmin %}
-    <ul>
-        <li>Status: Admin </li>
-    </ul>
-{% else %}
-    <ul>
-        <li>Status: General user </li>
-    </ul>
-{% endif %}
-
-{% if catalog %}
+{% if userData %}
     <h1>
-        Catalog name: {{ catalog.getCatalogName() }}
+        Username: {{ userData['username'] }}
     </h1>
     <ul>
         <li>
-            Catalog owner: {{ catalog.getOwner() }}
+            Full name: {{ userData['firstname'] }} {{ userData['lastname']  }}
         </li>
     </ul>
-{% endif %}
-{% if isOwner %}
-    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
-{% endif %}
-{% if user.isAdmin() or isOwner %}
-    <form method="post">
-        <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
-        <input type="submit" name="Delete_catalog" value="Delete catalog" />
-    </form>
-{% endif %}
-
-{% if isOwner %}
-    <p><a href="user-edit/">Edit information</a></p>
-{% endif %}
-
-{% if isAdmin() or isOwner %}
-    <form method="post">
-        <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
-        <input type="submit" name="Delete_user" value="Delete User" />
-    </form>
-{% endif %}
-
-{% if catalog %}
-    <h1>
-        Catalog name: {{ catalog.getCatalogName() }}
-    </h1>
     <ul>
         <li>
-            Catalog owner: {{ catalog.getOwner() }}
+            User type: {% if user.isAdmin() %} Admin {% else %} General user {% endif %}
         </li>
     </ul>
 {% endif %}
 
-{% if isOwner %}
-    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
+{% if isOwner or user.isAdmin() %}
+    <p><a href="edit-user/?username={{userData['username']}}">Edit user</a></p>
 {% endif %}
-
 </body>
 </html>

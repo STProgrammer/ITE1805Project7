@@ -23,6 +23,12 @@ class RegisterUser
     //Register user
     public function registerUser ($userData)
     {
+        $username = $this->request->request->get('username');
+        $firstname = $this->request->request->get('firstname');
+        $lastname = $this->request->request->get('lastname');
+        $email = $this->request->request->get('email');
+        $password = $this->request->request->get('password');
+
         try{
             $hash = password_hash($userData['password'], PASSWORD_DEFAULT);
             $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
@@ -80,7 +86,7 @@ class RegisterUser
     }
 
     public function getUserData($username){
-        $stmt = $this->db->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+        $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -119,52 +125,93 @@ class RegisterUser
         return $allUsers;
     }
 
-    public function editUser(User $user): bool {
-        $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
-        $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
-        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-        $verified = filter_input(INPUT_POST, 'verified', FILTER_SANITIZE_NUMBER_INT);
-        $hash = password_hash($password, PASSWORD_DEFAULT);
+    public function editUser($username) {
+        $newUsername = $this->request->request->get('username');
+        $firstname = $this->request->request->get('firstname');
+        $lastname = $this->request->request->get('lastname');
+        $verified = $this->request->request->get('verified');
 
         if ($verified == null) $verified = 1;
 
         try {
-            $sth = $this->db->prepare("update Users set firstname = :firstname, lastname = :lastname, password = :hash where username = :username");
+            $sth = $this->dbase->prepare("update Users set firstname = :firstname, lastname = :lastname, username = :newUsername where username = :username");
+            $sth->bindParam(':newUsername', $newUsername);
+            $sth->bindParam(':username', $username);
             $sth->bindParam(':firstname', $firstname);
             $sth->bindParam(':lastname', $lastname);
-            $sth->bindParam(':hash', $hash);
-
             $sth->execute();
             if ($sth->rowCount() == 1) {
-                $this->NotifyUser('User details changed', '');
+                $this->session->get('User')->setFirstName($firstname);
+                $this->session->get('User')->setLastName($lastname);
+                $this->session->get('User')->setUsername($newUsername);
+                $this->notifyUser('User details changed', '');
             } else {
-                $this->NotifyUser('Failed to change user details', "");
+                $this->notifyUser('Failed to change user details', "");
             }
         } catch (Exception $e) {
-            $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change user details", $e->getMessage() . PHP_EOL);
         }
     }
 
-    public function deleteUser($username): bool {
-        $result = false;
+    public function changePassword($password, $username) : bool {
+        if ($password == "") {return false;}
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            $sth = $this->dbase->prepare("update Users set password = :hash where username = :username");
+            $sth->bindParam(':username', $username);
+            $sth->bindParam(':hash', $hash);
+            $sth->execute();
+            if ($sth->rowCount() == 1) {
+                $this->notifyUser("Password changed!", '');
+                return true;
+            } else {
+                $this->notifyUser('Failed to change password!', "");
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->notifyUser("Failed to change password", $e->getMessage() . PHP_EOL);
+            return false;
+        }
+    }
+
+
+    public function changeEmail($email, $username) {
+        try {
+            $sth = $this->dbase->prepare("update Users set email = :email, verified = 0 where username = :username");
+            $sth->bindParam(':username', $username);
+            $sth->bindParam(':email', $email);
+            $sth->execute();
+            $this->sendEmail($email);
+            if ($sth->rowCount() == 1) {
+                $this->notifyUser("Email changed", '');
+                return true;
+            } else {
+                $this->notifyUser("Failed to change email!", "");
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->notifyUser("Failed to change email!", $e->getMessage() . PHP_EOL);
+            return false;
+        }
+    }
+
+    public function deleteUser($username) {
         try
         {
-            $stmt = $this->db->prepare("DELETE FROM Users WHERE username = :username");
+            $stmt = $this->dbase->prepare("DELETE FROM Users WHERE username = :username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             if ($stmt->rowCount()==1) {
-                $this->NotifyUser( "User deleted", "");
+                $this->notifyUser( "User deleted", "");
                 $result = true;
             } else {
-                $this->NotifyUser( "Error 3", "");
+                $this->notifyUser( "Failed to delete user!", "");
                 $result = false;
             }
         }
         catch (Exception $e) {
-            $this->NotifyUser( "En feil oppstod", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete user!", $e->getMessage() . PHP_EOL);
         }
-        return $result;
     }
 
     public function verifyUser() : bool {
@@ -175,7 +222,7 @@ class RegisterUser
                 $sth  = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
                 $sth ->bindParam(':id',$id);
                 $sth ->execute();
-                if($sth->rowCount() >= 1 ){
+                if($sth->rowCount() == 1 ){
                     return true;
                 }
                 else
