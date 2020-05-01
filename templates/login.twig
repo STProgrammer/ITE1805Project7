@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Welcome</title>
+  <title>Login</title>
 </head>
 <body>
 <h2>Logg inn</h2>
@@ -15,7 +15,7 @@
     <table>
       <tr><td><label>Email: </label> </td>
         <td><input type="email" name="email"></td></tr>
-      <tr><td><label>Passord:</label> </td>
+      <tr><td><label>Password:</label> </td>
         <td><input type="password" name="password" size="15"></td></tr>
       <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
       <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>

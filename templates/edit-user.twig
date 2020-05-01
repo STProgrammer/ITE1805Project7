@@ -2,22 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Edit user</title>
 </head>
 <body>
+<script>
+    var check = function() {
+        if (document.getElementById('password').value ==
+            document.getElementById('password2').value) {
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'matching';
+        } else {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'not matching';
+        }
+    }
+    function validate(){
+        var pass1 = document.getElementById("password").value;
+        var pass2 = document.getElementById("password2").value;
+        if (pass1 != pass2) {
+            alert("Passwords don't match!")
+        }
+        return pass1 == pass2;
+    }
+    function tryalert()
+    {
+        alert("working");
+        return false;
+    }
+</script>
 {% include 'login2.twig' %}
-{% if user %}
+{% if isUser %}
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
     <table border="1" cellspacing="0" cellpadding="5" width="400">
         <tr><td><label>User name:</label>
-                <input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}" required></td></tr>
+                <input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}"></td></tr>
         <tr><td><br><label>First name:</label>
-                <input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}" required></td></tr>
+                <input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}"></td></tr>
         <tr><td><br><label>Last name:</label>
-                <input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}" required></td></tr>
-        <tr><td><br><label>Password (if left empty password won't be edited):</label>
-                <input type="password" name="password" required maxlength=45 value=""></td></tr>
+                <input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}"></td></tr>
         <input type="hidden" value="{{ getMac("Edit user information") }}" name="XSRFPreventionToken">
         <td colspan="2" width="400" align="middle">
             <input type="submit" name="edit_user" value="Edit" />
@@ -25,10 +48,30 @@
         </tr>
     </table>
 </form>
-<form method="post">
-    <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
-    <input type="submit" name="Delete_user" value="Delete user" />
-</form>
+
+    <p><form method="post">
+    <br><label>Change email: </label>
+    <br><input type="email" name="email" required maxlength=45 value="">
+    <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
+    <br><input type="submit" name="change_email" value="Change" />
+</form></p>
 {% endif %}
+{% if isUser or user.isAdmin() %}
+<p><form method="post">
+    <br><label>Delet e user: </label>
+    <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
+    <br><input type="submit" name="Delete_user" value="Delete user" />
+</form></p>
+
+    <p><form method="post" onsubmit="return validate();">
+        <br><label>Change password: </label>
+        <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
+        <br><label>Confirm password:</label>
+        <br><input type="password" name="password2" id="password2" required placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
+    <span id='message'></span>
+    <input type="hidden" value="{{ getMac("change password") }}" name="XSRFPreventionToken">
+        <br><input type="submit" id="change_password" name="change_password" value="Change" />
+    </form></p>
+    {% endif %}
 </body>
 </html>

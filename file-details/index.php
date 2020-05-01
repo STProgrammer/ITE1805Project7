@@ -6,7 +6,7 @@ define('FILENAME_TAG', 'image');
 
 require_once '../login.php';
 
-$comment = new Comment($db, $session);
+$comment = new Comment($db, $request, $session);
 
     $archive = new FileArchive($db, $request, $session);
 
@@ -25,7 +25,7 @@ $comment = new Comment($db, $session);
                 if (XsrfProtection::verifyMac("Post comment")) {
                     $username = $user->getUserName();
                     $fileId = $file->getFileId();
-                    $comment->addComment($db, $username, $fileId);
+                    $comment->addComment($username, $fileId);
                     $get_info = "?id=" . $id . "&comment=1";
                     header("Location: ." . $get_info);
                     exit();

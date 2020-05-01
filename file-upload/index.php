@@ -14,7 +14,7 @@ $archive = new FileArchive($db, $request, $session);
     if($request->request->has('post_file') && $session->get('loggedin') && $user->verifyUser($request))
     {
         if (XsrfProtection::verifyMac("File upload")) {
-            $id = $archive->save($user->getUsername());
+            $id = $archive->saveFile($user->getUsername());
             $get_info = "fileupload=1";
             if ($id == 0) {
                 header("Location: ../?" . $get_info);

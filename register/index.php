@@ -8,7 +8,9 @@
 
 
     if ($request->request->has('register') && XsrfProtection::verifyMac("Register")) {
-        $reguser->registerUser($userData);
+        $reguser->registerUser();
+        header("Location: ../?registereduser=1");
+        exit();
 
     } else {
         echo $twig->render('register.twig', array('script' => $homedir));

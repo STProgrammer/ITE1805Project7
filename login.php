@@ -1,5 +1,5 @@
 <?php
-//logg ut
+//logg out
 if ($request->request->has('logout')) {
     $session->clear();
     header("Location: .");

@@ -28,12 +28,14 @@ class User {
 
     }
 
-    public function setName($newname) { $this->usr_full_name = $newname; }
     public function getUsername() { return $this->usr_name; }
+    public function setUsername($username) { $this->usr_name = $username; }
     public function getEmail() { return $this->email;}
     public function getFullName() {return $this->firstname . " " . $this->lastname;}
     public function getFirstName() { return $this->firstname;}
+    public function setFirstName($firstname) { $this->firstname = $firstname;}
     public function getLastName() { return $this->lastname;}
+    public function setLastName($lastname) {$this->lastname = $lastname;}
     public function isAdmin() { return $this->admin; }
     public function makeAdmin() { $this->admin = 1; }
     public function undoAdmin() { $this->admin = 0; }

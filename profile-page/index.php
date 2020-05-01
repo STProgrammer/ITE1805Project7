@@ -10,10 +10,9 @@ require_once "../login.php";
 $regUser = new RegisterUser($db, $request, $session);
 
 //User information
-//We get the username from $_GET
-if($username = $request->query->get('username')) {
-    //We get the profile data (the data of the profile)
-    $userData = $regUser->getUserData($username);
+//We get the username from $_GET and get the user data to use
+if(($username = $request->query->get('username')) && $userData = $regUser->getUserData($username)) {
+ //   $userData = $regUser->getUserData($username);
     $isOwner = false;  //isOwner controls if the user owns this account or not, this is to avoid repeated checks
     $isAdmin = false;  //isAdmin controls if the user is admin or not, this is to avoid repeated checks
     //we check if the user of the website is logged in, and verified

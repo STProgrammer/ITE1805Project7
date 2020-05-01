@@ -1,6 +1,6 @@
 <?php
 
-require_once('../includes.php');
+require_once('../../includes.php');
 
 $regUser = new RegisterUser($db, $request, $session);
 
