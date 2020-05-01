@@ -38,6 +38,10 @@ if ($request->query->has('username') && ($user = $session->get('User'))
         if ($isAdmin or $isUser) {
             if (XsrfProtection::verifyMac("Delete")) {
                 $regUser->deleteUser($username);
+                //If the user is not admin, the session should be cleared so the user logout
+                if (!$isAdmin) {
+                    $session->clear();
+                }
                 $get_info = "?userdeleted=1";
                 header("Location: ../" . $get_info);
                 exit();
