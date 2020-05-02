@@ -42,7 +42,7 @@ if (ctype_digit($request->query->get('id'))) {
 
     // just show the details
     else {
-        echo $twig->render('user.twig', array('users' => $users, 'user' => $user,
+        echo $twig->render('user-edit.twig', array('users' => $users, 'user' => $user,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isUser' => $isUser,
             'xsrfMac' => $xsrfMac));
     }

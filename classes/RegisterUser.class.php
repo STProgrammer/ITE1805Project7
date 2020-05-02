@@ -155,29 +155,39 @@ class RegisterUser
     //source code: https://phpgurukul.com/change-password-php/
     //https://stackoverflow.com/questions/34320881/php-pdo-how-do-i-change-password-of-logged-in-user-via-php-and-pdo-and-refresh?fbclid=IwAR1IeTq9403lCm9SFjwtzUYuq-_8sN7EoLGPaWlYhRYEV7FJFg8LuXXTrag
 
-    public function changePassword($username): array
+    public function changePassword($username)
     {
         $password = null;
-        $old_password = filter_input(INPUT_POST, 'oldpassword', FILTER_SANITIZE_STRING);
+        $old_password = filter_input(INPUT_POST, 'oldpassword', FILTER_SANITIZE_STRING);        
         $oldhash = password_hash($old_password, PASSWORD_DEFAULT);
         $new_password = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_STRING);
+        $cf_password = filter_input(INPUT_POST, 'cfpassword', FILTER_SANITIZE_STRING);
         $newhash = password_hash($new_password, PASSWORD_DEFAULT);
 
+        if($new_password !== $cf_password){
+            $this->NotifyUser('', 'New Password and confirmation does not match');
+            return false;
+        }
         try {
-            $sth = $this->db->prepare("SELECT password FROM Users WHERE password =:oldhash && username = :username");
+            $sth = $this->dbase->prepare("SELECT password FROM Users WHERE password =:oldhash && username = :username");
             $sth->bindParam(':oldhash', $oldhash);
-            $sth->bindParam(':newhash', $newhash);
-            $row = $sth->fetch(PDO::FETCH_ASSOC);
-            if ($row > 0) {
-                $sth = $this->db->prepare("UPDATE Users set password =:newhash WHERE username = :username");
-                $sth->execute();
-                $password = $sth->fetchAll();
+            $sth->bindParam(':username', $username);
+            $sth->execute();
+            if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                $sth2 = $this->dbase->prepare("UPDATE Users set password =:newhash WHERE username = :username");
+                $sth2->bindParam(':newhash', $newhash);
+                $sth2->bindParam(':username', $username);
+                $sth2->execute();
+                $password = $sth2->fetchAll();
+                $this->NotifyUser('', 'Password sucessfull changed');
                 return $password;
             } else {
-                $this->NotifyUser('Password does not match', "");
+                $this->NotifyUser('', 'Old Password does not match');
+                return false;
             }
         } catch (Exception $e){
             $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+            return false;
         }
     }
 

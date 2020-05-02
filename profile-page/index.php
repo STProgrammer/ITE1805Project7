@@ -1,11 +1,14 @@
 <?php
 
-require_once '../includes.php';
-
-define('FILENAME_TAG', 'image');
+/// DECLARE HOMEDIR
+$homedir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
+    
+require_once $homedir.DIRECTORY_SEPARATOR.'includes.php';
 
 //Håndterer login
-require_once "../login.php";
+require_once $homedir.DIRECTORY_SEPARATOR.'login.php';
+
+define('FILENAME_TAG', 'image');
 
 $archive = new FileArchive($db, $request, $session, $twig);
 
@@ -46,7 +49,8 @@ if(ctype_digit($request->query->get('id')))
     else {
         echo $twig->render('catalog.twig', array('catalog' => $catalog, 'user' => $user,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
-            'xsrfMac' => $xsrfMac));
+            ///'xsrfMac' => $xsrfMac
+        ));
     }
 }
 

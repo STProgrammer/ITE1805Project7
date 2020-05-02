@@ -34,7 +34,7 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
             exit();
         }
     } else {
-        echo $twig->render('user-edit.twig', array('users' => $users,
+        echo $twig->render('user.twig', array('users' => $users,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isUser' => $isUser,
             'xsrfMac' => $xsrfMac, 'user' => $user));
     }

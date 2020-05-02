@@ -1,20 +1,22 @@
 <?php
 
-    $homedir = __DIR__ . 'includes.php/';
+    $homedir = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
 
-    //Generate relative path string "../"
-    $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']),"ite1805project7"));
-    $rel = str_replace('/', '../', $rel);
-    $rel = preg_replace('~[^\.\.\/]*~', '', $rel);
+    // //Generate relative path string "../"
+    // $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']),"ite1805project7"));
+    // $rel = str_replace('/', '../', $rel);
+    // $rel = preg_replace('~[^\.\.\/]*~', '', $rel);
 
 
 
-    spl_autoload_register(function ($class_name) {
-        $homedir = __DIR__ . 'includes.php/';
-        require_once ($homedir . "classes/" .$class_name . '.class.php');
-    });
+    // spl_autoload_register(function ($class_name) {
+    //     $homedir = basename(__DIR__);//__DIR__ . 'includes.php/';
+    //     require_once ($homedir . "classes/" .$class_name . '.class.php');
+    // });
 
-    require_once $homedir . 'vendor/autoload.php';
+    require_once '..\..\vendor\autoload.php';
+    
+
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
@@ -29,13 +31,14 @@
     error_reporting(E_ALL);
 
     // Twig templates
-    $loader = new \Twig\Loader\FilesystemLoader($homedir . 'templates');
+    $loader = new \Twig\Loader\FilesystemLoader($homedir .DIRECTORY_SEPARATOR. 'templates');
     $twig = new \Twig\Environment($loader, ['debug' => true]);
     $twig->addExtension(new \Twig\Extension\DebugExtension());
 
     $twig->addFunction(new \Twig\TwigFunction('getMac', function($action) {
         return XsrfProtection::getMac($action);
     }));
+
 
     $db = Db::getDBConnection();
     if ($db==null) {
