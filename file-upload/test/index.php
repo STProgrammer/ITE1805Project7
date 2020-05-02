@@ -10,11 +10,13 @@
 <?php
 require_once "../../includes.php";
 
-$session->getFlashBag()->add('notice', "Test message");
+if (class_exists('Twig')) { echo "True";}
+else echo "False";
 
-echo $session->getFlashBag()->has('sss');
+echo phpinfo();
 
-echo  $twig->render('thiss.twig', array('session' => $session));
+
+//echo  $twig->render('thiss.twig', array('session' => $session));
 
 
 ?>

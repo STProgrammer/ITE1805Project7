@@ -28,11 +28,11 @@ class RegisterUser
         try{
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
-            $sth->bindParam(':email', $email);
-            $sth->bindParam(':hash', $hash);
-            $sth->bindParam(':username', $username );
-            $sth->bindParam(':firstname', $firstname);
-            $sth->bindParam(':lastname',  $lastname);
+            $sth->bindParam(':email', $email, PDO::PARAM_STR);
+            $sth->bindParam(':hash', $hash, PDO::PARAM_STR);
+            $sth->bindParam(':username', $username, PDO::PARAM_STR);
+            $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
+            $sth->bindParam(':lastname',  $lastname, PDO::PARAM_STR);
             $sth->execute() or exit();
             if ($this->sendEmail($email)) { $this->notifyUser("User registered, check your email for verification", "");}
             else {$this->notifyUser("Failed to send email to verify!", ""); }
@@ -57,8 +57,8 @@ class RegisterUser
         $id = md5(uniqid(rand(), 1));
         try{
             $sth = $this->dbase->prepare("update Users set verCode = :id where email = :email;");
-            $sth->bindParam(':email', $email);
-            $sth->bindParam(':id',  $id);
+            $sth->bindParam(':email', $email, PDO::PARAM_STR);
+            $sth->bindParam(':id',  $id, PDO::PARAM_STR);
             $sth->execute() or exit();
         } catch (Exception $e) {
             $this->notifyUser("Failed to send verification email",$e->getMessage() . PHP_EOL);
@@ -78,7 +78,7 @@ class RegisterUser
         if($id = $this->request->query->get('id')) {
             try{
                 $sth = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
-                $sth->bindParam(':id', $id);
+                $sth->bindParam(':id', $id, PDO::PARAM_STR);
                 $sth->execute();
                 if($sth->rowCount() == 1) {
                     return true;
@@ -141,10 +141,10 @@ class RegisterUser
 
         try {
             $sth = $this->dbase->prepare("update Users set firstname = :firstname, lastname = :lastname, username = :newUsername where username = :username");
-            $sth->bindParam(':newUsername', $newUsername);
-            $sth->bindParam(':username', $username);
-            $sth->bindParam(':firstname', $firstname);
-            $sth->bindParam(':lastname', $lastname);
+            $sth->bindParam(':newUsername', $newUsername, PDO::PARAM_STR);
+            $sth->bindParam(':username', $username, PDO::PARAM_STR);
+            $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
+            $sth->bindParam(':lastname', $lastname, PDO::PARAM_STR);
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->session->get('User')->setFirstName($firstname);
@@ -164,8 +164,8 @@ class RegisterUser
         $hash = password_hash($password, PASSWORD_DEFAULT);
         try {
             $sth = $this->dbase->prepare("update Users set password = :hash where username = :username");
-            $sth->bindParam(':username', $username);
-            $sth->bindParam(':hash', $hash);
+            $sth->bindParam(':username', $username, PDO::PARAM_STR);
+            $sth->bindParam(':hash', $hash, PDO::PARAM_STR);
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->notifyUser("Password changed!", '');
@@ -184,8 +184,8 @@ class RegisterUser
     public function changeEmail($email, $username) {
         try {
             $sth = $this->dbase->prepare("update Users set email = :email, verified = 0 where username = :username");
-            $sth->bindParam(':username', $username);
-            $sth->bindParam(':email', $email);
+            $sth->bindParam(':username', $username, PDO::PARAM_STR);
+            $sth->bindParam(':email', $email, PDO::PARAM_STR);
             $sth->execute();
             $this->sendEmail($email);
             if ($sth->rowCount() == 1) {

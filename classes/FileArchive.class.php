@@ -347,6 +347,7 @@ class FileArchive {
                 $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
                 $stmt->execute();
                 $id = intval($this->db->lastInsertId());
+    //            if (exif_imagetype($file)) {$this->saveThumbnail($data, $id);}
                 $this->addTags($tagsStr, $id);
                 $this->notifyUser("File uploaded", "");
                 return $id;
@@ -355,13 +356,40 @@ class FileArchive {
         }
         else {
             //require_once ("hode.php");
-            if ($size > 5512000) $this->notifyUser("File size is too big !", "");
-            elseif(strlen($name) > 60) $this->notifyUser("Filename is too long", "");
+            if ($size > 5512000) $this->notifyUser("Failed to upload: File size is too big !", "");
+            elseif(strlen($name) > 60) $this->notifyUser("Failed to upload: Filename is too long", "");
             else $this->notifyUser("No file found", "");
             return 0;
         }
 
     }  // END FILE SAVE
+
+    //Koden modifisert fra https://stackoverflow.com/questions/18805497/php-resize-image-on-upload
+    private function saveThumbnail($data, $id) {
+        $maxDimW = 60;
+        $maxDimH = 60;
+        //reducing image to 5%, max 60 60.
+        $fileTags = $this->request->files->get('image');
+        $file = $fileTags->getPathname();
+        $size = getimagesize($file);
+        $width = $size[0] / 20;
+        $height = $size[0] / 20;
+        if ($width > $maxDimW) $width = 60;
+        if ($height > $maxDimH) $height = 60;
+        $src = imagecreatefromstring($data);
+        $dst = imagecreatetruecolor( $width, $height );
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $size[0], $size[1] );
+        $data = file_get_contents($dst);
+        try
+        {
+            $stmt = $this->db->prepare("INSERT INTO Thumbnails (fileId, data) VALUES (:fileId, :data);");
+            $stmt->bindParam(':fileId', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
+            $stmt->execute();
+            $thumb = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", "Thumb".$e->getMessage()); return; }
+    }
 
 
 
@@ -469,15 +497,11 @@ class FileArchive {
                 $filename = $item['filename'];
                 $type = $item['type'];
                 $data = $item['data'];
-                $size = getimagesize($filename);
-
-                $image = imagecreate(3,3);
-                $image = imagecreatefromjpeg($filename);
-                Header("Content-type: $type");
-                Header("Content-Disposition: filename=\"$filename\"");
-                Header("Content-size: 10%");
-                // Skriv bildet/filen til klienten
-                echo $data;
+                $image = imagecreatefromstring($data);
+                $image = imagescale($image, 100, 90);
+                header('Content-Type: image/jpeg');
+                imagejpeg($image);
+                imagedestroy($image);
                 return true;
             }
         }
