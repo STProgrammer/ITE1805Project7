@@ -485,7 +485,7 @@ class FileArchive {
     }  //END SHOW FILE
 
 
-    //Show thumbnail
+    //Show thumbnail, delvis modifisert fra https://stackoverflow.com/questions/21709098/resizing-and-then-displaying-blob-element-from-database
     public function showThumbnail($id) {
         try {
             $stmt = $this->db->prepare("SELECT type, impressions, filename, data FROM Files WHERE fileId = :id");
@@ -599,16 +599,16 @@ class FileArchive {
     public function searchFiles($searchQuery) {
         $searchQuery = str_replace('%','\\%', $searchQuery);
         $searchQuery = "%".$searchQuery."%";
-        $fromDate = $this->request->query->has('from-date');
-        $toDate = $this->request->query->has('to-date');
+        $fromDate = $this->request->query->get('from-date');
+        $toDate = $this->request->query->get('to-date');
 
         try
         {
             if (DateTime::createFromFormat('Y-m-d', $toDate) && DateTime::createFromFormat('Y-m-d', $fromDate)) {
-                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
                 $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
-                $stmt->bindParam(':fromdate', $searchQuery, PDO::PARAM_STR);
-                $stmt->bindParam(':todate', $searchQuery, PDO::PARAM_STR);
+                $stmt->bindParam(':fromdate', $fromDate, PDO::PARAM_STR);
+                $stmt->bindParam(':todate', $toDate, PDO::PARAM_STR);
             }
             else {
                 $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet')));");

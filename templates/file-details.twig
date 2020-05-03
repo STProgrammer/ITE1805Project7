@@ -95,7 +95,7 @@
             <form  method="post">
             <label>Comment: </label>
                 <input type="hidden" value="{{ getMac("Post comment") }}" name="XSRFPreventionToken">
-            <textarea type="text" name="commenttext" rows="2" cols="20" maxlength=255 ></textarea>
+            <textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
                 <input type="submit" name="comment" value="Comment" />
             </form>
             {% endif %}
