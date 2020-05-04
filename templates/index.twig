@@ -4,7 +4,7 @@
     <title>
       File archive - showing files from the database
     </title>
-		<link type="text/css" rel="stylesheet" href="stilark.css" />
+		<link type="text/css" rel="stylesheet" href="stylesheet.css" />
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
   </head>
   <!-- Denne Javascript koden er modifisert fra https://stackoverflow.com/questions/5413899/search-and-replace-specific-query-string-parameter-value-in-javascript-->
@@ -13,10 +13,10 @@
           {% if session.getFlashBag.has('header') %}
       <div class="flash-notice">
           {% for header in session.getFlashBag.get('header', []) %}
-          <h2>{{ header }}</h2>
+          <h3>{{ header }}</h3>
           {% endfor %}
           {% for message in session.getFlashBag.get('message', []) %}
-              <h2>{{ message }}</h2>
+              <p>{{ message }}</p>
           {% endfor %}
               <p><a href = "./">Back </a></p>
       </div>
@@ -48,31 +48,25 @@
 
 
           <h1>
-              Filearchive - showing files
+              Project 7 Drive
           </h1>
               <h2>
                   {{ catalogPath }}
               </h2>
-          <pre>
-            <p><a href="{{rel}}file-upload/">Add new</a> </p>
-        </pre>
-      {% if catalog %}
-          <h2>
-              {{ catalog.getCatalogName() }}
-          </h2>
-      {% endif %}
+            <p><a href="{{rel}}file-upload/" class="button_white">+ New</a> </p>
   {% if elements %}
       <div id="filliste">
-          <ul>
+          <table id="files_table"></table>
+          <tr>
               {% for element in elements %}
                   {% if element.isFile == 0 %}
-                      <li>
+                      <td>
                           <a href="{{rel}}?catalogid={{element.id}}">{{element.Title}}</a> {{element.date}}
                           <a href="{{rel}}catalog/?id={{element.id}}"> Details </a>&nbsp;
-                      </li>
+                      </td>
                   {% else %}
                       {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
-                          <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}" width="10%"/></a>
+                          <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}"/></a>
                           <a href="{{rel}}file-details/?id={{element.id}}"> Details </a>
                       {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
                           <video width="25%" height="100%" controls>
@@ -86,7 +80,7 @@
                       {% endif %}
                   {% endif %}
               {% endfor %}
-          </ul>
+          </tr>
       </div>
   {% endif %}
                    {{ dump('pageno') }}

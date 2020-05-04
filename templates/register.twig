@@ -6,43 +6,59 @@
 </head>
 <script>
     var check = function() {
-        if (document.getElementById('password').value ==
-            document.getElementById('password2').value) {
-            document.getElementById('message').style.color = 'green';
-            document.getElementById('message').innerHTML = 'matching';
-        } else {
-            document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'not matching';
-        }
-    }
-    function validate(){
         var pass1 = document.getElementById("password").value;
         var pass2 = document.getElementById("password2").value;
-        if (pass1 != pass2) {
-            alert("Passwords don't match!")
+        if (pass1 != "" && pass2 != "") {
+            if (pass1 === pass2) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+                return true;
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+                return false;
+            }
         }
-        return pass1 == pass2;
+        else document.getElementById('message').innerHTML = '';
+        return false;
     }
+
+   function validate(){
+        var pass1 = document.getElementById("password").value;
+        var pass2 = document.getElementById("password2").value;
+        return check();
+    }
+
 </script>
 <body>
 <h1>Register user</h1>
-<form method="post" onsubmit="return validate();" >
+<form method="post" id="register_form" onsubmit="return validate();">
     <label>Username:</label>
-    <br><input type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username"/>
+    <div id="error_msg"></div>
+    <div>
+    <br><input type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username" />
+    <span></span>
+        <div id="usrnm_msg"></div>
+    </div>
+    <div>
     <br><label>First Name:</label>
     <br><input type="text" name="firstname" value="" placeholder="First name" maxlength=45 required id="firstname" />
     <br><label>Last name:</label>
     <br><input type="text" name="lastname" value="" placeholder="Last name" maxlength=45 required id="lastname" />
+        <div>
     <br><label>Epost:</label>
     <br><input type="email" name="email" value="" placeholder="Email" maxlength=45 required id="email" />
-    <br><label>Change password: </label>
+        <span></span>
+    </div>
+    <div>
+    <br><label>Password: </label>
     <br><input type="password" name="password"  required id="password" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
     <br><label>Confirm password:</label>
     <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
-    <span id='message'></span>
+        <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="register" id="reg_btn" value="Register"></form>
-</body>
-<script src="../jquery-3.5.0.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="../script.js"></script>
+</body>
 </html>

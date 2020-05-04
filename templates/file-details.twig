@@ -24,7 +24,7 @@
     <div id="filliste">
         <ul>
             {% if file.getType() == 'image/jpeg' or  file.getType() == 'image/pjpeg' or file.getType() == 'image/png' or file.getType() == 'image/gif'%}
-                <a href="../?id={{file.getFileId}}"><img src="../thumbnail.php?id={{file.getFileId}}" width="10%"/></a>
+                <a href="../?id={{file.getFileId}}"><img src="../thumbnail.php?id={{file.getFileId}}" /></a>
             {% elseif file.getType() == 'video/mp4' or file.getType() == 'video/webm' or file.getType() == 'video/ogg' %}
                 <video width="25%" height="100%" controls>
                     <source src="../?id={{file.getFileId()}}" type="{{file.getType()}}">

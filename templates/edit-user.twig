@@ -7,14 +7,18 @@
 <body>
 <script>
     var check = function() {
-        if (document.getElementById('password').value ==
-            document.getElementById('password2').value) {
-            document.getElementById('message').style.color = 'green';
-            document.getElementById('message').innerHTML = 'matching';
-        } else {
-            document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'not matching';
+        if (document.getElementById('password').value != "" ||
+            document.getElementById('password2').value != "") {
+            if (document.getElementById('password').value ==
+                document.getElementById('password2').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+            }
         }
+        else document.getElementById('message').innerHTML = '';
     }
     function validate(){
         var pass1 = document.getElementById("password").value;
@@ -23,11 +27,6 @@
             alert("Passwords don't match!")
         }
         return pass1 == pass2;
-    }
-    function tryalert()
-    {
-        alert("working");
-        return false;
     }
 </script>
 {% include 'login2.twig' %}
