@@ -67,7 +67,7 @@ class Comment
             $stmt->execute();
             if($comment = $stmt->fetchObject('Comment')) {
                 return $comment;
-            } else { $this->notifyUser("En feil oppstod", ""); }
+            } else { $this->notifyUser("Something went wrong", ""); }
         }
         catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
     }
@@ -82,7 +82,7 @@ class Comment
             if ($comment = $stmt->fetch()) {
                 return $comment['username'] == $username;
             } else {
-                $this->notifyUser("En feil oppstod", "");
+                $this->notifyUser("Something went wrong", "");
                 return false;
             }
         } catch

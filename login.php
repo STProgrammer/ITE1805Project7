@@ -1,6 +1,6 @@
 <?php
 //logg out
-if ($request->request->has('logout')) {
+if ($request->request->has('logout') && XsrfProtection::verifyMac("Logout")) {
     $session->clear();
     header("Location: .");
     exit();

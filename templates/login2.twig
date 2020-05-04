@@ -1,24 +1,31 @@
 {% if user %}
-    <p>
-        Du er logget inn som {{user.getFullName()}}
-    </p>
-    <form action="index.php" method="post">
-        <input type="submit" name="logout" value="Logout">
-    </form>
-    <p><a href="{{rel}}profile-page/?username={{ user.getUsername() }}">Profile page</a></p>
+    <table id="loggedin_top">
+        <tr>
+            <td>You are logged in as <a href="{{rel}}profile-page/?username={{ user.getUsername() }}">{{ user.getUsername() }}</a> ({{user.getFullName()}})</td>
+            <td>
+                <form action="index.php" method="post">
+                    <input type="hidden" value="{{ getMac("Logout") }}" name="XSRFPreventionToken">
+                    <input type="submit" name="logout" value="Logout">
+                </form>
+            </td>
+        </tr>
+    </table>
 {% else %}
-    <h3>Du må logge inn</h3>
     <form action="index.php" method="post">
-        <table>
+        <table id="loginform_top">
             <tr><td><label>Email: </label> </td>
-                <td><input type="text" name="email"></td></tr>
-            <tr><td><label>Password:</label> </td>
-                <td><input type="password" name="password" size="15"></td></tr>
-            <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
-            <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
+                <td><input type="text" name="email" class="rounded_input"></td>
+                <td><label>Password:</label> </td>
+                <td><input type="password" name="password" size="15" class="rounded_input"></td>
+            <td>
+                <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
+                <button type="submit" name="login"  value="Login" class="button_white">Sign in</button>
+            </td>
+            <td>
+                <a href="{{rel}}register/" class="button_white">Register </a>
+            </td>
             </tr>
         </table>
     </form>
     <p>Logg inn med bruker: "aka160@post.uit.no" & passord: "test"</p>
-    <p><a href="{{rel}}register/"> Register </a> </p>
 {% endif %}

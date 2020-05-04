@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
   <title>Login</title>
 </head>
 <body>
-<h2>Logg inn</h2>
-{% if fail %}
-  <h3>Failed to login</h3>
-{% endif %}
+<h2>Log in</h2>
+{% if session.getFlashBag.has('header') %}
+<div class="flash-notice">
+  {% for header in session.getFlashBag.get('header', []) %}
+    <h2>{{ header }}</h2>
+  {% endfor %}
+  {% endif %}
+  </div>
   <form action="../login/index.php" method="post">
     <table>
       <tr><td><label>Email: </label> </td>

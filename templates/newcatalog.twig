@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        New catalog
+    </title>
+    <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+{% include 'login2.twig' %}
+    {% if user %}
+        <h1>Add new catalog: </h1>
+        <form method="post">
+            <table border="1" cellspacing="0" cellpadding="5" width="400">
+                <tr>
+                    <td>
+                        <input type="checkbox" name="access" value="0">
+                        Only accessible for registered users
+                    </td>
+                <tr><td><label>Catalog name: </label>
+                        <input type="text" name="catalogName" required></td></tr>
+                <tr><td><br><label>Catalog:</label>
+                        <br><select name="catalogId">
+                            <option value="1"> Main </option>
+                            {% if catalogsList %}
+                                {% for catalog in catalogsList %}
+                                    <option value="{{ catalog.catalogId }}">{{ catalog.catalogName }} </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+            <input type="hidden" value="{{ getMac("Catalog upload") }}" name="XSRFPreventionToken">
+            <tr><td colspan="2" width="400" align="middle">
+                <input type="submit" name="post_catalog" value="Post" />
+            </td>
+            </tr>
+            </table>
+        </form>
+    {% else %}
+        <p>Du må logge inn for å laste opp fil</p>
+    {% endif %}
+</body>
+</html>

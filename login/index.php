@@ -23,11 +23,8 @@ elseif ($request->request->has('login')) {
         exit();
     }
 }
-
-if ($request->query->has('loginfail')) {
-    echo $twig->render('login.twig', array('fail' => true));
-} else {
-    echo $twig->render('login.twig', array());
+else {
+    echo $twig->render('login.twig', array('session' => $session));
 }
 
 ?>

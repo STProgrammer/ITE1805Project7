@@ -44,15 +44,17 @@ $comment = new Comment($db, $request, $session);
             //Get the comment id;
             $commentId = $request->request->getInt('commentid');
             //Check if user is owner of comment or admin
-            if ($comment->checkOwner($db, $user->getUserName(), $commentId) or $isAdmin) {
-                //Xsrf check
-                if (XsrfProtection::verifyMac("Delete comment")) {
+            if (($comment->checkOwner($user->getUserName(), $commentId) or $isAdmin)
+                && XsrfProtection::verifyMac("Delete comment")) {
                     $username = $user->getUserName();
-                    $comment->deleteComment($db, $commentId);
+                    $comment->deleteComment($commentId);
                     $get_info = "?id=" . $id . "&deletecomment=1";
                     header("Location: ." . $get_info);
                     exit();
-                }
+            }
+            else {
+                header("Location: " . dirname($_SERVER['PHP_SELF']) . "?id=" . $id);
+                exit();
             }
         }
 
