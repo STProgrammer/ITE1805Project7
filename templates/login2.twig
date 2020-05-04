@@ -14,12 +14,12 @@
     <form action="index.php" method="post">
         <table id="loginform_top">
             <tr><td><label>Email: </label> </td>
-                <td><input type="text" name="email"></td>
+                <td><input type="text" name="email" class="rounded_input"></td>
                 <td><label>Password:</label> </td>
-                <td><input type="password" name="password" size="15"></td>
+                <td><input type="password" name="password" size="15" class="rounded_input"></td>
             <td>
                 <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
-                <button type="submit" name="login"  value="Login">Sign in</button>
+                <button type="submit" name="login"  value="Login" class="button_white">Sign in</button>
             </td>
             <td>
                 <a href="{{rel}}register/" class="button_white">Register </a>

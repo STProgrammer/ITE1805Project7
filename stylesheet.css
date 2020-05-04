@@ -1,3 +1,23 @@
+
+/* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
+
+body {
+    background-image: linear-gradient(to top, lightskyblue , darkturquoise);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    font-family: "Courier New", sans-serif;
+    font-size: 1em;
+    margin: auto;
+    max-width: 80em;
+    word-wrap: break-word;
+}
+
+/*.content {
+    margin: auto;
+    max-width: 900px;
+}*/
+
 .button_white {
     background-color: white;
     border: black 1px solid;
@@ -9,4 +29,65 @@
     font-size: 1em;
     margin: 1em 1em;
     cursor: pointer;
+}
+
+button, input[type="submit"] {
+    background-color: grey;
+    color: black;
+    padding: 0.3em 0.3em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 1em 1em;
+}
+
+.circle {
+    border-radius: 3em;
+}
+
+.button_pagination {
+    border-radius: 1em;
+    font-size: 1.2em;
+    background-color: yellow;
+}
+
+.file-list {
+    width: 80em;
+    border: black 1px solid;
+    display: block;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+.element_box {
+    float: contour;
+    display: inline-block;
+    margin: 0.3em;
+    padding: 0.3em;
+}
+
+.search {
+    margin: 1em;
+    float: right;
+    padding: 1em;
+}
+
+table#search_form {
+    border: black 1px solid;
+    width: 20em;
+    word-wrap: break-word;
+    background: #00bfbf;
+}
+
+table#search_form tr, table#search_form td {
+    padding: 0.3em;
+}
+
+
+.pagination {
+    font-size: 1em;
+    color: red;
+    float: bottom;
+    text-align: center;
 }

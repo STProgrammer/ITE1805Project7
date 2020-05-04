@@ -462,6 +462,7 @@ class FileArchive {
                     if ($this->session->has('User') && $this->session->has('loggedin')) {
                         $user = $this->session->get('User');
                         if ($this->session->get('loggedin') && $user->verifyUser($this->request)) {
+                            $this->increaseImpression($id, $impressions);
                             Header( "Content-type: $type" );
                             Header("Content-Disposition: filename=\"$filename\"");
                             echo $data;
