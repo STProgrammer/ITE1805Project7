@@ -2,7 +2,7 @@
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
 body {
-    background-image: linear-gradient(to top, lightskyblue , darkturquoise);
+    background-image: linear-gradient(to top, darkcyan, darkblue);
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: white;
@@ -11,6 +11,15 @@ body {
     margin: auto;
     max-width: 80em;
     word-wrap: break-word;
+}
+
+a:link {
+    color: lightblue;
+}
+
+/* visited link */
+a:visited {
+    color: lightpink;
 }
 
 /*.content {
@@ -30,6 +39,42 @@ body {
     margin: 1em 1em;
     cursor: pointer;
 }
+
+a.button_white  {
+    color: black;
+}
+
+#commenttext {
+    background-color: #00bfbf;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    border: black 1px;
+    border-radius: 0.5em;
+    font-size: 1em;
+    margin: 2px;
+    padding: 0.4em;
+}
+
+#comment {
+    font-size: 1em;
+    margin: 1px;
+}
+
+
+input#comment_delete {
+    margin: 2px;
+    padding: 0.3em;
+}
+
+#tag {
+    background-color: lightskyblue;
+    border-radius: 1em;
+    color: darkmagenta;
+    text-align: center;
+    padding: 0.3em;
+}
+
 
 button, input[type="submit"] {
     background-color: grey;

@@ -39,21 +39,23 @@
                 Title: {{ file.getTitle() }}
             </li>
             <li>
-                Size: {{ file.getSize() }}
+                Type: {{ file.getType() }}
             </li>
             <li>
-                Owner: {{ file.getOwner() }}
+                Size: {{ file.getSize() / 1000 }} kilo bytes
             </li>
             <li>
-                Description: {{ file.getDescription() }}
+                Author: {{ file.getOwner() }}
             </li>
             <li>
                 Catalog Path: {{ file.getCatalogName() }}
             </li>
             <li>
-                <p id="tags"></p>
+                Description: {{ file.getDescription() }}
             </li>
             <li>
+                Tags: <p id="tags"></p>
+            </li>
                 <script>
                     <!-- koden er tatt fra http://jsfiddle.net/UH5U9/3/ found in StackOverflow
                         https://stackoverflow.com/questions/10022781/generate-search-links-for-comma-separated-words -->
@@ -61,12 +63,10 @@
                     tags = tags.split(', ');
                     var temp = '';
                     for (var i = 0; i < tags.length; i++) {
-                        temp = temp + '<a href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
+                        temp = temp + '<a id="tag" href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
                     }
                     document.getElementById("tags").innerHTML = temp;
                 </script>
-            </li>
-
         </ul>
     </div>
         {% if isOwner %}
@@ -78,16 +78,19 @@
             <input type="submit" name="Delete_file" value="Delete file" />
             </form>
             {% endif %}
+        <h3>Comments:</h3>
         {% for comment in comments %}
-        {{ comment['date'] }}
-        {{ comment['username'] }}
-        <p>{{ comment['comment'] }}</p>
-            {% if comment['username'] == user.getUsername() or user.isAdmin() == 0 %}
-                <form method="post">
+            <p><div id="comment"><div id="commenttext">
+                    <a href="{{rel}}profile-page/?username={{ comment.username }}">{{ comment['username'] }}</a>
+                {{ comment['comment'] }}
+               <br> {{ comment['date'] }}</div>
+            {% if comment['username'] == user.getUsername() or user.isAdmin() == 1 %}
+                <form method="post" id="delete_comment">
                     <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
                     <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
-                    <input type="submit" name="Delete_comment" value="Delete comment" />
-                </form>
+                    <input type="submit" name="Delete_comment" value="Delete comment" id="comment_delete" />
+                </form></div></p>
+            {% else %}</div></p>
             {% endif %}
 
         {% endfor %}
