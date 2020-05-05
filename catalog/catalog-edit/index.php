@@ -18,7 +18,7 @@ if (ctype_digit($request->query->get('id')) && ($user = $session->get('User'))
     // Admin can delete catalogs, but can't edit catalogs
     $isOwner = false;  //isOwner controls if the user owns the file or not, this is to avoid repeated checks
     if ($user->getUsername() == $catalog->getOwner()) {
-            $isOwner = true;
+        $isOwner = true;
     } // End checking catalog owner
 
     //If not owner, quit it
