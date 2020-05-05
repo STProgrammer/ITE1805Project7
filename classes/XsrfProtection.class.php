@@ -18,8 +18,10 @@ class XsrfProtection
         $secret = "g45jf722e";
         $id = session_id();
         $new_mac = hash_hmac($key, $action_name . $secret, $id);
-        if($new_mac == $_POST['XSRFPreventionToken']) return true;
-        else return false;
+        if($new_mac == $_POST['XSRFPreventionToken'])
+            return true;
+        else
+            return false;
     }
 }
 

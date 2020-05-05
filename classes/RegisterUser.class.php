@@ -2,6 +2,8 @@
 
 
 class RegisterUser
+
+
 {
 
     public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
@@ -9,6 +11,7 @@ class RegisterUser
         $this->dbase = $db;
         $this->request = $request;
         $this->session = $session;
+
     }
 
     private function notifyUser($strHeader, $strMessage)
@@ -25,6 +28,17 @@ class RegisterUser
         $lastname = $this->request->request->get('lastname');
         $email = $this->request->request->get('email');
         $password = $this->request->request->get('password');
+<<<<<<< HEAD
+
+        try{
+            $hash = password_hash($userData['password'], PASSWORD_DEFAULT);
+            $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
+            $sth->bindParam(':email', $userData['email']);
+            $sth->bindParam(':hash', $hash);
+            $sth->bindParam(':username', $userData['username'] );
+            $sth->bindParam(':firstname', $userData['firstname']);
+            $sth->bindParam(':lastname',  $userData['lastname']);
+=======
         try{
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
@@ -33,6 +47,7 @@ class RegisterUser
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
             $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
             $sth->bindParam(':lastname',  $lastname, PDO::PARAM_STR);
+>>>>>>> Ting0503
             $sth->execute() or exit();
             if ($this->sendEmail($email)) { $this->notifyUser("User registered, check your email for verification", "");}
             else {$this->notifyUser("Failed to send email to verify!", ""); }
@@ -55,6 +70,20 @@ class RegisterUser
         $url .= "/verify.php/";
 
         $id = md5(uniqid(rand(), 1));
+<<<<<<< HEAD
+
+        try{
+            $sth = $this->dbase->prepare("update Users set verCode = :id where email = :email;");
+            $sth->bindParam(':email', $email);
+            $sth->bindParam(':id', $id);
+            $sth->execute();
+        }catch (Exception $e){
+            print $e->getMessage() . PHP_EOL;
+        }
+
+
+        curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
+=======
         try{
             $sth = $this->dbase->prepare("update Users set verCode = :id where email = :email;");
             $sth->bindParam(':email', $email, PDO::PARAM_STR);
@@ -64,12 +93,16 @@ class RegisterUser
             $this->notifyUser("Failed to send verification email",$e->getMessage() . PHP_EOL);
             return false;
         }
+>>>>>>> Ting0503
 
         curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);
+<<<<<<< HEAD
+
+=======
         return true;
     }
 
@@ -88,6 +121,7 @@ class RegisterUser
                 return false;
             }
         }
+>>>>>>> Ting0503
     }
 
 
@@ -141,10 +175,17 @@ class RegisterUser
 
         try {
             $sth = $this->dbase->prepare("update Users set firstname = :firstname, lastname = :lastname, username = :newUsername where username = :username");
+<<<<<<< HEAD
+            $sth->bindParam(':newUsername', $newUsername);
+            $sth->bindParam(':username', $username);
+            $sth->bindParam(':firstname', $firstname);
+            $sth->bindParam(':lastname', $lastname);
+=======
             $sth->bindParam(':newUsername', $newUsername, PDO::PARAM_STR);
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
             $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
             $sth->bindParam(':lastname', $lastname, PDO::PARAM_STR);
+>>>>>>> Ting0503
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->session->get('User')->setFirstName($firstname);
@@ -164,8 +205,13 @@ class RegisterUser
         $hash = password_hash($password, PASSWORD_DEFAULT);
         try {
             $sth = $this->dbase->prepare("update Users set password = :hash where username = :username");
+<<<<<<< HEAD
+            $sth->bindParam(':username', $username);
+            $sth->bindParam(':hash', $hash);
+=======
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
             $sth->bindParam(':hash', $hash, PDO::PARAM_STR);
+>>>>>>> Ting0503
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->notifyUser("Password changed!", '');
@@ -184,8 +230,13 @@ class RegisterUser
     public function changeEmail($email, $username) {
         try {
             $sth = $this->dbase->prepare("update Users set email = :email, verified = 0 where username = :username");
+<<<<<<< HEAD
+            $sth->bindParam(':username', $username);
+            $sth->bindParam(':email', $email);
+=======
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
             $sth->bindParam(':email', $email, PDO::PARAM_STR);
+>>>>>>> Ting0503
             $sth->execute();
             $this->sendEmail($email);
             if ($sth->rowCount() == 1) {
@@ -218,6 +269,31 @@ class RegisterUser
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete user!", $e->getMessage() . PHP_EOL);
         }
+<<<<<<< HEAD
+    }
+
+    public function verifyUser() : bool {
+
+        if($this->request->query->get('id')){
+            $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+            try{
+                $sth  = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
+                $sth ->bindParam(':id',$id);
+                $sth ->execute();
+                if($sth->rowCount() == 1 ){
+                    return true;
+                }
+                else
+                    return false;
+            }catch (Exception $e){
+                $this->NotifyUser("En feil oppstod", $e->getMessage() . PHP_EOL);
+                return false;
+            }
+        }
+        else
+            return false;
+=======
+>>>>>>> Ting0503
     }
 }
 
