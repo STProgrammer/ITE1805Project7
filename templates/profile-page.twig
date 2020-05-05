@@ -15,11 +15,13 @@
         <p>{{ message }}</p>
     {% endfor %}
 </div>
+
 {% if userData %}
-    <h1>
+<div class = "userform">
+    <h1 id ="user">
         User details
     </h1>
-    <ul>
+    <ul id = "usr">
         <li>
             Username: {{ userData['username'] }}
         </li>
@@ -33,8 +35,8 @@
 {% endif %}
 
 {% if isOwner or user.isAdmin() %}
-    <p><a href="edit-user/?username={{userData['username']}}" class="button_white">Edit user</a></p>
+    <p id ="usr-button"><a href="edit-user/?username={{userData['username']}}" class="button_white">Edit user</a></p>
 {% endif %}
-<p><a href = "../">Back </a></p>
-</body>
+<p id="back"><a href = "../">Back </a></p>
+</div></body>
 </html>

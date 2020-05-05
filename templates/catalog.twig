@@ -6,6 +6,7 @@
     <title>Catalog details</title>
 </head>
 <body>
+<div class = "catalog">
 {% include 'login2.twig' %}
 <div class="flash-notice">
     {% for header in session.getFlashBag.get('header', []) %}
@@ -17,7 +18,7 @@
     {% endfor %}
 </div>
 {% if catalog %}
-    <h1>
+    <h1 id="ctl-name">
         Catalog name: {{ catalog.getCatalogName() }}
     </h1>
     <ul>
@@ -27,7 +28,7 @@
     </ul>
 {% endif %}
 {% if isOwner %}
-    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button_white" >Edit catalog</a></p>
+    <p id="edit-ctl"><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button_white" >Edit catalog</a></p>
 {% endif %}
 {% if user.isAdmin() or isOwner %}
     <form method="post" onsubmit="return confirm('Are you sure to delete the catalog?');">
@@ -35,6 +36,6 @@
         <input type="submit" name="Delete_catalog" value="Delete catalog" class="delete" />
     </form>
 {% endif %}
-<p><a href = "./">Back </a></p>
-</body>
+<p id = "back-ctl"><a href = "./">Back </a></p>
+</div></body>
 </html>
