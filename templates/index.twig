@@ -85,19 +85,19 @@
                       {% else %}
                     <div class="element_box">
                               {% if element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_word_272702.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src=Images/iconfinder_word_272702.png"/></a>
                               {% elseif element.Type == 'application/mspowerpoint' %}
-                               a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_powerpoint_272700.png"/></a>
+                               a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_powerpoint_272700.png"/></a>
                               {% elseif element.Type == 'application/vnd.ms-excel' or element.Type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_excel_272697.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_excel_272697.png"/></a>
                               {% elseif element.Type == 'application/pdf' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_pdf_272699.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_pdf_272699.png"/></a>
                               {% elseif element.Type == 'text/plain' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_text_272701.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_text_272701.png"/></a>
                               {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_video-alt_383195.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_video-alt_383195.png"/></a>
                               {% else %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_File_104851.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_File_104851.png"/></a>
                               {% endif %}
                               <br><a href="{{rel}}?id={{element.id}}"> {{element.Title}} </a>
                               <br>Type: {{ element.Type }}

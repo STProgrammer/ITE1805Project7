@@ -75,7 +75,7 @@
     //Multiple tags search
     elseif($request->query->get('search') == "tagssearch")
     {
-        $tagsStr = $request->query->get('search');
+        $tagsStr = $request->query->get('tags');
         if ($request->query->get('andcondition') == 1) {
             $elements = $archive->searchByTagsWithAndCondition($tagsStr);
         } else { $elements = $archive->searchByTagsWithOrCondition($tagsStr);}
