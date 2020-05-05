@@ -14,7 +14,7 @@ body {
 }
 
 a:link {
-    color: blue;
+    color: darkblue;
 }
 
 /* visited link */
@@ -99,10 +99,10 @@ button, input[type="submit"] {
 
 .file-list {
     width: 80em;
-    border: black 1px solid;
+    border: #3C3C3C 1px solid;
     display: block;
-    margin: 0.5em;
-    padding: 0.5em;
+    margin: 1.5em;
+    padding: 1.5em;
 }
 
 .element_box {
@@ -113,7 +113,7 @@ button, input[type="submit"] {
 }
 
 .search {
-    margin: -5em;
+    margin: -3em;
     float: right;
     padding: 0em;
 }
@@ -123,6 +123,7 @@ table#search_form {
     width: 40em;
     word-wrap: break-word;
     background: none;
+    font-size: 13px;
 }
 
 table#search_form tr, table#search_form td {
@@ -135,4 +136,16 @@ table#search_form tr, table#search_form td {
     color: red;
     float: bottom;
     text-align: center;
+}
+
+p{
+    font-size: 15px;
+}
+
+h1{
+    font-size: 38px;
+}
+
+div{
+    font-size: 15px;
 }
