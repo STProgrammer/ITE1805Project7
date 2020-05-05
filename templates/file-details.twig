@@ -7,19 +7,18 @@
 </head>
 <body>
 {% include 'login2.twig' %}
-
+<h1>
+    File details
+</h1>
     <div class="flash-notice">
         {% for header in session.getFlashBag.get('header', []) %}
-            <h2>{{ header }}</h2>
+            <h3>{{ header }}</h3>
         {% endfor %}
         {% for message in session.getFlashBag.get('message', []) %}
-            <h2>{{ message }}</h2>
+            <p>{{ message }}</p>
         {% endfor %}
     </div>
     {% if file %}
-    <h1>
-        Detaljer om fil:
-    </h1>
     <pre>
         </pre>
     <div id="filliste">

@@ -9,10 +9,10 @@
 {% include 'login2.twig' %}
 <div class="flash-notice">
     {% for header in session.getFlashBag.get('header', []) %}
-        <h2>{{ header }}</h2>
+        <h3>{{ header }}</h3>
     {% endfor %}
     {% for message in session.getFlashBag.get('message', []) %}
-        <h2>{{ message }}</h2>
+        <p>{{ message }}</p>
     {% endfor %}
     <p><a href = "./">Back </a></p>
 </div>
@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if isOwner or user.isAdmin() %}
-    <p><a href="edit-user/?username={{userData['username']}}">Edit user</a></p>
+    <p><a href="edit-user/?username={{userData['username']}}" class="button_white">Edit user</a></p>
 {% endif %}
 </body>
 </html>

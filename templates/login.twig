@@ -12,7 +12,7 @@
 {% if session.getFlashBag.has('header') %}
 <div class="flash-notice">
   {% for header in session.getFlashBag.get('header', []) %}
-    <h2>{{ header }}</h2>
+    <h3>{{ header }}</h3>
   {% endfor %}
   {% endif %}
   </div>

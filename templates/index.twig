@@ -29,7 +29,7 @@
               <td>
                   <form method = "get">
                       <input type="search" name="query" placeholder="Search" maxlength="45">
-                      <br>Uploaded date (dateformat Month/Day/Year):
+                      <br>Uploaded date:
                       <br><label for="start">From date:</label>
                       <br><input type="date" id="from date" name="from-date"
                                  value=""
@@ -47,7 +47,7 @@
                       <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
                       <button type="submit" name="search" value="tagssearch">Search by tags</button>
                       <br><input type="checkbox" name="andcondition" value="1">
-                      <br>Check if you want each file to include all tags (AND condition)</form>
+                      Check if you want each file to include all tags (AND condition)</form>
               </td>
           </tr>
       </table>
@@ -112,8 +112,7 @@
       </div>
   {% endif %}
   </div>
-                   {{ dump('pageno') }}
-              {% if pagination %} <div class="pagination">
+              {% if pagination|length > 1 %} <div class="pagination">
 
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page %} {{ page }}
@@ -121,11 +120,7 @@
                       {% endif %}
                   {% endfor %}
               </div>
-
-
           {% endif %}
-  {{ dump(request.server.get('REQUEST URL')) }}
-  {{ dump(request.server.get('QUERY_STRING')) }}
   {% endif %}
   </body>
 </html>

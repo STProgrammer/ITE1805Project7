@@ -2,7 +2,7 @@
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
 body {
-    background-image: linear-gradient(to top, #ACD6FF, #004B97);
+    background-image: linear-gradient(to top,  #79A3CC, #002975);
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: white;
@@ -11,6 +11,7 @@ body {
     margin: auto;
     max-width: 80em;
     word-wrap: break-word;
+    line-height: 1.5em;
 }
 
 a:link {
@@ -26,6 +27,10 @@ a:visited {
     margin: auto;
     max-width: 900px;
 }*/
+
+.flash-notice {
+    color: red;
+}
 
 .button_white {
     background-color: white;
@@ -45,7 +50,7 @@ a.button_white  {
 }
 
 #commenttext {
-    /*background-color: #00bfbf;*/
+    background-color: #00bfbf;
     color: white;
     text-align: left;
     display: inline-block;
@@ -79,12 +84,19 @@ input#comment_delete {
 button, input[type="submit"] {
     background-color: #BEBEBE;
     color: black;
-    padding: 0.3em 0.3em;
     text-align: center;
-    text-decoration: none;
     display: inline-block;
     font-size: 1em;
+    padding: 0.3em 0.3em;
     margin: 1em 1em;
+}
+
+input {
+    margin-bottom: 0.5em;
+}
+
+label {
+    margin-top: 0.5em;
 }
 
 .circle {
@@ -93,8 +105,15 @@ button, input[type="submit"] {
 
 .button_pagination {
     border-radius: 1em;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: yellow;
+}
+
+.pagination {
+    font-size: 1.1em;
+    color: red;
+    float: bottom;
+    text-align: center;
 }
 
 .file-list {
@@ -113,26 +132,23 @@ button, input[type="submit"] {
 }
 
 .search {
-    margin: -5em;
+    margin: -3em;
     float: right;
-    padding: 0em;
+    background: dodgerblue;
 }
 
 table#search_form {
-    border: none;
-    width: 40em;
+    width: 30em;
     word-wrap: break-word;
-    background: none;
+}
+
+table, tr, td {
+    border: transparent;
 }
 
 table#search_form tr, table#search_form td {
-    padding: 0.3em;
+    padding: 1em;
+    margin-left: 1em;
 }
 
 
-.pagination {
-    font-size: 1em;
-    color: red;
-    float: bottom;
-    text-align: center;
-}
