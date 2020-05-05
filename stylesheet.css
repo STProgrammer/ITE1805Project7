@@ -15,12 +15,12 @@ body {
 }
 
 a:link {
-    color: blue;
+    color: lightblue;
 }
 
 /* visited link */
 a:visited {
-    color: darkmagenta;
+    color: lightpink;
 }
 
 /*.content {
