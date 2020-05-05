@@ -20,8 +20,7 @@
               <p>{{ message }}</p>
           {% endfor %}
       </div>
-          <p><a href = "../">Back </a></p>
-          {% else %}
+          {% endif %}
               <div class="search">
 {#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
       <table id="search_form">
@@ -113,6 +112,5 @@
                   {% endfor %}
               </div>
           {% endif %}
-  {% endif %}
   </body>
 </html>
