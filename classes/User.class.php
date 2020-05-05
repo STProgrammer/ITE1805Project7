@@ -41,7 +41,6 @@ class User {
     public function setVerified() { $this->verified = 1; }
     public function getHits() { return $this->usr_hits; }
     public function getIPAddress() { return $this->IPAddress; }
-
     public function verifyUser($request) {
         //$request = Request::createFromGlobals();
         if(($this->IPAddress == $request->server->get('REMOTE_ADDR')) && ($this->UserAgent == $request->server->get('HTTP_USER_AGENT') )){
@@ -52,6 +51,7 @@ class User {
             return false;
     }
 
+
     public static function login(PDO $db,  $request,  $session) {
         $email = $request->request->get('email');
         $stmt = $db->prepare("SELECT username, password, username, firstname, lastname, date, verified, admin FROM Users WHERE email=:email");
@@ -59,14 +59,6 @@ class User {
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
-<<<<<<< HEAD
-            if (password_verify($request->request->get('password'), $row['password']) && $row['verified'] == 1) {
-                $session->set('loggedin', true);
-                $ip = $request->server->get('REMOTE_ADDR');
-                $browser = $request->server->get('HTTP_USER_AGENT');
-                $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
-                return true;
-=======
             if (password_verify($request->request->get('password'), $row['password'])) {
                 if ($row['verified'] == 1) {
                     $session->set('loggedin', true);
@@ -81,15 +73,11 @@ class User {
             } else {
                 $session->getFlashBag()->add('header', "Wrong username or password");
                 return false;
->>>>>>> Ting0503
             }
         }  else {
             $session->getFlashBag()->add('header', "Wrong username or password");
             return false;
         }
     }
-
-    public function changePassword(){;}
-
 }
 ?>
