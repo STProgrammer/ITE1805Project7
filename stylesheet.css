@@ -2,24 +2,23 @@
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
 body {
-    background-image: linear-gradient(to top, #ACD6FF, #004B97);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-image: url("Images/circle-blues.png");
     color: white;
     font-family: "Arial", sans-serif;
     font-size: 1em;
     margin: auto;
-    max-width: 80em;
+    max-width: 70em;
     word-wrap: break-word;
+    line-height: 1.5em;
 }
 
 a:link {
-    color: darkblue;
+    color: lightskyblue;
 }
 
 /* visited link */
 a:visited {
-    color: darkmagenta;
+    color: lightpink;
 }
 
 /*.content {
@@ -27,7 +26,47 @@ a:visited {
     max-width: 900px;
 }*/
 
-.button_white {
+.flash-notice {
+    color: deeppink;
+
+}
+
+button, input[type="submit"], .button_white {
+    background-color: blue;
+    border-top: solid #80c3e6;
+    border-right: solid darkblue;
+    border-bottom: solid darkblue;
+    border-left: solid #80c3e6;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.3em 0.3em;
+    margin: 1em 1em;
+    border-radius: 0.3em;
+    cursor: pointer;
+}
+
+input {
+    margin-bottom: 0.5em;
+    border-radius: 0.2em;
+}
+
+input[type=submit].delete {
+    background-color: red;
+    color: white;
+    border-top: solid #FF4444;
+    border-right: solid darkred;
+    border-bottom: solid darkred;
+    border-left: solid #FF4444;
+    cursor: pointer;
+}
+
+label {
+    margin-top: 0.5em;
+}
+
+/*.button_white {
     background-color: white;
     border: black 1px solid;
     color: black;
@@ -38,14 +77,20 @@ a:visited {
     font-size: 1em;
     margin: 1em 1em;
     cursor: pointer;
-}
+}*/
 
 a.button_white  {
-    color: black;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
 }
 
+
+
+
+
 #commenttext {
-    /*background-color: #00bfbf;*/
+    background-color: #00bfbf;
     color: white;
     text-align: left;
     display: inline-block;
@@ -76,16 +121,8 @@ input#comment_delete {
 }
 
 
-button, input[type="submit"] {
-    background-color: #BEBEBE;
-    color: black;
-    padding: 0.3em 0.3em;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1em;
-    margin: 1em 1em;
-}
+
+
 
 .circle {
     border-radius: 3em;
@@ -93,16 +130,22 @@ button, input[type="submit"] {
 
 .button_pagination {
     border-radius: 1em;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background-color: yellow;
 }
 
+.pagination {
+    font-size: 1.1em;
+    color: red;
+    float: bottom;
+    text-align: center;
+}
+
 .file-list {
-    width: 80em;
-    border: #3C3C3C 1px solid;
-    display: block;
-    margin: 1.5em;
-    padding: 1.5em;
+    border: black 1px solid;
+    /*   display: block; */
+    margin: 0.5em;
+    padding: 0.5em;
 }
 
 .element_box {
@@ -113,39 +156,23 @@ button, input[type="submit"] {
 }
 
 .search {
-    margin: -3em;
     float: right;
-    padding: 0em;
+    background: dodgerblue;
+    display: inline-block;
 }
 
 table#search_form {
-    border: none;
-    width: 40em;
+    width: 30em;
     word-wrap: break-word;
-    background: none;
-    font-size: 13px;
+}
+
+table, tr, td {
+    border: transparent;
 }
 
 table#search_form tr, table#search_form td {
-    padding: 0.3em;
+    padding: 1em;
+    margin-left: 1em;
 }
 
 
-.pagination {
-    font-size: 1em;
-    color: red;
-    float: bottom;
-    text-align: center;
-}
-
-p{
-    font-size: 15px;
-}
-
-h1{
-    font-size: 38px;
-}
-
-div{
-    font-size: 15px;
-}
