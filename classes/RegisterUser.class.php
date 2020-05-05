@@ -29,6 +29,7 @@ class RegisterUser
         $email = $this->request->request->get('email');
         $password = $this->request->request->get('password');
         try{
+            //check if username exists
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $sth = $this->dbase->prepare("insert into Users (email, password, username, firstname, lastname, date, verified) values (:email, :hash, :username, :firstname, :lastname, NOW(), 0);");
             $sth->bindParam(':email', $email, PDO::PARAM_STR);

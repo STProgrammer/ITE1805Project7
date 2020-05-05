@@ -55,10 +55,11 @@
           <h1>
               Project 7 Drive
           </h1>
-            <p><a href="{{rel}}file-upload/" class="button_white">Upload File</a> <a href="{{rel}}new-catalog/" class="button_white">New Catalog</a>  </p>
-          <h2>
-              Catalog path: {{ catalogPath }}
-          </h2>
+          <div class="overview">
+              <p><a href="{{rel}}file-upload/" class="button_white">Upload File</a> <a href="{{rel}}new-catalog/" class="button_white">New Catalog</a>  </p>
+              <h2>
+                  Catalog path: {{ catalogPath }}
+              </h2>
           <div class="file-list">
   {% if elements %}
               {% for element in elements %}
@@ -104,6 +105,7 @@
       </div>
   {% endif %}
   </div>
+      </div>
               {% if pagination|length > 1 %} <div class="pagination">
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page

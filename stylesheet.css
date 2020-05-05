@@ -150,7 +150,12 @@ input#comment_delete {
     text-align: center;
 }
 
+.overview {
+    display: block;
+}
+
 .file-list {
+    clear: both;
     border: 30px solid;
     border-image-source: url("Images/greenframe.svg");
     border-image-slice: 100;
