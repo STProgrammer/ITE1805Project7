@@ -59,15 +59,34 @@ class User {
         $stmt->execute();
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
+<<<<<<< HEAD
             if (password_verify($request->request->get('password'), $row['password']) && $row['verified'] == 1) {
                 $session->set('loggedin', true);
                 $ip = $request->server->get('REMOTE_ADDR');
                 $browser = $request->server->get('HTTP_USER_AGENT');
                 $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
                 return true;
+=======
+            if (password_verify($request->request->get('password'), $row['password'])) {
+                if ($row['verified'] == 1) {
+                    $session->set('loggedin', true);
+                    $ip = $request->server->get('REMOTE_ADDR');
+                    $browser = $request->server->get('HTTP_USER_AGENT');
+                    $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
+                    return true;
+                } else {
+                    $session->getFlashBag()->add('header', "User not verified, please check your email");
+                    return false;
+                }
+            } else {
+                $session->getFlashBag()->add('header', "Wrong username or password");
+                return false;
+>>>>>>> Ting0503
             }
+        }  else {
+            $session->getFlashBag()->add('header', "Wrong username or password");
+            return false;
         }
-        else return false;
     }
 
     public function changePassword(){;}

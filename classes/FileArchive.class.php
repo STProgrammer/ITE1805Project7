@@ -1,36 +1,34 @@
 <?php
 
 class FileArchive {
-        
-        private $db;
-        private $request;
-        private $session;
-        private $twig;
-   
-        function __construct($db, $request, $session, $twig) {
-           
-            $this->db = $db;
-            $this->request = $request;
-            $this->session = $session;
-            $this->twig = $twig;
-        }
 
-        //* NOTIFY USER
-                
-        private function NotifyUser($strHeader, $strMessage)
-        {
-            $this->session->getFlashBag()->add('header', $strHeader);
-            $this->session->getFlashBag()->add('message', $strMessage);
-        }
+    private $db;
+    private $request;
+    private $session;
 
-        //* END NOTIFY USER
+    function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request,
+                         \Symfony\Component\HttpFoundation\Session\Session $session) {
+
+        $this->db = $db;
+        $this->request = $request;
+        $this->session = $session;
+    }
+
+    //* NOTIFY USER
+
+    private function notifyUser($strHeader, $strMessage)
+    {
+        $this->session->getFlashBag()->add('header', $strHeader);
+        $this->session->getFlashBag()->add('message', $strMessage);
+    }
+
+    //* END NOTIFY USER
 
     /////////////////////////////////////////////////////////////////////////////
     /// PRIVATE FUNCTIONS
     /// //////////////////////////////////////////////////////////////////////////
 
-    //* ADD TAGS
-
+    //Fix tags string
     private function fixTagsString(string $tagsStr) : string {
         $tagsStr = preg_replace("/[^\w\s\,]+/", "", $tagsStr);  //Only alphanumerics and spaces
         $tagsStr = preg_replace("/\s*,\s*/", ",", $tagsStr);  //Get rid of spaces before or after comma ,
@@ -38,46 +36,71 @@ class FileArchive {
         return $tagsStr;
     }
 
-        private function addTags(string $tagsStr, int $fileId) : bool {
-            $tagsStr = $this->fixTagsString($tagsStr);
-            $tags = explode(',', $tagsStr);
-            $tags = array_unique($tags);
-            $tags = array_filter($tags);
-            try {
-                $stmt = $this->db->prepare("INSERT IGNORE INTO Tags (tag) VALUES (:tag);");
-                if(is_array($tags)){
-                    foreach ($tags as $tag) {
-                        $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
-                        $stmt->execute();
-                    }
+    //Add tags
+    private function addTags(string $tagsStr, int $fileId) : bool {
+        $tagsStr = $this->fixTagsString($tagsStr);
+        $tags = explode(',', $tagsStr);
+        $tags = array_unique($tags);
+        $tags = array_filter($tags);
+        try {
+            $stmt = $this->db->prepare("INSERT IGNORE INTO Tags (tag) VALUES (:tag);");
+            if(is_array($tags)){
+                foreach ($tags as $tag) {
+                    $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
+                    $stmt->execute();
                 }
-                $stmt = $this->db->prepare("INSERT IGNORE INTO FilesAndTags (tag, fileId) VALUES (:tag, :fileid);");
-                if(is_array($tags)){
-                    foreach ($tags as $tag) {
-                        $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
-                        $stmt->bindParam(':fileid', $fileId, PDO::PARAM_INT);
-                        $stmt->execute();
-                    }
-                }
-            } catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return false;}
-            return true;
-
-        } //* END ADD TAGS
-
-    private function getTags($id) {
-            try {
-                $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                $stmt->execute();
-                $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
-                $tags = implode(", ", $tags);
-                return $tags;
             }
-            catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return false; }
+            $stmt = $this->db->prepare("INSERT IGNORE INTO FilesAndTags (tag, fileId) VALUES (:tag, :fileid);");
+            if(is_array($tags)){
+                foreach ($tags as $tag) {
+                    $stmt->bindParam(':tag', $tag, PDO::PARAM_STR);
+                    $stmt->bindParam(':fileid', $fileId, PDO::PARAM_INT);
+                    $stmt->execute();
+                }
+            }
+        } catch (Exception $e) { $this->notifyUser("Failed to add tags", $e->getMessage()); return false;}
+        return true;
+    } //* END ADD TAGS
 
+
+    //Get tags
+    private function getTags($id) {
+        try {
+            $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            $tags = implode(", ", $tags);
+            return $tags;
+        }
+        catch (Exception $e) { return "Failed to loads tags";}
+    } //end get tags
+
+    //Increase impression when file is viewed or downloaded
+    private function increaseImpression($id, $impressions) {
+        try
+        {
+            $impressions++;
+            $stmt = $this->db->prepare("UPDATE Files SET impressions = :impr WHERE fileId = :id;");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':impr', $impressions, PDO::PARAM_INT);
+            $stmt->execute();
+            if(!$stmt->rowCount() == 1) {
+                $this->notifyUser("Something went wrong", '');
+            }
+        }
+        catch(Exception $e) {
+            $this->notifyUser("Something went wrong", $e->getMessage());
+        }
     }
 
 
+
+    /////////////////////////////////////////////////////////////////////////////
+    /// CATALOG FUNCTIONS
+    /// //////////////////////////////////////////////////////////////////////////
+
+    //Get catalog path string e.g. "main / catalog1 / subcatalog"
     public function getCatalogPath($catalogId) : String {
         if ($catalogId <= 1 ) {
             return "Main";
@@ -91,91 +114,86 @@ class FileArchive {
             $catalogPath = $this->getCatalogPath($parentId) . " / " . $row['catalogName'];
             return $catalogPath;
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return false; }
+        catch (Exception $e) { return "Failed to show catalog path" . $e->getMessage(); }
     }
 
-    /////////////////////////////////////////////////////////////////////////////
-    /// CATALOG FUNCTIONS
-    /// //////////////////////////////////////////////////////////////////////////
 
-        private function isCatalogAccessible($id) : bool {
-            if ($id <= 1) {
-                return true;
-            }
-            try
-            {
-                $stmt = $this->db->prepare("SELECT access, parentId FROM Catalogs WHERE catalogId = :id");
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                $stmt->execute();
-                if($parent = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $parentId = $parent['parentId'];
-                    $access = $parent['access'];
-                    if ($access == 0) {
-                        return false;
-                    }
-                    else return $this->isCatalogAccessible($parentId);
-                }
-                else {
-                    $this->NotifyUser("Catalog not found", "");
+    //Check if catalog is public or not, if a catalog is not public, all it's son are not public
+    private function isCatalogAccessible($id) : bool {
+        if ($id <= 1) {
+            return true;
+        }
+        try
+        {
+            $stmt = $this->db->prepare("SELECT access, parentId FROM Catalogs WHERE catalogId = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            if($parent = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $parentId = $parent['parentId'];
+                $access = $parent['access'];
+                if ($access == 0) {
                     return false;
                 }
+                else return $this->isCatalogAccessible($parentId);
             }
-            catch(Exception $e) { $this->NotifyUser("Error 5", $e->getMessage()); }
-        } //* END IsCatalogAccessible
+            else {
+                $this->notifyUser("Catalog not found", "");
+                return false;
+            }
+        }
+        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
+    } //* END IsCatalogAccessible
 
 
-
-        public function showCatalog($id) {
-            if (!$this->isCatalogAccessible($id)) {
-                if ($this->session->has('User') && $this->session->has('loggedin')) {
-                    $user = $this->session->get('User');
-                    if ($this->session->get('loggedin') && $user->verifyUser($this->request)) {
-                        return true;
-                    } else {$this->NotifyUser("Access denied, login to view catalog", ""); return false;}
-                } else {$this->NotifyUser("Access denied, login to view catalog", ""); return false;}
-            } else {
+    //Can user show the catalog?
+    public function showCatalog($id) {
+        if (!$this->isCatalogAccessible($id)) {
+            if (($user = $this->session->get('User')) && $this->session->get('loggedin')
+            && $user->verifyUser($this->request)) {
                 return true;
-            }
-        }  //* END showCatalog
+            } else {$this->notifyUser("Access denied, login to view catalog", ""); return false;}
+        } else {
+            return true;
+        }
+    }  //* END showCatalog
 
 
+    // Add catalog
+    public function addCatalog(string $owner) : int {
 
-        public function addCatalog(string $owner) : int {
-            $this->session->remove('strHeader');
-            $this->session->remove('strMessage');
-
-            $catalogname = filter_input(INPUT_POST, 'catalogname', FILTER_SANITIZE_STRING);
-            if ($this->request->request->has('access')) $access = 0;
-            else $access = 1;
-            $parentId = filter_input(INPUT_POST, 'catalogId', FILTER_SANITIZE_NUMBER_INT);
-            if (!$this->canUserAddToThisCatalog($parentId)) {
-                $this->NotifyUser('User can\'t add to this catalog', '');
-                return 0;
-            }
-            try
-            {
-                $stmt = $this->db->prepare("INSERT INTO Catalogs (catalogName, parentId, date, owner, access) VALUES (:catalogname, :parentid, curdate(), :owner, :access);");
-                $stmt->bindParam(':catalogname', $catalogname, PDO::PARAM_STR);
-                $stmt->bindParam(':parentid', $parentId, PDO::PARAM_INT);
-                $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
-                $stmt->bindParam(':access', $access, PDO::PARAM_INT);
-                $stmt->execute();
-                $id = intval($this->db->lastInsertId());
-                $this->NotifyUser("New catalog added !", "");
-                return $id;
-            }
-            catch(Exception $e) { $this->NotifyUser("Error 6", $e->getMessage()); return 0; }
-        }  //* END Add catalog
+        $catalogName = $this->request->request->get('catalogName');
+        if ($this->request->request->has('access')) $access = 0;
+        else $access = 1;
+        $parentId = $this->request->request->get('catalogId');
+        if (!$this->canUserAddToThisCatalog($parentId)) {
+            $this->notifyUser('User can\'t add to this catalog', '');
+            return 0;
+        }
+        try
+        {
+            $stmt = $this->db->prepare("INSERT INTO Catalogs (catalogName, parentId, date, owner, access) VALUES (:catalogName, :parentid, curdate(), :owner, :access);");
+            $stmt->bindParam(':catalogName', $catalogName, PDO::PARAM_STR);
+            $stmt->bindParam(':parentid', $parentId, PDO::PARAM_INT);
+            $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
+            $stmt->bindParam(':access', $access, PDO::PARAM_INT);
+            $stmt->execute();
+            $id = intval($this->db->lastInsertId());
+            $this->notifyUser("New catalog added !", "");
+            return $id;
+        }
+        catch(Exception $e) { $this->notifyUser("Failed to add catalog", $e->getMessage()); return 0; }
+    }  //* END Add catalog
 
 
+    // Edit catalog
     public function editCatalog($catalogId)
     {
-        $catalogName = filter_input(INPUT_POST, 'catalogName', FILTER_SANITIZE_STRING);
-        $access = filter_input(INPUT_POST, 'access', FILTER_SANITIZE_NUMBER_INT);
-        $parentId = filter_input(INPUT_POST, 'catalogId', FILTER_SANITIZE_NUMBER_INT);
+        $catalogName = $this->request->request->get('catalogName');
+        $access = $this->request->request->get('access');
+        $parentId = $this->request->request->get('catalogId');
         if ($access == null) $access = 1;
         if (!$this->canUserAddToThisCatalog($parentId)) {
-            $this->NotifyUser('User can\'t add to this catalog', '');
+            $this->notifyUser('User can\'t add to this catalog', '');
             return false;
         }
         try {
@@ -186,22 +204,25 @@ class FileArchive {
             $sth->bindParam(':parentId', $parentId);
             $sth->execute();
             if ($sth->rowCount() == 1) {
-                $this->NotifyUser('Catalog details changed', '');
+                $this->notifyUser('Catalog details changed', '');
             } else {
-                $this->NotifyUser('Failed to change catalog details', "");
+                $this->notifyUser('Failed to change catalog details', "");
             }
         } catch (Exception $e) {
-            $this->NotifyUser('Error 23', $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change catalog details", $e->getMessage() . PHP_EOL);
         }
     }  //END EDIT CATALOG
 
+
+    //Check if user can add to this catalog
     private function canUserAddToThisCatalog ($catalogId) {
-            if ($catalogId <= 1) return true;
-            $user = $this->session->get('User');
-            $catalog = $this->getCatalogObject($catalogId);
-            return $user->getUsername() == $catalog->getOwner();
+        if ($catalogId <= 1) return true;
+        $user = $this->session->get('User');
+        $catalog = $this->getCatalogObject($catalogId);
+        return $user->getUsername() == $catalog->getOwner();
     }
 
+    // Get catalog object
     public function getCatalogObject ($id) : Catalog {
         try
         {
@@ -212,15 +233,17 @@ class FileArchive {
                 return $catalog;
             }
             else {
-                $this->NotifyUser("Catalog not found", "");
+                $this->notifyUser("Catalog not found", "");
                 return new Catalog();
             }
         }
-        catch(Exception $e) { $this->NotifyUser("Error 7", $e->getMessage());
-        return new Catalog();}
+        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage());
+            return new Catalog();}
 
     }
 
+
+    //Delete catalog
     public function deleteCatalog($id) : bool {
         $result = false;
         try
@@ -229,20 +252,21 @@ class FileArchive {
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount()==1) {
-                $this->NotifyUser( "Catalog deleted", "");
+                $this->notifyUser( "Catalog deleted", "");
                 $result = true;
             } else {
-                $this->NotifyUser( "Error 3", "");
+                $this->notifyUser( "Failed to delete catalog", "");
                 $result = false;
             }
         }
         catch (Exception $e) {
-            $this->NotifyUser( "Error 4", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete catalog", $e->getMessage() . PHP_EOL);
         }
         return $result;
     }  //END DELETE CATALOG
 
 
+    // Get Catalogs
     public function getCatalogs(int $catalogId)
     {
         $allCatalogs = null;
@@ -253,7 +277,7 @@ class FileArchive {
             $stmt->execute();
             $allCatalogs = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
         // bruk av data i video src
         //<source src="data:video/mp4;base64,{{ fil.kode }}">
         //foreach ($alleFiler as &$encode) {
@@ -262,6 +286,7 @@ class FileArchive {
         return $allCatalogs;
     }
 
+    //Get catalogs by owner (get all catalogs of the user)
     public function getCatalogsByOwner(string $owner) : array
     {
         $allCatalogs = null;
@@ -272,7 +297,7 @@ class FileArchive {
             $stmt->execute();
             $allCatalogs = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
         // bruk av data i video src
         //<source src="data:video/mp4;base64,{{ fil.kode }}">
         //foreach ($alleFiler as &$encode) {
@@ -285,83 +310,111 @@ class FileArchive {
     /// FILE FUNCTIONS
     /// //////////////////////////////////////////////////////////////////////////
 
-    public function save(string $owner) : int {
+    //SAVE FILE ON DATABASE (taken from Knut Collin)
+    public function saveFile(string $owner) : int {
 
-            $this->session->remove('strHeader');
-            $this->session->remove('strMessage');
-
-            $fileTags = $this->request->files->get('image');
-            $file = $fileTags->getPathname();
-            $name = $fileTags->getClientOriginalName();
-            $type = $fileTags->getClientMimeType();
-            $size = $fileTags->getSize();
-            $imgsize = getimagesize($file);
-            $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-            $tagsStr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
-            $catalogId = filter_input(INPUT_POST, 'catalogId', FILTER_SANITIZE_NUMBER_INT);
-            if (!$this->canUserAddToThisCatalog($catalogId)) {
-                $this->NotifyUser('User can\'t add to this catalog', '');
-                return 0;
-            }
-            if ($this->request->request->has('access')) $access = 0;
-            else $access = 1;
-            // VIKTIG !  sjekk at vi jobber med riktig fil 
-            if(is_uploaded_file($file) && $size != 0 && $size <= 5512000)
-            {
-                try
-                {
-                    $data = file_get_contents($file);
-                    $stmt = $this->db->prepare("INSERT INTO `Files` (filename, title, description, catalogId, size, uploadedDate, type, access, data, owner)
-                                                      VALUES (:filename, :title, :description, :catalogId, :size, curdate(), :type, :access, :data, :owner)");
-                    $stmt->bindParam(':filename', $name, PDO::PARAM_STR);
-                    $stmt->bindParam(':title', $title, PDO::PARAM_STR);
-                    $stmt->bindParam(':description', $description, PDO::PARAM_STR);
-                    $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
-                    $stmt->bindParam(':size', $size, PDO::PARAM_INT);
-                    $stmt->bindParam(':type', $type, PDO::PARAM_STR);
-                    $stmt->bindParam(':access', $access, PDO::PARAM_INT);
-                    $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
-                    $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
-                    $stmt->execute();
-                    $id = intval($this->db->lastInsertId());
-                    $this->addTags($tagsStr, $id);
-                    $this->NotifyUser("Filen er lastet opp !", "");
-                    return $id;
-                }
-                catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return 0; }
-            }
-            else {
-             //require_once ("hode.php");    
-                    if ($size > 0) $this->NotifyUser("Filen er for stor !", "");
-                    else $this->NotifyUser("Ingen filvedlegg", "");
-                    return 0;
-            }
-
-        }  // END FILE SAVE
-
-
-
-        // Viser oversikt over alle filer i db        
-        public function getFilesOverview(int $catalogId)
+        $fileTags = $this->request->files->get('image');
+        $file = $fileTags->getPathname();
+        $name = $fileTags->getClientOriginalName();
+        $type = $fileTags->getClientMimeType();
+        $size = $fileTags->getSize();
+        $title = $this->request->request->get('title');
+        $description = $this->request->request->get('description');
+        $tagsStr = $this->request->request->get('tags');
+        $catalogId = $this->request->request->get('catalogId');
+        if (!$this->canUserAddToThisCatalog($catalogId)) {
+            $this->notifyUser('User can\'t add to this catalog', '');
+            return 0;
+        }
+        if ($this->request->request->has('access')) $access = 0;
+        else $access = 1;
+        // VIKTIG !  sjekk at vi jobber med riktig fil
+        if(is_uploaded_file($file) && $size != 0 && $size <= 5512000 && strlen($name) <= 60)
         {
-            $allFiles = null;
             try
             {
-                $stmt = $this->db->prepare("SELECT * FROM Files where catalogId = :catalogId order by title;");
+                $data = file_get_contents($file);
+                $stmt = $this->db->prepare("INSERT INTO `Files` (filename, title, description, catalogId, size, uploadedDate, type, access, data, owner)
+                                                      VALUES (:filename, :title, :description, :catalogId, :size, curdate(), :type, :access, :data, :owner)");
+                $stmt->bindParam(':filename', $name, PDO::PARAM_STR);
+                $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+                $stmt->bindParam(':description', $description, PDO::PARAM_STR);
                 $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
+                $stmt->bindParam(':size', $size, PDO::PARAM_INT);
+                $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+                $stmt->bindParam(':access', $access, PDO::PARAM_INT);
+                $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
+                $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
                 $stmt->execute();
-                $allFiles = $stmt->fetchAll();
+                $id = intval($this->db->lastInsertId());
+    //            if (exif_imagetype($file)) {$this->saveThumbnail($data, $id);}
+                $this->addTags($tagsStr, $id);
+                $this->notifyUser("File uploaded", "");
+                return $id;
             }
-            catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
-            // bruk av data i video src
-            //<source src="data:video/mp4;base64,{{ fil.kode }}">
-            //foreach ($alleFiler as &$encode) {
-            //    $encode['kode'] = base64_encode($encode['kode']);
-            //}
-            return $allFiles;
-        }     //END FILES OVERVIEW
+            catch(Exception $e) { $this->notifyUser("Failed to upload file", $e->getMessage()); return 0; }
+        }
+        else {
+            //require_once ("hode.php");
+            if ($size > 5512000) $this->notifyUser("Failed to upload: File size is too big !", "");
+            elseif(strlen($name) > 60) $this->notifyUser("Failed to upload: Filename is too long", "");
+            else $this->notifyUser("No file found", "");
+            return 0;
+        }
 
+    }  // END FILE SAVE
+
+    //Koden modifisert fra https://stackoverflow.com/questions/18805497/php-resize-image-on-upload
+    private function saveThumbnail($data, $id) {
+        $maxDimW = 60;
+        $maxDimH = 60;
+        //reducing image to 5%, max 60 60.
+        $fileTags = $this->request->files->get('image');
+        $file = $fileTags->getPathname();
+        $size = getimagesize($file);
+        $width = $size[0] / 20;
+        $height = $size[0] / 20;
+        if ($width > $maxDimW) $width = 60;
+        if ($height > $maxDimH) $height = 60;
+        $src = imagecreatefromstring($data);
+        $dst = imagecreatetruecolor( $width, $height );
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $size[0], $size[1] );
+        $data = file_get_contents($dst);
+        try
+        {
+            $stmt = $this->db->prepare("INSERT INTO Thumbnails (fileId, data) VALUES (:fileId, :data);");
+            $stmt->bindParam(':fileId', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
+            $stmt->execute();
+            $thumb = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", "Thumb".$e->getMessage()); return; }
+    }
+
+
+
+    // Show overview of all files, taken from Knut Collin
+    public function getFilesOverview(int $catalogId)
+    {
+        $allFiles = null;
+        try
+        {
+            $stmt = $this->db->prepare("SELECT * FROM Files where catalogId = :catalogId order by title;");
+            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
+            $stmt->execute();
+            $allFiles = $stmt->fetchAll();
+        }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return; }
+        // bruk av data i video src
+        //<source src="data:video/mp4;base64,{{ fil.kode }}">
+        //foreach ($alleFiler as &$encode) {
+        //    $encode['kode'] = base64_encode($encode['kode']);
+        //}
+        return $allFiles;
+    }     //END FILES OVERVIEW
+
+
+    //GET OVERVIEW OF FILES AND CATALOGS
     public function getOverview(int $catalogId, int $offset, int $nrOfElementsPerPage)
     {
         $allElements = null;
@@ -374,127 +427,102 @@ class FileArchive {
             $stmt->execute();
             $allElements = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return; }
+        catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", $e->getMessage()); return; }
         // bruk av data i video src
         //<source src="data:video/mp4;base64,{{ fil.kode }}">
         //foreach ($alleFiler as &$encode) {
         //    $encode['kode'] = base64_encode($encode['kode']);
         //}
         return $allElements;
-    }     //END FILES OVERVIEW
+    }     //END FILES AND CATALOGS OVERVIEW
 
 
 
-        /*
-            Viser en fil fra databasen
-        */
-        public function showFile($id)
+    //Show a file from the database
+    public function showFile($id)
+    {
+        try
         {
-            try
-            {
-                $stmt = $this->db->prepare("SELECT type, impressions, filename, catalogId, data, access FROM Files WHERE fileId = :id");
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                $stmt->execute();
-                if(!$item = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    throw new InvalidArgumentException('Invalid id: ' . $id);
-                }
-                else {
-                    $filename = $item['filename'];
-                    $type = $item['type'];
-                    $data = $item['data'];
-                    $access = $item['access'];
-                    $impressions = $item['impressions'];
-                    $catalogId = $item['catalogId'];
-
-                    // check if public or not
-                    if ($access == 0 or !$this->isCatalogAccessible($catalogId)) {
-                        if ($this->session->has('User') && $this->session->has('loggedin')) {
-                            $user = $this->session->get('User');
-                            if ($this->session->get('loggedin') && $user->verifyUser($this->request)) {
-                                Header( "Content-type: $type" );
-                                Header("Content-Disposition: filename=\"$filename\"");
-                                echo $data;
-                                return true;
-                            } else {$this->NotifyUser("Access denied, login to view file", ""); return false;}
-                        } else {$this->NotifyUser("Access denied, login to view file", ""); return false;}
-                    } elseif ($access == 1) {
-                        $this->increaseImpression($id, $impressions);
-                        Header( "Content-type: $type" );
-                        Header("Content-Disposition: filename=\"$filename\"");
-                        // Skriv bildet/filen til klienten
-                        echo $data;
-                        return true;
-                    } else {$this->NotifyUser("Access denied, login to view file", ""); return false;}
-                }
+            $stmt = $this->db->prepare("SELECT type, impressions, filename, catalogId, data, access FROM Files WHERE fileId = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            if(!$item = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                throw new InvalidArgumentException('Invalid id: ' . $id);
             }
-            catch(Exception $e) {
-                $this->NotifyUser("En feil oppstod", $e->getMessage());
-                return false;
-            }
-        }
+            else {
+                $filename = $item['filename'];
+                $type = $item['type'];
+                $data = $item['data'];
+                $access = $item['access'];
+                $impressions = $item['impressions'];
+                $catalogId = $item['catalogId'];
 
-
-        public function showThumbnail($id) {
-            try {
-                $stmt = $this->db->prepare("SELECT type, impressions, filename, data FROM Files WHERE fileId = :id");
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                $stmt->execute();
-                if (!$item = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    throw new InvalidArgumentException('Invalid id: ' . $id);
-                } else {
-                    $filename = $item['filename'];
-                    $type = $item['type'];
-                    $data = $item['data'];
-                    $size = getimagesize($filename);
-
-                    $image = imagecreate(3,3);
-                    $image = imagecreatefromjpeg($filename);
-                    Header("Content-type: $type");
+                // check if public or not
+                if ($access == 0 or !$this->isCatalogAccessible($catalogId)) {
+                    if ($this->session->has('User') && $this->session->has('loggedin')) {
+                        $user = $this->session->get('User');
+                        if ($this->session->get('loggedin') && $user->verifyUser($this->request)) {
+                            $this->increaseImpression($id, $impressions);
+                            Header( "Content-type: $type" );
+                            Header("Content-Disposition: filename=\"$filename\"");
+                            echo $data;
+                            return true;
+                        } else {$this->notifyUser("Access denied, login to view file", ""); return false;}
+                    } else {$this->notifyUser("Access denied, login to view file", ""); return false;}
+                } elseif ($access == 1) {
+                    $this->increaseImpression($id, $impressions);
+                    Header( "Content-type: $type" );
                     Header("Content-Disposition: filename=\"$filename\"");
-                    Header("Content-size: 10%");
                     // Skriv bildet/filen til klienten
                     echo $data;
                     return true;
-                }
-            }
-            catch(Exception $e) {
-                $this->NotifyUser("En feil oppstod", $e->getMessage());
-                return false;
-            }
-        }
-
-
-
-
-
-    private function increaseImpression($id, $impressions) {
-        try
-        {
-            $impressions++;
-            $stmt = $this->db->prepare("UPDATE Files SET impressions = :impr WHERE fileId = :id;");
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':impr', $impressions, PDO::PARAM_INT);
-            $stmt->execute();
-            if(!$stmt->rowCount() == 1) {
-                $this->NotifyUser("Error 12", '');
+                } else {$this->notifyUser("Access denied, login to view file", ""); return false;}
             }
         }
         catch(Exception $e) {
-            $this->NotifyUser("Error 1", $e->getMessage());
+            $this->notifyUser("Something went wrong", $e->getMessage());
+            return false;
+        }
+    }  //END SHOW FILE
+
+
+    //Show thumbnail, delvis modifisert fra https://stackoverflow.com/questions/21709098/resizing-and-then-displaying-blob-element-from-database
+    public function showThumbnail($id) {
+        try {
+            $stmt = $this->db->prepare("SELECT type, impressions, filename, data FROM Files WHERE fileId = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            if (!$item = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                throw new InvalidArgumentException('Invalid id: ' . $id);
+            } else {
+                $filename = $item['filename'];
+                $type = $item['type'];
+                $data = $item['data'];
+                $image = imagecreatefromstring($data);
+                $image = imagescale($image, 100, 90);
+                header('Content-Type: image/jpeg');
+                imagejpeg($image);
+                imagedestroy($image);
+                return true;
+            }
+        }
+        catch(Exception $e) {
+            $this->notifyUser("Failed to show thumbnail", $e->getMessage());
+            return false;
         }
     }
 
 
-
+    //EDIT file
     public function editFile($fileId)
     {
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $tagsStr = filter_input(INPUT_POST, 'tags', FILTER_SANITIZE_STRING);
-        $access = filter_input(INPUT_POST, 'access', FILTER_SANITIZE_NUMBER_INT);
-        $catalogId = filter_input(INPUT_POST, 'catalogId', FILTER_SANITIZE_NUMBER_INT);
+        $title = $this->request->request->get('title', FILTER_SANITIZE_STRING);
+        $description = $this->request->request->get('description', FILTER_SANITIZE_STRING);
+        $tagsStr = $this->request->request->get('tags', FILTER_SANITIZE_STRING);
+        $access = $this->request->request->get('access');
+        $catalogId = $this->request->request->get('catalogId');
         if (!$this->canUserAddToThisCatalog($catalogId)) {
-            $this->NotifyUser('User can\'t add to this catalog', '');
+            $this->notifyUser('User can\'t add to this catalog', '');
             return false;
         }
         if ($access == null) $access = 1;
@@ -507,17 +535,17 @@ class FileArchive {
             $sth->bindParam(':access', $access);
             $sth->execute();
             if ($sth->rowCount() == 1 | $this->addTags($tagsStr, $fileId)) {
-                $this->NotifyUser('File details changed', '');
+                $this->notifyUser('File details changed', '');
             } else {
-                $this->NotifyUser('Failed to change file details', "");
+                $this->notifyUser('Failed to change file details', "");
             }
         } catch (Exception $e) {
-            $this->NotifyUser('Error 2', $e->getMessage() . PHP_EOL);
+            $this->notifyUser('Failed to change file details', $e->getMessage() . PHP_EOL);
         }
-    }
+    }  // END EDIT FILE
 
 
-
+    // Delete file
     public function deleteFile($id) : bool {
         $result = false;
         $this->session->remove('strHeader');
@@ -528,21 +556,22 @@ class FileArchive {
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount()==1) {
-                $this->NotifyUser( "File deleted", "");
+                $this->notifyUser( "File deleted", "");
                 $result = true;
             } else {
-                $this->NotifyUser( "Error 3", "");
+                $this->notifyUser( "Failed to delete file", "");
                 $result = false;
             }
         }
         catch (Exception $e) {
-            $this->NotifyUser( "Error 4", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete file", $e->getMessage() . PHP_EOL);
         }
         return $result;
-    }
+    }  //END DELETE FILE
 
 
 
+    // Get file object
     public function getFileObject ($id) : File {
         try
         {
@@ -557,29 +586,30 @@ class FileArchive {
                 return $file;
             }
             else {
-                $this->NotifyUser("File not found", "");
+                $this->notifyUser("File not found", "");
                 return new File();
             }
         }
-        catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage());
-        return new File(); }
-    }
+        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage());
+            return new File(); }
+    } //END GET FILE OBJECT
 
 
 
+    // Search files
     public function searchFiles($searchQuery) {
         $searchQuery = str_replace('%','\\%', $searchQuery);
         $searchQuery = "%".$searchQuery."%";
-        $fromDate = $this->request->query->has('from-date');
-        $toDate = $this->request->query->has('to-date');
+        $fromDate = $this->request->query->get('from-date');
+        $toDate = $this->request->query->get('to-date');
 
         try
         {
             if (DateTime::createFromFormat('Y-m-d', $toDate) && DateTime::createFromFormat('Y-m-d', $fromDate)) {
-                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
                 $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
-                $stmt->bindParam(':fromdate', $searchQuery, PDO::PARAM_STR);
-                $stmt->bindParam(':todate', $searchQuery, PDO::PARAM_STR);
+                $stmt->bindParam(':fromdate', $fromDate, PDO::PARAM_STR);
+                $stmt->bindParam(':todate', $toDate, PDO::PARAM_STR);
             }
             else {
                 $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet')));");
@@ -588,13 +618,13 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong when searching", $e->getMessage()); return;}
         return $allFiles;
-    }
+    } //End search files
 
 
 
-
+    // Search files bu tag
     public function searchFilesByTag($tag) {
         try
         {
@@ -603,13 +633,13 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("En feil oppstod", $e->getMessage()); return;}
         return $allFiles;
     } //* END SEARCH BY TAG
 
 
 
-
+    // Search files by tags with OR condition (search files containing "tag1" or "tag2" or "tag3" or ... )
     public function searchByTagsWithOrCondition($tagsStr) {
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
@@ -626,11 +656,12 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return;}
         return $filesByTags;
-    } //* END SEARCH BY MULTIPLE TAGS
+    } //* END SEARCH BY MULTIPLE TAGS WITH OR CONDITION
 
 
+    // Search files by tags with AND condition (search files containing both "tag1" and "tag2" and "tag3" and ...)
     public function searchByTagsWithAndCondition($tagsStr) {
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
@@ -648,11 +679,12 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return;}
         return $filesByTags;
-    } //* END SEARCH BY MULTIPLE TAGS AND CONDITION
+    } //* END SEARCH BY MULTIPLE TAGS WITH AND CONDITION
 
 
+    //Search by multiple tags with OR condition
     public function searchByMultipleTags($tagsStr) {
         $tagsStr = $this->fixTagsString($tagsStr);
         $tags = explode(',', $tagsStr);
@@ -666,6 +698,8 @@ class FileArchive {
         return $files;
     } //* END SEARCH BY MULTIPLE TAGS OR CONDITION
 
+
+    //Search by multiple tags with AND condition
     public function searchByMultipleTagsAndCondition($tagsStr) {
         $tagsStr = $this->fixTagsString($tagsStr);
         $tags = explode(',', $tagsStr);
@@ -681,7 +715,7 @@ class FileArchive {
 
 
 
-
+    //Get total number of pages (used in pagination, depending on nr of elements)
     public function totalNrOfPages($nrOfElementsPerPage, $catalogId) : int {
         $totalPages = 1;
         try
@@ -692,7 +726,7 @@ class FileArchive {
             $totalRows = $stmt->fetch();
             $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
         }
-        catch (Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
         // bruk av data i video src
         //<source src="data:video/mp4;base64,{{ fil.kode }}">
         //foreach ($alleFiler as &$encode) {
@@ -702,20 +736,17 @@ class FileArchive {
     }
 
 
-
-
-
-
-   public function getOnlyPublicFiles($files) : array {
-            $publicFiles = array();
-            $i = 0;
-            foreach($files as $file) {
-                if ($file['Access'] == 1 && $this->isCatalogAccessible($file['Catalog'])) {
-                    $publicFiles[$i] = $file;
-                    $i++;
-                }
+    //Get an array of only public files, used in searching so results only show public files if user is not logged inn
+    public function getOnlyPublicFiles($files) : array {
+        $publicFiles = array();
+        $i = 0;
+        foreach($files as $file) {
+            if ($file['Access'] == 1 && $this->isCatalogAccessible($file['Catalog'])) {
+                $publicFiles[$i] = $file;
+                $i++;
             }
-            return $publicFiles;
+        }
+        return $publicFiles;
     }
 
 }

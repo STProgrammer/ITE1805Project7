@@ -8,7 +8,7 @@
     require_once "login.php";
 
     // opprett nytt filarkiv
-    $archive = new FileArchive($db, $request, $session, $twig);
+    $archive = new FileArchive($db, $request, $session);
 
 /* Denne Twig funksjonen er tatt fra https://stackoverflow.com/questions/61407758/how-to-change-one-value-in-get-by-clicking-a-link-or-button-from-twig-with/61407993#61407993 */
     $twig->addFunction(new \Twig\TwigFunction('get_page_url', function($query = [], $append = true) {
@@ -22,7 +22,7 @@
     if (!($pageno = $request->query->getInt('pageno')) || $pageno < 1) {
         $pageno = 1;
     }
-    $nrOfElementsPerPage = 4;
+    $nrOfElementsPerPage = 40;
     $offset = ($pageno-1) * $nrOfElementsPerPage;
 
     //Vis fil
@@ -38,31 +38,31 @@
     //Search made
     elseif($request->query->get('search') == "search")
         {
-            $searchQuery = filter_input(INPUT_GET, 'query', FILTER_SANITIZE_STRING);
-            $files = $archive->searchFiles($searchQuery);
+            $searchQuery = $request->query->get('query');
+            $elements = $archive->searchFiles($searchQuery);
             if (!$session->get('loggedin')) {
-                $files = $archive->getOnlyPublicFiles($files);
+                $elements = $archive->getOnlyPublicFiles($files);
             }
-            $sizeOfList = sizeof($files);
+            $sizeOfList = sizeof($elements);
             $totalPages = ($sizeOfList == 0) ? 1 : ceil($sizeOfList / $nrOfElementsPerPage);
             $pagination = range(1, $totalPages, 1);
-            $files = array_slice($files, $offset, $nrOfElementsPerPage);
-            echo $twig->render('index.twig', array('elements' => $files, 'user' => $user,
+            $files = array_slice($elements, $offset, $nrOfElementsPerPage);
+            echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
                 'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
         }
 
     //Tag search
     elseif($request->query->get('tag'))
     {
-        $tag = filter_input(INPUT_GET, 'tag', FILTER_SANITIZE_STRING);
-        $files = $archive->searchFilesByTag($tag);
+        $tag = $request->query->get('tag');
+        $elements = $archive->searchFilesByTag($tag);
         if (!$session->get('loggedin')) {
             $files = $archive->getOnlyPublicFiles($files);
         }
         $sizeOfList = sizeof($elements);
         $totalPages = ($sizeOfList == 0) ? 1 : ceil($sizeOfList / $nrOfElementsPerPage);
         $pagination = range(1, $totalPages, 1);
-        $elements = array_slice($files, $offset, $nrOfElementsPerPage);
+        $elements = array_slice($elements, $offset, $nrOfElementsPerPage);
         echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
             'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
     }
@@ -70,7 +70,7 @@
     //Multiple tags search
     elseif($request->query->get('search') == "tagssearch")
     {
-        $tagsStr = filter_input(INPUT_GET, 'tags', FILTER_SANITIZE_STRING);
+        $tagsStr = $request->query->get('search');
         if ($request->query->get('andcondition') == 1) {
             $elements = $archive->searchByTagsWithAndCondition($tagsStr);
         } else { $elements = $archive->searchByTagsWithOrCondition($tagsStr);}

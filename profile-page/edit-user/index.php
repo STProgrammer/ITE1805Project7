@@ -17,7 +17,11 @@ if ($request->query->has('username') && ($user = $session->get('User'))
     // Admin can delete user and change user password
     $isUser = false;
     $isAdmin = false;  //isAdmin controls if the user is admin or not, this is to avoid repeated checks
+<<<<<<< HEAD
     //check if user is Admin
+=======
+     //check if user is Admin
+>>>>>>> Ting0503
     if ($user->isAdmin() == 1) {
         $isAdmin = true;
     }
@@ -38,6 +42,13 @@ if ($request->query->has('username') && ($user = $session->get('User'))
         if ($isAdmin or $isUser) {
             if (XsrfProtection::verifyMac("Delete")) {
                 $regUser->deleteUser($username);
+<<<<<<< HEAD
+=======
+                //If the user is not admin, the session should be cleared so the user logout
+                if (!$isAdmin) {
+                    $session->clear();
+                }
+>>>>>>> Ting0503
                 $get_info = "?userdeleted=1";
                 header("Location: ../" . $get_info);
                 exit();
@@ -75,7 +86,11 @@ if ($request->query->has('username') && ($user = $session->get('User'))
             $email = $request->request->get('email');
             //Logout after email change
             if ($regUser->changeEmail($email, $username)) {
+<<<<<<< HEAD
                 $session->clear();
+=======
+                 $session->clear();
+>>>>>>> Ting0503
             }
             $get_info = "username=" . $username . "&emailchanged=1";
             header("Location: ../?" . $get_info);
@@ -95,4 +110,8 @@ if ($request->query->has('username') && ($user = $session->get('User'))
     exit();
 }
 
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> Ting0503

@@ -4,25 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Welcome</title>
+  <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
+  <title>Login</title>
 </head>
 <body>
-<h2>Logg inn</h2>
-{% if fail %}
-  <h3>Feil brukernavn eller passord</h3>
-{% endif %}
+<h2>Log in</h2>
+{% if session.getFlashBag.has('header') %}
+<div class="flash-notice">
+  {% for header in session.getFlashBag.get('header', []) %}
+    <h2>{{ header }}</h2>
+  {% endfor %}
+  {% endif %}
+  </div>
   <form action="../login/index.php" method="post">
     <table>
-      <tr><td><label>Brukernavn: </label> </td>
-        <td><input type="text" name="username"></td></tr>
-      <tr><td><label>Passord:</label> </td>
+      <tr><td><label>Email: </label> </td>
+        <td><input type="email" name="email"></td></tr>
+      <tr><td><label>Password:</label> </td>
         <td><input type="password" name="password" size="15"></td></tr>
       <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
       <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
       </tr>
     </table>
   </form>
-  <p>Logg inn med bruker: "donald" & passord: "test"</p>
+  <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
 
 </body>
 </html>

@@ -2,15 +2,16 @@
 
     $homedir = __DIR__ . '/';
 
-    //Generate relative path string "../"
+    //Generate relative path string "../" or "../../" depending on where it's loaded
     $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']),"ite1805project7"));
-    $rel = str_replace('/', '../', $rel);
-    $rel = preg_replace('~[^\.\.\/]*~', '', $rel);
+    $rel = str_replace('/', '../', $rel);  //Turn "/" into "../"
+    $rel = preg_replace('~[^\.\.\/]*~', '', $rel);  //Remove all except "../"
 
 
 
     spl_autoload_register(function ($class_name) {
         $homedir = __DIR__ . '/';
+        if (file_exists($homedir . "classes/". $class_name .".class.php"))
         require_once ($homedir . "classes/" .$class_name . '.class.php');
     });
 

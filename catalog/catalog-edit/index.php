@@ -5,9 +5,10 @@ require_once '../../includes.php';
 require_once '../../login.php';
 
 
-$archive = new FileArchive($db, $request, $session, $twig);
+$archive = new FileArchive($db, $request, $session);
 
-if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
+if (ctype_digit($request->query->get('id')) && ($user = $session->get('User'))
+    && $user->verifyUser($request) && $session->get('loggedin')) {
 
     $id = $request->query->getInt('id');
     $catalog = $archive->getCatalogObject($id);
@@ -15,21 +16,18 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
 
     // Check if user owns the catalog. Only owner of the catalog can edit the catalog.
     // Admin can delete catalogs, but can't edit catalogs
-    $isOwner = false;  //isOwner controls if the user owns the catalog or not
-    if ($session->get('loggedin') && $user->verifyUser($request)) {
-        if ($user->getUsername() == $catalog->getOwner()) {  //check if user owns the catalog
+    $isOwner = false;  //isOwner controls if the user owns the file or not, this is to avoid repeated checks
+    if ($user->getUsername() == $catalog->getOwner()) {
             $isOwner = true;
-            $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
-        }
-    }
+    } // End checking catalog owner
 
     //If not owner, quit it
-    if (!$isOwner) {
+    else {
         header("Location: ../");
         exit();
     }
 
-    elseif ($request->request->get('edit_catalog') == "Edit") {
+    if ($request->request->get('edit_catalog') == "Edit") {
         if ($isOwner && XsrfProtection::verifyMac("Edit catalog")) {
             $archive->editCatalog($id);
             $get_info = "id=" . $id . "&catalogedited=1";
@@ -39,7 +37,7 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
     }
 
     else {
-
+        $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
         echo $twig->render('catalog-edit.twig', array('catalog' => $catalog,
             'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
             'user' => $user, 'catalogsList' => $catalogsList, 'archive' => $archive));
@@ -48,7 +46,7 @@ if (ctype_digit($request->query->get('id')) && $user = $session->get('User')) {
 }
 
 else {
-    $get_info = "id=" . $id ;
+    $get_info = "id=" . $request->query->get('id');
     header("Location: ../?" . $get_info);
     exit();
 }

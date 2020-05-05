@@ -1,0 +1,151 @@
+
+/* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
+
+body {
+    background-image: linear-gradient(to top, #ACD6FF, #004B97);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    font-family: "Arial", sans-serif;
+    font-size: 1em;
+    margin: auto;
+    max-width: 80em;
+    word-wrap: break-word;
+}
+
+a:link {
+    color: darkblue;
+}
+
+/* visited link */
+a:visited {
+    color: darkmagenta;
+}
+
+/*.content {
+    margin: auto;
+    max-width: 900px;
+}*/
+
+.button_white {
+    background-color: white;
+    border: black 1px solid;
+    color: black;
+    padding: 0.3em 0.3em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 1em 1em;
+    cursor: pointer;
+}
+
+a.button_white  {
+    color: black;
+}
+
+#commenttext {
+    /*background-color: #00bfbf;*/
+    color: white;
+    text-align: left;
+    display: inline-block;
+    border: black 1px;
+    border-radius: 0.5em;
+    font-size: 1em;
+    margin: 2px;
+    padding: 0.4em;
+}
+
+#comment {
+    font-size: 1em;
+    margin: 1px;
+}
+
+
+input#comment_delete {
+    margin: 2px;
+    padding: 0.3em;
+}
+
+#tag {
+    background-color: lightskyblue;
+    border-radius: 0.5em;
+    color: darkmagenta;
+    text-align: center;
+    padding: 0.3em;
+}
+
+
+button, input[type="submit"] {
+    background-color: #BEBEBE;
+    color: black;
+    padding: 0.3em 0.3em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 1em 1em;
+}
+
+.circle {
+    border-radius: 3em;
+}
+
+.button_pagination {
+    border-radius: 1em;
+    font-size: 1.2em;
+    background-color: yellow;
+}
+
+.file-list {
+    width: 80em;
+    border: #3C3C3C 1px solid;
+    display: block;
+    margin: 1.5em;
+    padding: 1.5em;
+}
+
+.element_box {
+    float: contour;
+    display: inline-block;
+    margin: 0.3em;
+    padding: 0.3em;
+}
+
+.search {
+    margin: -3em;
+    float: right;
+    padding: 0em;
+}
+
+table#search_form {
+    border: none;
+    width: 40em;
+    word-wrap: break-word;
+    background: none;
+    font-size: 13px;
+}
+
+table#search_form tr, table#search_form td {
+    padding: 0.3em;
+}
+
+
+.pagination {
+    font-size: 1em;
+    color: red;
+    float: bottom;
+    text-align: center;
+}
+
+p{
+    font-size: 15px;
+}
+
+h1{
+    font-size: 38px;
+}
+
+div{
+    font-size: 15px;
+}

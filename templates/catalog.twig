@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
+    <title>Catalog details</title>
 </head>
 <body>
 {% include 'login2.twig' %}
@@ -33,7 +34,7 @@
 
 {% if user.isAdmin() or isOwner %}
     <form method="post">
-        <input type="hidden" value="{{ xsrfMac.getMac("Delete") }}" name="XSRFPreventionToken">
+        <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
         <input type="submit" name="Delete_catalog" value="Delete catalog" />
     </form>
 {% endif %}

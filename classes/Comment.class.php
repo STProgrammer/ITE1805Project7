@@ -10,29 +10,42 @@ class Comment
     private $date;
     private $db;
     private $session;
+    private $request;
 
-    public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Session\Session $session)
+    public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request,
+                                \Symfony\Component\HttpFoundation\Session\Session $session)
     {
         $this->session = $session;
+        $this->request = $request;
         $this->db = $db;
     }
 
-    public function addComment(PDO $db, $username, $fileId) {
+    //Notify User, using FlashBag of session
+    public function notifyUser($strHeader, $strMessage)
+    {
+        $this->session->getFlashBag()->add('header', $strHeader);
+        $this->session->getFlashBag()->add('message', $strMessage);
+    }
 
-        $comment = filter_input(INPUT_POST, 'commenttext', FILTER_SANITIZE_STRING);
+    //Add comment
+    public function addComment($username, $fileId) {
+
+        $comment = $this->request->request->get('commenttext');
 
         try {
-            $stmt = $db->prepare("INSERT INTO Comments (comment, fileId, username, date)
+            $stmt = $this->db->prepare("INSERT INTO Comments (comment, fileId, username, date)
 					                                      VALUES (:comment, :fileId, :username, now());");
             $stmt->bindParam(':comment', $comment, PDO::PARAM_STR);
             $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
-            self::NotifyUser("Commend added", "");
+            $this->notifyUser("Commend added", "");
         }
-        catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Failed to add comment", $e->getMessage()); }
     }
 
+
+    //Get comments made to a file
     public function getComments ($fileId) {
         try {
             $stmt = $this->db->prepare("SELECT * FROM Comments WHERE fileId = :fileId;");
@@ -42,9 +55,11 @@ class Comment
                 return $comments;
             }
         }
-        catch(Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("Failed to load comments", $e->getMessage()); }
     }
 
+
+    // Get comment object
     public function getCommentObject ($commentId) {
         try {
             $stmt = $this->db->prepare("SELECT * FROM Comments WHERE commentId = :commentId;");
@@ -52,50 +67,48 @@ class Comment
             $stmt->execute();
             if($comment = $stmt->fetchObject('Comment')) {
                 return $comment;
-            } else { $this->NotifyUser("En feil oppstod", ""); }
+            } else { $this->notifyUser("Something went wrong", ""); }
         }
-        catch(Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
     }
 
-    public function checkOwner (PDO $db, $username, $commentId) {
+
+    //Check if user owns the comment or not
+    public function checkOwner ($username, $commentId) {
         try {
-            $stmt = $db->prepare("SELECT username FROM Comments WHERE commentId = :commentId;");
+            $stmt = $this->db->prepare("SELECT username FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
             $stmt->execute();
             if ($comment = $stmt->fetch()) {
                 return $comment['username'] == $username;
             } else {
-                self::NotifyUser("En feil oppstod", "");
+                $this->notifyUser("Something went wrong", "");
                 return false;
             }
         } catch
-            (Exception $e) { $this->NotifyUser("Fail to submit comment", $e->getMessage()); }
+            (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
             return false;
     }
 
 
-    public function deleteComment(PDO $db, $commentId) {
+    // Delete comment
+    public function deleteComment($commentId) {
         try {
-            $stmt = $db->prepare("DELETE FROM Comments WHERE commentId = :commentId;");
+            $stmt = $this->db->prepare("DELETE FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount()==1) {
-                $this->NotifyUser("Comment deleted", "");
+                $this->notifyUser("Comment deleted", "");
                 return true;
             } else {
-                $this->NotifyUser( "Error 3", "");
+                $this->notifyUser( "Failed to delete comment", "");
                 return false;
             }
         }
-        catch(Exception $e) { $this->NotifyUser("En feil oppstod", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Failed to delete comment", $e->getMessage()); }
 
     }
 
-    public function NotifyUser($strHeader, $strMessage)
-    {
-        $this->session->getFlashBag()->add('header', $strHeader);
-        $this->session->getFlashBag()->add('message', $strMessage);
-    }
 
     /**
      * @return mixed
