@@ -75,7 +75,7 @@
     //Multiple tags search
     elseif($request->query->get('search') == "tagssearch")
     {
-        $tagsStr = $request->query->get('search');
+        $tagsStr = $request->query->get('tags');
         if ($request->query->get('andcondition') == 1) {
             $elements = $archive->searchByTagsWithAndCondition($tagsStr);
         } else { $elements = $archive->searchByTagsWithOrCondition($tagsStr);}
@@ -90,11 +90,14 @@
             'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
     }
 
-    elseif (ctype_digit($request->query->get('catalogid'))) {
+    else {
+        if ($catalogId = $request->query->getInt('catalogid')) {
+            $catalogId = $catalogId == 0 ? 1: $catalogId;
+        } else $catalogId = 1;
 
-        $catalogId = $request->query->getInt('catalogid');
-        $catalogId = $catalogId == 0 ? 1: $catalogId;
         $catalogPath = $archive->getCatalogPath($catalogId);
+        $totalPages = $archive->totalNrOfPages($nrOfElementsPerPage, $catalogId);
+        $pagination = range(1, $totalPages, 1);
 
         if(!$archive->showCatalog($catalogId)) {
             echo $twig->render('index.twig', array('user' => $user,
@@ -102,17 +105,9 @@
         } else {
             $elements = $archive->getOverview($catalogId, $offset, $nrOfElementsPerPage);
             echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
-                'session' => $session, 'request' => $request, 'rel' => $rel, 'catalogPath' => $catalogPath));
+                'session' => $session, 'request' => $request, 'rel' => $rel,
+                'pagination' => $pagination, 'catalogPath' => $catalogPath));
         }
     }
 
-    // vis oversikten
-    else {
-        $totalPages = $archive->totalNrOfPages($nrOfElementsPerPage, 1);
-        $pagination = range(1, $totalPages, 1);
-        $elements = $archive->getOverview(1, $offset, $nrOfElementsPerPage);
-
-        echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
-            'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
-    }
 ?>

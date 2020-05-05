@@ -12,7 +12,7 @@
 {% if session.getFlashBag.has('header') %}
 <div class="flash-notice">
   {% for header in session.getFlashBag.get('header', []) %}
-    <h2>{{ header }}</h2>
+    <h3>{{ header }}</h3>
   {% endfor %}
   {% endif %}
   </div>
@@ -28,6 +28,6 @@
     </table>
   </form>
   <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-
+<p><a href = "../">Back </a></p>
 </body>
 </html>

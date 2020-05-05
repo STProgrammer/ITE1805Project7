@@ -19,9 +19,8 @@
           {% for message in session.getFlashBag.get('message', []) %}
               <p>{{ message }}</p>
           {% endfor %}
-              <p><a href = "./">Back </a></p>
       </div>
-          {% else %}
+          {% endif %}
               <div class="search">
 {#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
       <table id="search_form">
@@ -29,7 +28,7 @@
               <td>
                   <form method = "get">
                       <input type="search" name="query" placeholder="Search" maxlength="45">
-                      <br>Uploaded date (dateformat Month/Day/Year):
+                      <br>Uploaded date:
                       <br><label for="start">From date:</label>
                       <br><input type="date" id="from date" name="from-date"
                                  value=""
@@ -47,7 +46,7 @@
                       <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
                       <button type="submit" name="search" value="tagssearch">Search by tags</button>
                       <br><input type="checkbox" name="andcondition" value="1">
-                      <br>Check if you want each file to include all tags (AND condition)</form>
+                      Check if you want each file to include all tags (AND condition)</form>
               </td>
           </tr>
       </table>
@@ -55,10 +54,10 @@
           <h1>
               Project 7 Drive
           </h1>
-              <h2>
-                  {{ catalogPath }}
-              </h2>
             <p><a href="{{rel}}file-upload/" class="button_white">Upload File</a> <a href="{{rel}}new-catalog/" class="button_white">New Catalog</a>  </p>
+          <h2>
+              Catalog path: {{ catalogPath }}
+          </h2>
   {% if elements %}
       <div class="file-list">
               {% for element in elements %}
@@ -85,19 +84,19 @@
                       {% else %}
                     <div class="element_box">
                               {% if element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_word_272702.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src=Images/iconfinder_word_272702.png"/></a>
                               {% elseif element.Type == 'application/mspowerpoint' %}
-                               a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_powerpoint_272700.png"/></a>
+                               a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_powerpoint_272700.png"/></a>
                               {% elseif element.Type == 'application/vnd.ms-excel' or element.Type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_excel_272697.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_excel_272697.png"/></a>
                               {% elseif element.Type == 'application/pdf' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_pdf_272699.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_pdf_272699.png"/></a>
                               {% elseif element.Type == 'text/plain' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_text_272701.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_text_272701.png"/></a>
                               {% elseif element.Type == 'video/mp4' or element.Type == 'video/webm' or element.Type == 'video/ogg' %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_video-alt_383195.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_video-alt_383195.png"/></a>
                               {% else %}
-                              <a href="{{rel}}?id={{element.id}}"><img src="../Images/iconfinder_File_104851.png"/></a>
+                              <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_File_104851.png"/></a>
                               {% endif %}
                               <br><a href="{{rel}}?id={{element.id}}"> {{element.Title}} </a>
                               <br>Type: {{ element.Type }}
@@ -112,8 +111,7 @@
       </div>
   {% endif %}
   </div>
-                   {{ dump('pageno') }}
-              {% if pagination %} <div class="pagination">
+              {% if pagination|length > 1 %} <div class="pagination">
 
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page %} {{ page }}
@@ -121,11 +119,6 @@
                       {% endif %}
                   {% endfor %}
               </div>
-
-
           {% endif %}
-  {{ dump(request.server.get('REQUEST URL')) }}
-  {{ dump(request.server.get('QUERY_STRING')) }}
-  {% endif %}
   </body>
 </html>

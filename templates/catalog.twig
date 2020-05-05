@@ -9,12 +9,12 @@
 {% include 'login2.twig' %}
 <div class="flash-notice">
     {% for header in session.getFlashBag.get('header', []) %}
-        <h2>{{ header }}</h2>
+        <h3>{{ header }}</h3>
     {% endfor %}
     {% for message in session.getFlashBag.get('message', []) %}
-        <h2>{{ message }}</h2>
+        <p>{{ message }}</p>
+        <p><a href = "./">Back </a></p>
     {% endfor %}
-    <p><a href = "./">Back </a></p>
 </div>
 {% if catalog %}
     <h1>
@@ -27,13 +27,14 @@
     </ul>
 {% endif %}
 {% if isOwner %}
-    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}">Edit catalog</a></p>
+    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button_white" >Edit catalog</a></p>
 {% endif %}
 {% if user.isAdmin() or isOwner %}
-    <form method="post">
+    <form method="post" onsubmit="return confirm('Are you sure to delete the catalog?');">
         <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
-        <input type="submit" name="Delete_catalog" value="Delete catalog" />
+        <input type="submit" name="Delete_catalog" value="Delete catalog" class="delete" />
     </form>
 {% endif %}
+<p><a href = "./">Back </a></p>
 </body>
 </html>
