@@ -13,8 +13,8 @@
     {% endfor %}
     {% for message in session.getFlashBag.get('message', []) %}
         <p>{{ message }}</p>
+        <p><a href = "./">Back </a></p>
     {% endfor %}
-    <p><a href = "./">Back </a></p>
 </div>
 {% if catalog %}
     <h1>
@@ -30,10 +30,11 @@
     <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button_white" >Edit catalog</a></p>
 {% endif %}
 {% if user.isAdmin() or isOwner %}
-    <form method="post">
+    <form method="post" onsubmit="return confirm('Are you sure to delete the catalog?');">
         <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
-        <input type="submit" name="Delete_catalog" value="Delete catalog" />
+        <input type="submit" name="Delete_catalog" value="Delete catalog" class="delete" />
     </form>
 {% endif %}
+<p><a href = "./">Back </a></p>
 </body>
 </html>

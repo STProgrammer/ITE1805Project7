@@ -49,21 +49,16 @@
         </tr>
     </table>
 </form>
-
+    <p><a href = "../">Back </a></p>
     <p><form method="post">
     <br><label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="">
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="change_email" value="Change" />
 </form></p>
+
 {% endif %}
 {% if isUser or user.isAdmin() %}
-<p><form method="post">
-    <br><label>Delet e user: </label>
-    <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
-    <br><input type="submit" name="Delete_user" value="Delete user" />
-</form></p>
-
     <p><form method="post" onsubmit="return validate();">
         <br><label>Change password: </label>
         <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
@@ -73,6 +68,13 @@
     <input type="hidden" value="{{ getMac("change password") }}" name="XSRFPreventionToken">
         <br><input type="submit" id="change_password" name="change_password" value="Change" />
     </form></p>
+
+    <p><form method="post" onsubmit="return confirm('Are you sure to delete the user? (Can\'t be reversed');">
+    <br><label>Delet e user: </label>
+    <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
+    <br><input type="submit" name="Delete_user" value="Delete user" class="delete" />
+</form></p>
     {% endif %}
+<p><a href = "../">Back </a></p>
 </body>
 </html>

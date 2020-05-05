@@ -16,6 +16,7 @@
         {% endfor %}
         {% for message in session.getFlashBag.get('message', []) %}
             <p>{{ message }}</p>
+            <p><a href = "../">Back </a></p>
         {% endfor %}
     </div>
     {% if file %}
@@ -74,7 +75,7 @@
         {% if user.isAdmin() or isOwner %}
             <form method="post">
                 <input type="hidden" value="{{ getMac("Delete file") }}" name="XSRFPreventionToken">
-            <input type="submit" name="Delete_file" value="Delete file" />
+            <input type="submit" name="Delete_file" value="Delete file" class="delete" />
             </form>
             {% endif %}
         <h3>Comments:</h3>
@@ -95,7 +96,7 @@
         {% endfor %}
 
         {% if user %}
-            <form  method="post">
+            <form  method="post" onsubmit="return confirm('Are you sure to delete the file?');">
             <label>Comment: </label>
                 <input type="hidden" value="{{ getMac("Post comment") }}" name="XSRFPreventionToken">
             <textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
@@ -103,6 +104,7 @@
             </form>
             {% endif %}
 {% endif %}
+<p><a href = "../">Back </a></p>
 
 </body>
 </html>

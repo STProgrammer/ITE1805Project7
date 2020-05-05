@@ -2,20 +2,18 @@
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
 body {
-    background-image: url("Images/water-blue-ocean-5412.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-image: url("Images/circle-blues.png");
     color: white;
     font-family: "Arial", sans-serif;
     font-size: 1em;
     margin: auto;
-    max-width: 80em;
+    max-width: 70em;
     word-wrap: break-word;
     line-height: 1.5em;
 }
 
 a:link {
-    color: lightblue;
+    color: lightskyblue;
 }
 
 /* visited link */
@@ -29,10 +27,46 @@ a:visited {
 }*/
 
 .flash-notice {
-    color: red;
+    color: deeppink;
+
 }
 
-.button_white {
+button, input[type="submit"], .button_white {
+    background-color: blue;
+    border-top: solid #80c3e6;
+    border-right: solid darkblue;
+    border-bottom: solid darkblue;
+    border-left: solid #80c3e6;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.3em 0.3em;
+    margin: 1em 1em;
+    border-radius: 0.3em;
+    cursor: pointer;
+}
+
+input {
+    margin-bottom: 0.5em;
+    border-radius: 0.2em;
+}
+
+input[type=submit].delete {
+    background-color: red;
+    color: white;
+    border-top: solid #FF4444;
+    border-right: solid darkred;
+    border-bottom: solid darkred;
+    border-left: solid #FF4444;
+    cursor: pointer;
+}
+
+label {
+    margin-top: 0.5em;
+}
+
+/*.button_white {
     background-color: white;
     border: black 1px solid;
     color: black;
@@ -43,11 +77,17 @@ a:visited {
     font-size: 1em;
     margin: 1em 1em;
     cursor: pointer;
-}
+}*/
 
 a.button_white  {
-    color: black;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
 }
+
+
+
+
 
 #commenttext {
     background-color: #00bfbf;
@@ -81,23 +121,8 @@ input#comment_delete {
 }
 
 
-button, input[type="submit"] {
-    background-color: #BEBEBE;
-    color: black;
-    text-align: center;
-    display: inline-block;
-    font-size: 1em;
-    padding: 0.3em 0.3em;
-    margin: 1em 1em;
-}
 
-input {
-    margin-bottom: 0.5em;
-}
 
-label {
-    margin-top: 0.5em;
-}
 
 .circle {
     border-radius: 3em;
@@ -117,9 +142,8 @@ label {
 }
 
 .file-list {
-    width: 80em;
     border: black 1px solid;
-    display: block;
+ /*   display: block; */
     margin: 0.5em;
     padding: 0.5em;
 }
@@ -132,9 +156,9 @@ label {
 }
 
 .search {
-    margin: -3em;
     float: right;
     background: dodgerblue;
+    display: inline-block;
 }
 
 table#search_form {
