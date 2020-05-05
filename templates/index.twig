@@ -20,7 +20,8 @@
               <p>{{ message }}</p>
           {% endfor %}
       </div>
-          {% endif %}
+          <p><a href = "../">Back </a></p>
+          {% else %}
               <div class="search">
 {#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
       <table id="search_form">
@@ -104,8 +105,6 @@
   {% endif %}
   </div>
               {% if pagination|length > 1 %} <div class="pagination">
-
-
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page
                       or not request.query.has('pageno') and page == 1%} {{ page }}
@@ -114,5 +113,6 @@
                   {% endfor %}
               </div>
           {% endif %}
+  {% endif %}
   </body>
 </html>
