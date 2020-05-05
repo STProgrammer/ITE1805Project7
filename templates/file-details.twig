@@ -73,7 +73,7 @@
             <p><a href="file-edit/?id={{file.getFileId}}" class="button_white">Edit file</a></p>
             {% endif %}
         {% if user.isAdmin() or isOwner %}
-            <form method="post">
+            <form method="post" onsubmit="return confirm('Are you sure to delete the file?');">
                 <input type="hidden" value="{{ getMac("Delete file") }}" name="XSRFPreventionToken">
             <input type="submit" name="Delete_file" value="Delete file" class="delete" />
             </form>
@@ -96,11 +96,11 @@
         {% endfor %}
 
         {% if user %}
-            <form  method="post" onsubmit="return confirm('Are you sure to delete the file?');">
+            <form  method="post">
             <label>Comment: </label>
                 <input type="hidden" value="{{ getMac("Post comment") }}" name="XSRFPreventionToken">
-            <textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
-                <input type="submit" name="comment" value="Comment" />
+            <br><textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
+               <br><input type="submit" name="comment" value="Comment" />
             </form>
             {% endif %}
 {% endif %}

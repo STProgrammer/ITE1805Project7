@@ -23,7 +23,7 @@
     if (!($pageno = $request->query->getInt('pageno')) || $pageno < 1) {
         $pageno = 1;
     }
-    $nrOfElementsPerPage = 40;
+    $nrOfElementsPerPage = 4;
     $offset = ($pageno-1) * $nrOfElementsPerPage;
 
 

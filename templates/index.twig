@@ -58,8 +58,8 @@
           <h2>
               Catalog path: {{ catalogPath }}
           </h2>
+          <div class="file-list">
   {% if elements %}
-      <div class="file-list">
               {% for element in elements %}
                   {% if element.isFile == 0 %}
                       <div class="element_box">
@@ -70,20 +70,11 @@
                           <br>Author: <a href="profile-page/?username={{ element.Author }}">{{ element.Author }}</a>
                           <br><a href={{rel}}catalog/?id={{element.id}}>Details</a>
                       </div>
-                  {% else %}
-                      {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
-                      <div class="element_box">
-                          <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}"/></a>
-                              <br><a href="{{rel}}?id={{element.id}}"> {{element.Title}} </a>
-                              <br>Type: {{ element.Type }}
-                              <br>Upload Date: {{ element.Date }}
-                              <br>Author: <a href="profile-page/?username={{ element.Author }}">{{ element.Author }}</a>
-                              <br>Views: {{ element.Views }}
-                              <br><a href={{rel}}file-details/?id={{element.id}}>Details</a>
-                          </div>
                       {% else %}
                     <div class="element_box">
-                              {% if element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
+                              {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
+                              <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}"/></a>
+                              {% elseif element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
                               <a href="{{rel}}?id={{element.id}}"><img src=Images/iconfinder_word_272702.png"/></a>
                               {% elseif element.Type == 'application/mspowerpoint' %}
                                a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_powerpoint_272700.png"/></a>
@@ -106,15 +97,18 @@
                               <br><a href={{rel}}file-details/?id={{element.id}}>Details</a>
                           </div>
                       {% endif %}
-                  {% endif %}
               {% endfor %}
+              {% else %}
+              <h3>No elements found</h3>
       </div>
   {% endif %}
   </div>
               {% if pagination|length > 1 %} <div class="pagination">
 
+
                   {% for page in pagination %}
-                  {% if request.query.get('pageno') == page %} {{ page }}
+                  {% if request.query.get('pageno') == page
+                      or not request.query.has('pageno') and page == 1%} {{ page }}
                       {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}" class = "button_white button_pagination">{{ page }}</a>
                       {% endif %}
                   {% endfor %}

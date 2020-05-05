@@ -12,6 +12,13 @@ body {
     line-height: 1.5em;
 }
 
+h1 {
+    color: white;
+    text-shadow: 5px 5px 5px black;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
 a:link {
     color: lightskyblue;
 }
@@ -27,16 +34,22 @@ a:visited {
 }*/
 
 .flash-notice {
-    color: deeppink;
+    color: mediumvioletred;
 
 }
 
 button, input[type="submit"], .button_white {
-    background-color: blue;
+
+   /* background-color: blue;
     border-top: solid #80c3e6;
     border-right: solid darkblue;
     border-bottom: solid darkblue;
-    border-left: solid #80c3e6;
+    border-left: solid #80c3e6;*/
+    background-color: green;
+    border-top: solid lightgreen;
+    border-right: solid #004200;
+    border-bottom: solid #004200;
+    border-left: solid lightgreen;
     color: white;
     text-align: center;
     display: inline-block;
@@ -47,18 +60,18 @@ button, input[type="submit"], .button_white {
     cursor: pointer;
 }
 
-input {
+input, textarea {
     margin-bottom: 0.5em;
-    border-radius: 0.2em;
+    border-radius: 0.3em;
 }
 
 input[type=submit].delete {
     background-color: red;
     color: white;
-    border-top: solid #FF4444;
+    border-top: solid #FF7777;
     border-right: solid darkred;
     border-bottom: solid darkred;
-    border-left: solid #FF4444;
+    border-left: solid #FF7777;
     cursor: pointer;
 }
 
@@ -90,8 +103,7 @@ a.button_white  {
 
 
 #commenttext {
-    background-color: #00bfbf;
-    color: white;
+    background-color: #555555;
     text-align: left;
     display: inline-block;
     border: black 1px;
@@ -118,11 +130,8 @@ input#comment_delete {
     color: darkmagenta;
     text-align: center;
     padding: 0.3em;
+    text-decoration: none;
 }
-
-
-
-
 
 .circle {
     border-radius: 3em;
@@ -130,20 +139,23 @@ input#comment_delete {
 
 .button_pagination {
     border-radius: 1em;
+    color: red;
     font-size: 1.1em;
-    background-color: yellow;
 }
 
 .pagination {
-    font-size: 1.1em;
-    color: red;
+    font-size: 1.2em;
+    color: white;
     float: bottom;
     text-align: center;
 }
 
 .file-list {
-    border: black 1px solid;
- /*   display: block; */
+    border: 30px solid;
+    border-image-source: url("Images/greenframe.svg");
+    border-image-slice: 100;
+    border-image-repeat: repeat;
+    display: block;
     margin: 0.5em;
     padding: 0.5em;
 }
@@ -157,13 +169,15 @@ input#comment_delete {
 
 .search {
     float: right;
-    background: dodgerblue;
+    background: darkturquoise;
     display: inline-block;
+    border-radius: 0.5em;
 }
 
 table#search_form {
     width: 30em;
     word-wrap: break-word;
+    border: 1px darkgreen;
 }
 
 table, tr, td {
