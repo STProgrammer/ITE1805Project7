@@ -3,6 +3,9 @@
 
 class RegisterUser
 {
+    private $dbase;
+    private $request;
+    private $session;
 
     public function __construct(PDO $db, \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session)
     {
@@ -209,14 +212,15 @@ class RegisterUser
             $stmt->execute();
             if ($stmt->rowCount()==1) {
                 $this->notifyUser( "User deleted", "");
-                $result = true;
+                return true;
             } else {
                 $this->notifyUser( "Failed to delete user!", "");
-                $result = false;
+                return false;
             }
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete user!", $e->getMessage() . PHP_EOL);
+            return false;
         }
     }
 }
