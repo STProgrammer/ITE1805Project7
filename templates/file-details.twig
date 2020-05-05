@@ -69,7 +69,7 @@
         </ul>
     </div>
         {% if isOwner %}
-            <p><a href="file-edit/?id={{file.getFileId}}">Edit file</a></p>
+            <p><a href="file-edit/?id={{file.getFileId}}" class="button_white">Edit file</a></p>
             {% endif %}
         {% if user.isAdmin() or isOwner %}
             <form method="post">

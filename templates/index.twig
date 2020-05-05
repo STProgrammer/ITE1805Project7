@@ -55,10 +55,10 @@
           <h1>
               Project 7 Drive
           </h1>
-              <h2>
-                  {{ catalogPath }}
-              </h2>
             <p><a href="{{rel}}file-upload/" class="button_white">Upload File</a> <a href="{{rel}}new-catalog/" class="button_white">New Catalog</a>  </p>
+          <h2>
+              Catalog path: {{ catalogPath }}
+          </h2>
   {% if elements %}
       <div class="file-list">
               {% for element in elements %}

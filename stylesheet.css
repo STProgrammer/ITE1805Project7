@@ -2,7 +2,7 @@
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
 body {
-    background-image: linear-gradient(to top,  #79A3CC, #002975);
+    background-image: url("Images/water-blue-ocean-5412.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: white;
