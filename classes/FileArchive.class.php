@@ -515,7 +515,7 @@ class FileArchive {
                 $type = $item['type'];
                 $data = $item['data'];
                 $image = imagecreatefromstring($data);
-                $image = imagescale($image, 100, 90);
+                $image = imagescale($image, 110, 100);
                 header('Content-Type: image/jpeg');
                 imagejpeg($image);
                 imagedestroy($image);

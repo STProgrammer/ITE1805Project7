@@ -31,8 +31,8 @@
                 <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea></table></td>
     <tr><td><label>Tags: </label>
             <input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3"></td></tr>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
     <input type="hidden" value="{{ getMac("Edit file") }}" name="XSRFPreventionToken">
     <td colspan="2" width="400" align="middle">
         <input type="submit" name="edit_file" value="Edit" />

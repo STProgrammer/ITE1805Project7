@@ -63,7 +63,7 @@
                     tags = tags.split(', ');
                     var temp = '';
                     for (var i = 0; i < tags.length; i++) {
-                        temp = temp + '<a id="tag" href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
+                        temp = temp + '<a class="tag button-white" href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
                     }
                     document.getElementById("tags").innerHTML = temp;
                 </script>

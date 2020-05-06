@@ -29,6 +29,10 @@ a:visited {
     color: lightpink;
 }
 
+a:hover {
+    color: lightyellow;
+}
+
 /*.content {
     margin: auto;
     max-width: 900px;
@@ -138,13 +142,24 @@ input.comment-delete {
     color: lightgrey;
 }
 
-#tag {
-    background-color: lightskyblue;
-    border-radius: 0.5em;
-    color: darkmagenta;
-    text-align: center;
-    padding: 0.3em;
-    text-decoration: none;
+.tag {
+     border-radius: 1em;
+     text-align: center;
+     margin: 1px;
+     padding: 0.2em;
+     text-decoration: none;
+     background-color: #7d007d;
+     border: lightpink solid;
+}
+
+.tag:hover {
+    background-color: mediumvioletred;
+    border: lightpink solid;
+}
+
+#container {
+    position: relative;
+    vertical-align: bottom;
 }
 
 /*SEARCH*/
@@ -152,14 +167,17 @@ input.comment-delete {
 .search {
     float: right;
     width: 45em;
-    height: 10em;
+    height: fit-content;
     background: midnightblue;
     border-radius: 0.5em;
-    padding: 2em;
-    margin: 2em;
+    padding: 1em;
+    margin: 1em;
     display: inline-block;
 }
 
+#search-form table {
+    vertical-align: top;
+}
 
 #search-form td, #search-form tr, #search-form th{
     border-left: solid 0.5em transparent;
@@ -170,16 +188,14 @@ input.comment-delete {
 
 #upload-buttons {
     display: inline-block;
-    margin-top: 10em;
+    margin-top: 11em;
 }
 
 .overview {
     clear: both;
 }
 
-#container {
-    position: relative;
-}
+
 
 #catalogpath {
     font-size: 2em;
