@@ -10,7 +10,7 @@ $regUser = new RegisterUser($db, $request, $session);
 if ($request->query->has('username') && ($user = $session->get('User'))
     && $user->verifyUser($request) && $session->get('loggedin')) {
 
-    $username = $user->getUsername();
+    $username = $request->query->get('username');
     $userData = $regUser->getUserData($username);
 
 
