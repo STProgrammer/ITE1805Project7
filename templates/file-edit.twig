@@ -17,7 +17,7 @@
                 Only accessible for registered users
             </td>
         <tr><td><label>Title: </label>
-                <input type="text" name="title" required maxlength=45 value="{{ file.getTitle() }}"></td></tr>
+               <br><input type="text" name="title" required maxlength=45 value="{{ file.getTitle() }}"></td></tr>
         <tr><td><br><label>Catalog:</label>
         <br><select name="catalogId">
             <option value="1"> Main </option>
@@ -28,9 +28,9 @@
             {% endif %}
         </select>
         <tr><td><label>Description: </label>
-                <textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea></table></td>
+                <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea></table></td>
     <tr><td><label>Tags: </label>
-            <input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}"></td></tr>
+            <input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3"></td></tr>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
     <input type="hidden" value="{{ getMac("Edit file") }}" name="XSRFPreventionToken">

@@ -25,7 +25,7 @@
                             <option value="1"> Main </option>
                             {% if catalogsList %}
                                 {% for catalog in catalogsList %}
-                                    <option value="{{ catalog.catalogId }}">{{ catalog.catalogName }} </option>
+                                    <option value="{{ catalog.catalogId }}">{{ archive.getCatalogPath(catalog.catalogId) }} </option>
                                 {% endfor %}
                             {% endif %}
                         </select>
@@ -38,8 +38,8 @@
         </form>
     {% else %}
         <p>You must login to add new catalog</p>
-        <br><a href="{{rel}}register/" class="button_white">Register </a>
-        <a href="{{rel}}login/" class="button_white">Login page </a>
+        <br><a href="{{rel}}register/" class="button-white">Register </a>
+        <a href="{{rel}}login/" class="button-white">Login page </a>
     {% endif %}
 <p><a href = "../">Back </a></p>
 </body>

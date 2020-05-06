@@ -18,53 +18,74 @@
           {% endfor %}
           {% for message in session.getFlashBag.get('message', []) %}
               <p>{{ message }}</p>
-              <p><a href = "./">Back </a></p>
           {% endfor %}
+          <p><a href = "./">Back </a></p>
           {% else %}
       </div>
-              <div class="search">
-{#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
-      <table id="search_form">
-          <tr>
-              <td>
-                  <form method = "get">
-                      <input type="search" name="query" placeholder="Search" maxlength="45">
-                      <br>Uploaded date:
-                      <br><label for="start">From date:</label>
-                      <br><input type="date" id="from date" name="from-date"
-                                 value=""
-                                 min="2020-03-01" max="">
-                      <br><label for="start">To date:</label>
-                      <br><input type="date" id="to date" name="to-date"
-                                 value=""
-                                 min="2020-03-01" max="">
-                      <br><button type="submit" name="search" value="search">Search</button></form>
-              </td>
-              <td>
-                  <form method = "get">
-                      <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
-                      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-                      <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-                      <button type="submit" name="search" value="tagssearch">Search by tags</button>
-                      <br><input type="checkbox" name="andcondition" value="1">
-                      Check if you want each file to include all tags (AND condition)</form>
-              </td>
-          </tr>
-      </table>
-              </div>
           <h1>
               Project 7 Drive
           </h1>
+          <div id="container">
+          <div class="search">
+{#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
+      <table id="search-form">
+              <form method = "get">
+                  <tr>
+              <th colspan="2">
+                  <label>Search in file database </label>
+              </th>
+              <th colspan="2">
+                  <label>Search by tags</label>
+              </th>
+                  </tr>
+                  <tr>
+                      <td>
+                  <br><input type="search" name="query" placeholder="Search" maxlength="45">
+                 <br><button type="submit" name="search" value="search">Search</button>
+              </td>
+              <td>
+                      <label for="start">Start date range:</label>
+                      <br><input type="date" id="from date" name="from-date"
+                                 value=""
+                                 min="2020-03-01" max="">
+                  <br><label for="end">End date range:</label>
+                  <br><input type="date" id="to date" name="to-date"
+                             value=""
+                             min="2020-03-01" max="">
+              </td>
+                      <td>
+                      </td>
+              </form>
+              <form method = "get">
+                  <td>
+                      <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
+                      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+                      <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+                      <br><button type="submit" name="search" value="tagssearch">Search</button>
+                  </td>
+                  <td>
+                  <input type="checkbox" name="andcondition" value="1">
+                  Check if you want each file to include all tags (AND condition)
+                  </td>
+                  </tr>
+              </form>
+          </table>
+              </div>
+              <div id="upload-buttons">
+                  <a href="{{rel}}file-upload/" class="button-white">Upload File</a>
+                  <a href="{{rel}}new-catalog/" class="button-white">New Catalog</a>
+              </div>
+          </div>
           <div class="overview">
-              <p><a href="{{rel}}file-upload/" class="button_white">Upload File</a> <a href="{{rel}}new-catalog/" class="button_white">New Catalog</a>  </p>
-              <h2>
+
+              <a id="catalogpath">
                   Catalog path: {{ catalogPath }}
-              </h2>
-          <div class="file-list">
+              </a>
+              <div class="file-list">
   {% if elements %}
               {% for element in elements %}
                   {% if element.isFile == 0 %}
-                      <div class="element_box">
+                      <div class="element-box">
                           <a href="{{rel}}?catalogid={{element.id}}"><img src="Images/iconfinder_Blank-Catalog_33986.png"/></a>
                           <br><a href="{{rel}}?catalogid={{element.id}}"> {{element.Title}} </a>
                           <br>Type: {{ element.Type }}
@@ -73,7 +94,7 @@
                           <br><a href={{rel}}catalog/?id={{element.id}}>Details</a>
                       </div>
                       {% else %}
-                    <div class="element_box">
+                    <div class="element-box">
                               {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
                               <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}"/></a>
                               {% elseif element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
@@ -110,7 +131,7 @@
                   {% for page in pagination %}
                   {% if request.query.get('pageno') == page
                       or not request.query.has('pageno') and page == 1%} {{ page }}
-                      {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}" class = "button_white button_pagination">{{ page }}</a>
+                      {% else %} <a href="{{ get_page_url({ 'pageno': page, }) }}" class = "button-white button-pagination">{{ page }}</a>
                       {% endif %}
                   {% endfor %}
               </div>

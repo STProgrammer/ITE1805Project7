@@ -27,7 +27,7 @@
     </ul>
 {% endif %}
 {% if isOwner %}
-    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button_white" >Edit catalog</a></p>
+    <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button-white" >Edit catalog</a></p>
 {% endif %}
 {% if user.isAdmin() or isOwner %}
     <form method="post" onsubmit="return confirm('Are you sure to delete the catalog?');">

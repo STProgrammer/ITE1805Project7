@@ -70,7 +70,7 @@
         </ul>
     </div>
         {% if isOwner %}
-            <p><a href="file-edit/?id={{file.getFileId}}" class="button_white">Edit file</a></p>
+            <p><a href="file-edit/?id={{file.getFileId}}" class="button-white">Edit file</a></p>
             {% endif %}
         {% if user.isAdmin() or isOwner %}
             <form method="post" onsubmit="return confirm('Are you sure to delete the file?');">
@@ -80,15 +80,15 @@
             {% endif %}
         <h3>Comments:</h3>
         {% for comment in comments %}
-            <p><div id="comment"><div id="commenttext">
+            <p><div class="comment"><div class="comment-text">
                     <a href="{{rel}}profile-page/?username={{ comment.username }}">{{ comment['username'] }}</a>
                 {{ comment['comment'] }}
-               <br> {{ comment['date'] }}</div>
+            <br> <a class="comment-date">{{ comment['date'] }}</a></div>
             {% if comment['username'] == user.getUsername() or user.isAdmin() == 1 %}
                 <form method="post" id="delete_comment">
                     <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
                     <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
-                    <input type="submit" name="Delete_comment" value="Delete comment" id="comment_delete" />
+                    <input type="submit" name="Delete_comment" value="Delete comment" class="comment-delete" />
                 </form></div></p>
             {% else %}</div></p>
             {% endif %}

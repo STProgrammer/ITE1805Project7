@@ -1,6 +1,8 @@
 
 /* delvis modifisert fra https://stackoverflow.com/questions/710089/how-do-i-make-an-html-link-look-like-a-button */
 
+/*Body and baisc elements */
+
 body {
     background-image: url("Images/circle-blues.png");
     color: white;
@@ -8,7 +10,6 @@ body {
     font-size: 1em;
     margin: auto;
     max-width: 70em;
-    word-wrap: break-word;
     line-height: 1.5em;
 }
 
@@ -38,7 +39,7 @@ a:visited {
 
 }
 
-button, input[type="submit"], .button_white {
+button, input[type="submit"], .button-white {
 
    /* background-color: blue;
     border-top: solid #80c3e6;
@@ -79,7 +80,12 @@ label {
     margin-top: 0.5em;
 }
 
-/*.button_white {
+table, tr, td {
+    border: 3px solid transparent;
+}
+
+
+/*.button-white {
     background-color: white;
     border: black 1px solid;
     color: black;
@@ -92,17 +98,15 @@ label {
     cursor: pointer;
 }*/
 
-a.button_white  {
+a.button-white  {
     color: white;
     text-decoration: none;
     cursor: pointer;
 }
 
+/*COMMENT*/
 
-
-
-
-#commenttext {
+.comment-text {
     background-color: #555555;
     text-align: left;
     display: inline-block;
@@ -113,15 +117,25 @@ a.button_white  {
     padding: 0.4em;
 }
 
-#comment {
+.comment {
     font-size: 1em;
     margin: 1px;
 }
 
 
-input#comment_delete {
+input.comment-delete {
     margin: 2px;
     padding: 0.3em;
+    background-color: red;
+    border-top: solid #FF7777;
+    border-right: solid darkred;
+    border-bottom: solid darkred;
+    border-left: solid #FF7777;
+}
+
+.comment-date {
+    font-size: 0.8em;
+    color: lightgrey;
 }
 
 #tag {
@@ -133,11 +147,70 @@ input#comment_delete {
     text-decoration: none;
 }
 
+/*SEARCH*/
+
+.search {
+    float: right;
+    width: 45em;
+    height: 10em;
+    background: midnightblue;
+    border-radius: 0.5em;
+    padding: 2em;
+    margin: 2em;
+    display: inline-block;
+}
+
+
+#search-form td, #search-form tr, #search-form th{
+    border-left: solid 0.5em transparent;
+    border-right: solid 0.5em transparent;
+}
+
+/*FILES AND OVERVIEW*/
+
+#upload-buttons {
+    display: inline-block;
+    margin-top: 10em;
+}
+
+.overview {
+    clear: both;
+}
+
+#container {
+    position: relative;
+}
+
+#catalogpath {
+    font-size: 2em;
+    color: gold;
+    white-space: nowrap;
+}
+
+.file-list {
+    border: 30px solid;
+    border-image-source: url("Images/greenframe.svg");
+    border-image-slice: 100;
+    border-image-repeat: repeat;
+    display: block;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+.element-box {
+    float: none;
+    display: inline-block;
+    margin: 0.3em;
+    padding: 0.3em;
+}
+
+/*PAGINATION*/
+
 .circle {
     border-radius: 3em;
 }
 
-.button_pagination {
+.button-pagination {
     border-radius: 1em;
     color: red;
     font-size: 1.1em;
@@ -150,48 +223,7 @@ input#comment_delete {
     text-align: center;
 }
 
-.overview {
-    display: block;
-}
 
-.file-list {
-    clear: both;
-    border: 30px solid;
-    border-image-source: url("Images/greenframe.svg");
-    border-image-slice: 100;
-    border-image-repeat: repeat;
-    display: block;
-    margin: 0.5em;
-    padding: 0.5em;
-}
 
-.element_box {
-    float: contour;
-    display: inline-block;
-    margin: 0.3em;
-    padding: 0.3em;
-}
-
-.search {
-    float: right;
-    background: darkturquoise;
-    display: inline-block;
-    border-radius: 0.5em;
-}
-
-table#search_form {
-    width: 30em;
-    word-wrap: break-word;
-    border: 1px darkgreen;
-}
-
-table, tr, td {
-    border: transparent;
-}
-
-table#search_form tr, table#search_form td {
-    padding: 1em;
-    margin-left: 1em;
-}
 
 

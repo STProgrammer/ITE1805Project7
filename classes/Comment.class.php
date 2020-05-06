@@ -39,7 +39,7 @@ class Comment
             $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
-            $this->notifyUser("Commend added", "");
+            $this->notifyUser("Comment added", "");
         }
         catch(Exception $e) { $this->notifyUser("Failed to add comment", $e->getMessage()); }
     }
