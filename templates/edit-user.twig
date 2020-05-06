@@ -36,7 +36,7 @@
     <div class = "edit-user-form">
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
-    <table border="1" cellspacing="0" cellpadding="5" width="400">
+    <table border="1">
         <tr><th>Change user details;</th></tr>
         <tr><td><label>User name:</label>
                 <br><input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}"></td></tr>
@@ -45,7 +45,7 @@
         <tr><td><label>Last name:</label>
                 <br><input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}"></td></tr>
         <input type="hidden" value="{{ getMac("Edit user information") }}" name="XSRFPreventionToken">
-        <td colspan="2" width="400" align="middle">
+        <tr><td>
             <input type="submit" name="edit_user" value="Edit" />
         </td>
         </tr>
