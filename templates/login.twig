@@ -9,13 +9,13 @@
 </head>
 <body>
 <h2>Log in</h2>
-{% if session.getFlashBag.has('header') %}
 <div class="flash-notice">
+{% if session.getFlashBag.has('header') %}
   {% for header in session.getFlashBag.get('header', []) %}
     <h3>{{ header }}</h3>
   {% endfor %}
   {% endif %}
-  </div>
+</div>
   <form action="../login/index.php" method="post">
     <table>
       <tr><td><label>Email: </label> </td>
