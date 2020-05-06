@@ -79,7 +79,7 @@
             <p><div class="comment"><div class="comment-text">
                     <a href="{{rel}}profile-page/?username={{ comment.username }}">{{ comment['username'] }}</a>
                 {{ comment['comment'] }}
-            <br> <a class="comment-date">{{ comment['date'] }}</a></div>
+            <br> <span class="comment-date">{{ comment['date'] }}</span></div>
             {% if comment['username'] == user.getUsername() or user.isAdmin() == 1 %}
                 <form method="post" id="delete_comment">
                     <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
@@ -100,7 +100,7 @@
             </form>
             {% endif %}
 {% endif %}
-<p><a href = "../">Back </a></p>
+<p><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" id="back"></a></p>
 
 </body>
 </html>

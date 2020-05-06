@@ -252,8 +252,10 @@ input.comment-delete {
     display: inline-block;
 }
 
-.back {
+
+#back {
     clear: both;
+    float: end;
 }
 
 
