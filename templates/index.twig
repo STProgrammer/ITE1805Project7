@@ -28,49 +28,59 @@
           <div id="container">
           <div class="search">
 {#              <p>Today's date is: {{ object.date|date("Y-m-d") }}</p>#}
-      <table id="search-form">
-              <form method = "get">
-                  <tr>
-              <th colspan="2">
-                  <label>Search in file database </label>
-              </th>
-              <th colspan="2">
-                  <label>Search by tags</label>
-              </th>
-                  </tr>
+              <table>
                   <tr>
                       <td>
-                  <br><input type="search" name="query" placeholder="Search" maxlength="45">
-                 <br><button type="submit" name="search" value="search">Search</button>
-              </td>
-              <td>
-                      <label for="start">Start date range:</label>
-                      <br><input type="date" id="from date" name="from-date"
-                                 value=""
-                                 min="2020-03-01" max="">
-                  <br><label for="end">End date range:</label>
-                  <br><input type="date" id="to date" name="to-date"
-                             value=""
-                             min="2020-03-01" max="">
-              </td>
-                      <td>
+                          <form method = "get">
+                              <table id="search-form">
+                                  <tr>
+                                      <th colspan="2">
+                                          <label>Search in file database </label>
+                                      </th>
+                                  </tr>
+                                  <tr>
+                                      <td>
+                                          <br><input type="search" name="query" placeholder="Search" maxlength="45">
+                                          <br><button type="submit" name="search" value="search">Search</button>
+                                      </td>
+                                      <td>
+                                          <label for="from-date">Start date range:</label>
+                                          <br><input type="date" id="from-date" name="from-date"
+                                                     min="2020-03-01">
+                                          <br><label for="to-date">End date range:</label>
+                                          <br><input type="date" id="to-date" name="to-date"
+                                                     min="2020-03-01">
+                                      </td>
+                                  </tr>
+                              </table>
+                          </form>
                       </td>
-              </form>
-              <form method = "get">
-                  <td>
-                      <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
-                      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-                      <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
-                      <br><button type="submit" name="search" value="tagssearch">Search</button>
-                  </td>
-                  <td>
-                  <input type="checkbox" name="andcondition" value="1">
-                  Check if you want each file to include all tags (AND condition)
-                  </td>
+                      <td>
+                          <form method = "get">
+                              <table class="search-form">
+                                  <tr>
+                                      <th colspan="2">
+                                          <label>Search by tags</label>
+                                      </th>
+                                  </tr>
+                                  <tr>
+                                      <td>
+                                          <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
+                                          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                                          <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
+                                          <br><button type="submit" name="search" value="tagssearch">Search</button>
+                                      </td>
+                                      <td>
+                                          <input type="checkbox" name="andcondition" value="1">
+                                          Check if you want each file to include all tags (AND condition)
+                                      </td>
+                                  </tr>
+                              </table>
+                          </form>
+                      </td>
                   </tr>
-              </form>
-          </table>
-              </div>
+              </table>
+          </div>
               <div id="upload-buttons">
                   <a href="{{rel}}file-upload/" class="button-white">Upload File</a>
                   <a href="{{rel}}new-catalog/" class="button-white">New Catalog</a>
@@ -86,12 +96,12 @@
               {% for element in elements %}
                   {% if element.isFile == 0 %}
                       <div class="element-box">
-                          <a href="{{rel}}?catalogid={{element.id}}"><img src="Images/iconfinder_Blank-Catalog_33986.png"/></a>
+                          <a href="{{rel}}?catalogid={{element.id}}"><img src="Images/iconfinder_Blank-Catalog_33986.png" alt="icon_catalog"/></a>
                           <br><a href="{{rel}}?catalogid={{element.id}}"> {{element.Title}} </a>
                           <br>Type: {{ element.Type }}
                           <br>Upload Date: {{ element.Date }}
                           <br>Author: <a href="profile-page/?username={{ element.Author }}">{{ element.Author }}</a>
-                          <br><a href={{rel}}catalog/?id={{element.id}}>Details</a>
+                          <br><a href="{{rel}}catalog/?id={{element.id}}">Details</a>
                       </div>
                       {% else %}
                     <div class="element-box">

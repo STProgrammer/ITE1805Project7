@@ -144,18 +144,18 @@ input.comment-delete {
 }
 
 .tag {
+    font-size: 0.8em;
      border-radius: 1em;
      text-align: center;
      margin: 1px;
      padding: 0.2em;
      text-decoration: none;
      background-color: #7d007d;
-     border: lightpink solid;
+     border: 1px lightpink solid;
 }
 
 .tag:hover {
     background-color: mediumvioletred;
-    border: lightpink solid;
 }
 
 #container {
@@ -176,11 +176,12 @@ input.comment-delete {
     display: inline-block;
 }
 
-#search-form table {
+.search-form table {
+    float:right;
     vertical-align: top;
 }
 
-#search-form td, #search-form tr, #search-form th{
+.search-form td, .search-form tr, .search-form th{
     border-left: solid 0.5em transparent;
     border-right: solid 0.5em transparent;
 }
