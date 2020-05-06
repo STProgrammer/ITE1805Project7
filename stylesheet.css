@@ -11,6 +11,7 @@ body {
     margin: auto;
     max-width: 70em;
     line-height: 1.5em;
+    padding-bottom: 8em;
 }
 
 h1 {
@@ -237,6 +238,21 @@ input.comment-delete {
     color: white;
     float: bottom;
     text-align: center;
+}
+
+.edit-user-form {
+    float: left;
+    width: fit-content;
+    height: fit-content;
+    background: midnightblue;
+    border-radius: 0.2em;
+    padding: 0.5em;
+    margin: 1em;
+    display: inline-block;
+}
+
+.back {
+    clear: both;
 }
 
 

@@ -16,7 +16,4 @@
     } else {
         echo $twig->render('register.twig', array('script' => $homedir));
     }
-
-
-
 ?>

@@ -33,15 +33,17 @@
 </script>
 {% include 'login2.twig' %}
 {% if isUser %}
+    <div class = "edit-user-form">
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
     <table border="1" cellspacing="0" cellpadding="5" width="400">
+        <tr><th>Change user details;</th></tr>
         <tr><td><label>User name:</label>
-                <input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}"></td></tr>
-        <tr><td><br><label>First name:</label>
-                <input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}"></td></tr>
-        <tr><td><br><label>Last name:</label>
-                <input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}"></td></tr>
+                <br><input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}"></td></tr>
+        <tr><td><label>First name:</label>
+                <br><input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}"></td></tr>
+        <tr><td><label>Last name:</label>
+                <br><input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}"></td></tr>
         <input type="hidden" value="{{ getMac("Edit user information") }}" name="XSRFPreventionToken">
         <td colspan="2" width="400" align="middle">
             <input type="submit" name="edit_user" value="Edit" />
@@ -49,18 +51,21 @@
         </tr>
     </table>
 </form>
-    <p><a href = "../">Back </a></p>
+    </div>
+<div class = "edit-user-form">
     <p><form method="post">
-    <br><label>Change email: </label>
+    <label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="">
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="change_email" value="Change" />
 </form></p>
+</div>
 
 {% endif %}
 {% if isUser or user.isAdmin() %}
+<div class = "edit-user-form">
     <p><form method="post" onsubmit="return validate();">
-        <br><label>Change password: </label>
+        <label>Change password: </label>
         <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
         <br><label>Confirm password:</label>
         <br><input type="password" name="password2" id="password2" required placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
@@ -68,13 +73,16 @@
     <input type="hidden" value="{{ getMac("change password") }}" name="XSRFPreventionToken">
         <br><input type="submit" id="change_password" name="change_password" value="Change" />
     </form></p>
+</div>
 
+<div class = "edit-user-form">
     <p><form method="post" onsubmit="return confirm('Are you sure to delete the user? (Can\'t be reversed');">
-    <br><label>Delet e user: </label>
     <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="Delete_user" value="Delete user" class="delete" />
 </form></p>
+</div>
+
     {% endif %}
-<p><a href = "../">Back </a></p>
+<p class="back"><a href = "../">Back </a></p>
 </body>
 </html>
