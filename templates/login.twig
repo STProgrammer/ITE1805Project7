@@ -23,7 +23,7 @@
       <td><input type="email" name="email"></td></tr>
     <tr><td><label>Password:</label> </td>
       <td><input type="password" name="password" size="15"></td></tr>
-    <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
+    <tr><td><input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken"></td>
     <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
     </tr>
     <tr>
@@ -35,6 +35,6 @@
 </form>
 </div>
 <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
 </body>
 </html>

@@ -13,7 +13,7 @@
     {% if user %}
         <div class="form">
         <form enctype="multipart/form-data" method="post">
-            <input type="hidden" name="MAX_FILE_SIZE" value="5365536" required />
+            <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
             <table>
                 <tr>
                     <td>
@@ -28,7 +28,7 @@
                 <tr><td><label>Title: </label>
                         <br><input type="text" name="title" required maxlength=30></td></tr>
                 <tr><td><label>Description: </label>
-                        <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255 placeholder="Max 255 characters" ></textarea></td>
+                        <br><textarea name="description" rows="2" cols="20" maxlength=255 placeholder="Max 255 characters" ></textarea></td>
             <tr><td><br><label>Catalog:</label>
                     <br><select name="catalogId">
                         <option value="1"> Main </option>
@@ -44,8 +44,9 @@
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
                         <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
                     </td></tr>
-            <td align="middle">
-                <button type="submit" name="post_file" value="Post" />Upload File</button>
+
+            <tr><td style="text-align: center;">
+                <button type="submit" name="post_file" value="Post">Upload File</button>
             </td>
             </tr>
             </table>
@@ -57,6 +58,6 @@
         <br><a href="{{rel}}register/" class="button-white">Register </a>
         <a href="{{rel}}login/" class="button-white">Login page </a>
     {% endif %}
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
 </body>
 </html>

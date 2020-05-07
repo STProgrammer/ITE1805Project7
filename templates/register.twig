@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
     <title>Register User</title>
-</head>
 <script>
     var check = function() {
         var pass1 = document.getElementById("password").value;
@@ -31,6 +30,7 @@
     }
 
 </script>
+</head>
 <body>
 {% include 'login2.twig' %}
 <div>
@@ -40,33 +40,33 @@
     <label>Username:</label>
     <div id="error_msg"></div>
     <div>
-    <br><input type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username" />
+    <input type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username" />
     <span></span>
         <div id="usrnm_msg"></div>
     </div>
     <div>
-    <br><label>First Name:</label>
+    <label>First Name:</label>
     <br><input type="text" name="firstname" value="" placeholder="First name" maxlength=45 required id="firstname" />
     <br><label>Last name:</label>
     <br><input type="text" name="lastname" value="" placeholder="Last name" maxlength=45 required id="lastname" />
     </div>
         <div>
-    <br><label>Epost:</label>
+    <label>Epost:</label>
     <br><input type="email" name="email" value="" placeholder="Email" maxlength=45 required id="email" />
         <span></span>
     </div>
     <div>
-    <br><label>Password: </label>
+    <label>Password: </label>
     <br><input type="password" name="password"  required id="password" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
     <br><label>Confirm password:</label>
     <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
         <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
-    <br><input type="submit" name="register" id="reg_btn" value="Register"></form>
+        <br><input type="submit" name="register" id="reg_btn" value="Register"></div></form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="../script.js"></script>
 </div>
 </div>
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
 </body>
 </html>
