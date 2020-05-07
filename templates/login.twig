@@ -10,7 +10,6 @@
 <body>
 <h2>Log in</h2>
 <div class="flash-notice">
-<<<<<<< HEAD
   {% if session.getFlashBag.has('header') %}
     {% for header in session.getFlashBag.get('header', []) %}
       <h3>{{ header }}</h3>
@@ -35,31 +34,5 @@
 </form>
 <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
 <p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
-=======
-{% if session.getFlashBag.has('header') %}
-  {% for header in session.getFlashBag.get('header', []) %}
-    <h3>{{ header }}</h3>
-  {% endfor %}
-  {% endif %}
-</div>
-  <form action="../login/index.php" method="post">
-    <table>
-      <tr><td><label>Email: </label> </td>
-        <td><input type="email" name="email"></td></tr>
-      <tr><td><label>Password:</label> </td>
-        <td><input type="password" name="password" size="15"></td></tr>
-      <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
-      <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
-      </tr>
-      <tr>
-        <td>
-          <a href="{{rel}}register/" class="button-white">Register </a>
-        </td>
-      </tr>
-    </table>
-  </form>
-  <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<p><a href = "../">Back </a></p>
->>>>>>> 84581eedcc88dcc1600069d645c444c72ab96554
 </body>
 </html>
