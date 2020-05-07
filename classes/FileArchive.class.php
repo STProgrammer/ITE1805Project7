@@ -622,13 +622,13 @@ class FileArchive {
         try
         {
             if (DateTime::createFromFormat('Y-m-d', $toDate) && DateTime::createFromFormat('Y-m-d', $fromDate)) {
-                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Date > :fromdate or Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet'))) order by Date;");
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Date > :fromdate and Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text'))) order by Date;");
                 $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
                 $stmt->bindParam(':fromdate', $fromDate, PDO::PARAM_STR);
                 $stmt->bindParam(':todate', $toDate, PDO::PARAM_STR);
             }
             else {
-                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text|msword|pdf|excel|kword|kspread|kpresenter|mswrite|excel$|powepoint$|spreadsheet')));");
+                $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text')));");
                 $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
             }
             $stmt->execute();

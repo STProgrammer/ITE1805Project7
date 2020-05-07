@@ -14,7 +14,6 @@
     {% endfor %}
     {% for message in session.getFlashBag.get('message', []) %}
         <p>{{ message }}</p>
-        <p><a href = "./">Back </a></p>
     {% endfor %}
 </div>
 <h1>Catalog details</h1>
@@ -39,6 +38,7 @@
                 </td>
             </tr>
             <tr>
+<<<<<<< HEAD
             <td>
                 In which catalog is this in:
             </td>
@@ -46,6 +46,23 @@
                 {{ archive.getCatalogPath(catalog.getParentId()) }}
             </td>
         </tr>
+=======
+                <td>
+                    Upload date:
+                </td>
+                <td>
+                    {{ catalog.getDate() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    In which catalog is this in:
+                </td>
+                <td>
+                    {{ archive.getCatalogPath(catalog.getParentId()) }}
+                </td>
+            </tr>
+>>>>>>> master
         </table>
     </div>
 
@@ -73,7 +90,11 @@
     </form>
 {% endif %}
 <<<<<<< HEAD
+<<<<<<< HEAD
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
+=======
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
+>>>>>>> master
 </body>
 =======
 <p id = "back-ctl"><a href = "./">Back </a></p>

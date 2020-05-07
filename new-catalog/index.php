@@ -20,18 +20,12 @@ $archive = new FileArchive($db, $request, $session);
         }
     }
 
-
-    elseif($request->query->has('addcatalog')) {
-        echo $twig->render('newcatalog.twig', array('user' => $user,
-            'session' => $session, 'rel' => $rel));
-    }
-
     // vis formen
     else {
         if ($user = $session->get('User')) {
             $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
             echo $twig->render('newcatalog.twig', array('user' => $user,
-                'rel' => $rel, 'catalogsList' => $catalogsList));
+                'rel' => $rel, 'catalogsList' => $catalogsList, 'archive' => $archive));
         }
         else {
             echo $twig->render('newcatalog.twig', array('user' => $user, 'rel' => $rel));

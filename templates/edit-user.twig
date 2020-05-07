@@ -36,6 +36,7 @@
     <div class = "form edit-user-form">
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+<<<<<<< HEAD
     <table style = "border: 1px;">
         <tr><th>Change user details;</th></tr>
         <tr><td><label>User name:</label>
@@ -48,39 +49,92 @@
         <tr><td>
             <input type="submit" name="edit_user" value="Edit" />
         </td>
+=======
+    <table>
+        <tr>
+            <th>Change user details;
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <label>User name:</label>
+                <br><input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>First name:</label>
+                <br><input type="text" name="firstname" required maxlength=45 value="{{ user.getFirstName() }}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Last name:</label>
+                <br><input type="text" name="lastname" required maxlength=45 value="{{ user.getLastName() }}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="hidden" value="{{ getMac("Edit user information") }}" name="XSRFPreventionToken">
+                <input type="submit" name="edit_user" value="Edit" />
+            </td>
+>>>>>>> master
         </tr>
     </table>
 </form>
     </div>
 <div class = "form edit-user-form">
     <form method="post">
+<<<<<<< HEAD
     <br><label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="">
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="change_email" value="Change" >
+=======
+    <label>Change email: </label>
+    <br><input type="email" name="email" required maxlength=45 value="">
+    <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
+    <br><input type="submit" name="change_email" value="Change" />
+>>>>>>> master
 </form>
 </div>
 {% endif %}
 {% if isUser or user.isAdmin() %}
 <div class = "form edit-user-form">
     <form method="post" onsubmit="return validate();">
+<<<<<<< HEAD
         <br><label>Change password: </label>
+=======
+        <label>Change password: </label>
+>>>>>>> master
         <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
         <br><label>Confirm password:</label>
         <br><input type="password" name="password2" id="password2" required placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
     <span id='message'></span>
     <input type="hidden" value="{{ getMac("change password") }}" name="XSRFPreventionToken">
+<<<<<<< HEAD
         <br><input type="submit" id="change_password" name="change_password" value="Change" >
+=======
+        <br><input type="submit" id="change_password" name="change_password" value="Change" />
+>>>>>>> master
     </form>
 </div>
 
 <div class = "form edit-user-form">
     <form method="post" onsubmit="return confirm('Are you sure to delete the user? (Can\'t be reversed');">
     <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
+<<<<<<< HEAD
     <br><input type="submit" name="Delete_user" value="Delete user" class="delete" >
 </form>
 </div>
     {% endif %}
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
+=======
+    <br><input type="submit" name="Delete_user" value="Delete user" class="delete" />
+</form>
+</div>
+    {% endif %}
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
+>>>>>>> master
 </body>
 </html>
