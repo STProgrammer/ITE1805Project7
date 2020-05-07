@@ -95,6 +95,7 @@
             $catalogId = $catalogId == 0 ? 1: $catalogId;
         } else $catalogId = 1;
 
+        $parentId = $archive->getCatalogObject($catalogId)->getParentId();
         $catalogPath = $archive->getCatalogPath($catalogId);
         $totalPages = $archive->totalNrOfPages($nrOfElementsPerPage, $catalogId);
         $pagination = range(1, $totalPages, 1);
@@ -106,7 +107,8 @@
             $elements = $archive->getOverview($catalogId, $offset, $nrOfElementsPerPage);
             echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
                 'session' => $session, 'request' => $request, 'rel' => $rel,
-                'pagination' => $pagination, 'catalogPath' => $catalogPath));
+                'pagination' => $pagination, 'catalogPath' => $catalogPath,
+                'parentId' => $parentId));
         }
     }
 

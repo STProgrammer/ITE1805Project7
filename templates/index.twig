@@ -87,12 +87,16 @@
               </div>
           </div>
           <div class="overview">
+              {% if parentId %}
+              <a href="./?catalogid={{ parentId }}"><img src="Images/iconfinder_Close_1493281.svg" width=5% alt="one up catalog"></a>
+              {% endif %}
 
               <a id="catalogpath">
                   Catalog path: {{ catalogPath }}
               </a>
               <div class="file-list">
-  {% if elements %}
+
+                  {% if elements %}
               {% for element in elements %}
                   {% if element.isFile == 0 %}
                       <div class="element-box">

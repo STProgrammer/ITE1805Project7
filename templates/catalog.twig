@@ -16,13 +16,14 @@
         <p><a href = "./">Back </a></p>
     {% endfor %}
 </div>
+<h1>Catalog details</h1>
 {% if catalog %}
     <div class = "show-data">
         <table>
         <tr>
             <tr>
                 <td>
-                    Catalog name
+                    Catalog name:
                 </td>
                 <td>
                     {{ catalog.getCatalogName() }}
