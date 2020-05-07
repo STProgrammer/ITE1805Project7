@@ -32,14 +32,19 @@
 </script>
 </head>
 <body>
+<<<<<<< HEAD
 {% include 'login2.twig' %}
 <div>
 <h1>Register user</h1>
 <div class = "form">
+=======
+<div class = "contact-form">
+<h1 id="contact">Register User</h1>
+>>>>>>> c9bb35f9844893f7adef843772e0081e20944107
 <form method="post" id="register_form" onsubmit="return validate();">
-    <label>Username:</label>
     <div id="error_msg"></div>
     <div>
+<<<<<<< HEAD
     <input type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username" />
     <span></span>
         <div id="usrnm_msg"></div>
@@ -70,3 +75,33 @@
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
 </body>
 </html>
+=======
+        <label id = "cntlabel">Username:</label>
+        <input class = "form"  type="text" name="username" value="" placeholder="User name" maxlength=30 required id="username" />
+        <span></span>
+        <div id="usrnm_msg"></div>
+    </div>
+    <div class ="form">
+        <label id = "cntlabel">First Name:</label>
+        <input class = "form" type="text" name="firstname" value="" placeholder="First name" maxlength=45 required id="firstname" />
+        <br><label id = "cntlabel">Last Name:</label>
+        <input class = "form"  type="text" name="lastname" value="" placeholder="Last name" maxlength=45 required id="lastname" />
+        <div>
+            <label id = "cntlabel">Epost:</label>
+            <input class = "form"  type="email" name="email" value="" placeholder="Email" maxlength=45 required id="email" />
+            <span></span>
+        </div>
+        <div>
+            <label id = "cntlabel">Password: </label>
+            <input class = "form"  type="password" name="password"  required id="password" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
+            <br><label id = "cntlabel">Confirm password:</label>
+            <input class = "form"  type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
+            <span id='message'></span>
+            <input class = "form"  type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
+            <br><input class = "contact-submit" type="submit" name="register" id="reg_btn" value="Register"></form>
+<p><a href = "../">Back </a></p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="../script.js"></script>
+</div></body>
+</html>
+>>>>>>> c9bb35f9844893f7adef843772e0081e20944107

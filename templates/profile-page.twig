@@ -15,6 +15,7 @@
         <p>{{ message }}</p>
     {% endfor %}
 </div>
+<<<<<<< HEAD
 <h2>Details for {{ userData['username'] }}</h2>
 {% if userData %}
     <div class = "show-data">
@@ -52,4 +53,30 @@
 {% endif %}
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
 </body>
+=======
+
+{% if userData %}
+<div class = "userform">
+    <h1 id ="user">
+        User details
+    </h1>
+    <ul id = "usr">
+        <li>
+            Username: {{ userData['username'] }}
+        </li>
+        <li>
+            Full name: {{ userData['firstname'] }} {{ userData['lastname']  }}
+        </li>
+        <li>
+            User type: {% if user.isAdmin() %} Admin {% else %} General user {% endif %}
+        </li>
+    </ul>
+{% endif %}
+
+{% if isOwner or user.isAdmin() %}
+    <p id ="usr-button"><a href="edit-user/?username={{userData['username']}}" class="button_white">Edit user</a></p>
+{% endif %}
+<p id="back"><a href = "../">Back </a></p>
+</div></body>
+>>>>>>> c9bb35f9844893f7adef843772e0081e20944107
 </html>

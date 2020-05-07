@@ -14,11 +14,157 @@ body {
     padding-bottom: 8em;
 }
 
-h1 {
-    color: white;
-    text-shadow: 5px 5px 5px black;
-    text-decoration: underline;
-    text-decoration-style: dotted;
+h1#contact {
+    color: #8a8ace;
+    font-weight: bold;
+}
+
+.contact-form{
+    width: 500px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 75%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-right: 25px;
+}
+input.form {
+    width: 65%;
+    background: white;
+    border: 1px solid black;
+    padding: 6px 15px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #fff3d9;
+
+}
+label#cntlabel{
+    display: inline-block;
+    width: 150px;
+    color: #fff3d9;
+    justify-content:space-between;
+}
+input.contact-submit{
+    float: right;
+    cursor: pointer;
+    display: inline-block;
+    height:35px;
+    width:200px;
+}
+
+.login-form{
+    width: 400px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 75%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-right: 25px;
+}
+input#login{
+    width: 100%;
+    background: white;
+    border: 1px solid black;
+    padding: 6px 15px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #fff3d9;
+}
+h2#log-in{
+    font-size: 40px;
+    color: #8a8ace;
+    font-weight: lighter;
+}
+input.login-button{
+    float: right;
+    cursor: pointer;
+    display: inline-block;
+    height:35px;
+    width:100px;
+}
+td#loggedin_top{
+    text-align: center;
+}
+.userform{
+    width: 350px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    margin-right: 25px;
+}
+h1#user{
+    text-align: center;
+    font-size: 40px;
+    color: #8a8ace;
+}
+ul#usr{
+    color: #fff3d9;
+}
+
+p#usr-button{
+    cursor: pointer;
+    display: inline-block;
+    position:absolute;
+    transition: .5s ease;
+    left: 200px;
+    top: 160px;
+    height:25px;
+    width:400px;
+}
+
+p#back{
+    display: inline-block;
+    position:absolute;
+    transition: .5s ease;
+    left: 50px;
+    top: 180px;
+}
+
+.catalog{
+    width: 450px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    margin-right: 25px;
+}
+
+h1#ctl-name{
+    text-align:center;
+    font-size: 35px;
+    color: #8a8ace;
+    font-weight: lighter;
+}
+
+p#edit-ctl{
+    cursor: pointer;
+    display: inline-block;
+    transition: .5s ease;
+    height:35px;
+    width:500px;
+}
+p#back-ctl{
+    display: inline-block;
+    transition: .5s ease;
+    float: right;
+}
+
+.flash-notice {
+    color: mediumvioletred;
+
 }
 
 a:link {
@@ -39,10 +185,7 @@ a:hover {
     max-width: 900px;
 }*/
 
-.flash-notice {
-    color: mediumvioletred;
 
-}
 
 button, input[type="submit"], .button-white {
 
@@ -64,6 +207,7 @@ button, input[type="submit"], .button-white {
     margin: 1em 1em;
     border-radius: 0.3em;
     cursor: pointer;
+
 }
 
 input, textarea {
@@ -111,12 +255,16 @@ a.button-white  {
 
 /*COMMENT*/
 
+<<<<<<< HEAD
 .comment {
     font-size: 1em;
     margin: 1px;
 }
 
 .comment-text {
+=======
+#commenttext {
+>>>>>>> c9bb35f9844893f7adef843772e0081e20944107
     background-color: #555555;
     text-align: left;
     display: inline-block;
