@@ -104,6 +104,7 @@ class RegisterUser
         }
     }
 
+    /*
     public function getUserObject ($username) : User {
         try
         {
@@ -120,7 +121,6 @@ class RegisterUser
         }
         catch(Exception $e) { $this->notifyUser("Something went wrong!", $e->getMessage());
             return new User();}
-
     }
 
     public function getAllUsers(string $username){
@@ -133,7 +133,7 @@ class RegisterUser
         }  catch (Exception $e) { $this->notifyUser("Something went wrong!", $e->getMessage()); return; }
 
         return $allUsers;
-    }
+    }*/
 
     public function editUser($username) {
         $newUsername = $this->request->request->get('username');

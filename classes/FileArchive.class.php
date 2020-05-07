@@ -621,7 +621,10 @@ class FileArchive {
 
         try
         {
-            if (DateTime::createFromFormat('Y-m-d', $toDate) && DateTime::createFromFormat('Y-m-d', $fromDate)) {
+            if (DateTime::createFromFormat('Y-m-d', $toDate) || DateTime::createFromFormat('Y-m-d', $fromDate)) {
+                //To if koder slik at søk fungerer også når den ene er tom
+                if ($fromDate == "") {$fromDate = "2000-1-1";}
+                if ($toDate == "") {$toDate = date("Y-m-d");}
                 $stmt = $this->db->prepare("SELECT * FROM Elements where isFile = 1 and (Date > :fromdate and Date <= :todate) and (Title like :query or Description like :query or (`Data` like :query and (`Type` REGEXP 'text'))) order by Date;");
                 $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
                 $stmt->bindParam(':fromdate', $fromDate, PDO::PARAM_STR);
