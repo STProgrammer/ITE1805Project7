@@ -8,7 +8,6 @@
   <title>Login</title>
 </head>
 <body>
-<<<<<<< HEAD
 <h2>Log in</h2>
 <div class="flash-notice">
   {% if session.getFlashBag.has('header') %}
@@ -20,14 +19,6 @@
 <div class = "form">
 <form action="../login/index.php" method="post">
   <table>
-<<<<<<< HEAD
-    <tr><td><label>Email: </label> </td>
-      <td><input type="email" name="email"></td></tr>
-    <tr><td><label>Password:</label> </td>
-      <td><input type="password" name="password" size="15"></td></tr>
-    <tr><td><input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken"></td>
-    <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
-=======
     <tr>
       <td>
         <label>Email: </label>
@@ -49,7 +40,6 @@
         <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
         <input type="submit" name="login" value="Login">
       </td>
->>>>>>> master
     </tr>
     <tr>
       <td>
@@ -60,33 +50,6 @@
 </form>
 </div>
 <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<<<<<<< HEAD
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
-=======
 <p id="back"><a href = "javascript:history.back()"><img src="../Images/BackBtn.svg" alt="Back" width="100"></a></p>
->>>>>>> master
 </body>
-=======
-<div class = login-form>
-  <h2 id ="log-in">Logg in</h2>
-{% if session.getFlashBag.has('header') %}
-  {% for header in session.getFlashBag.get('header', []) %}
-    <h3>{{ header }}</h3>
-  {% endfor %}
-  {% endif %}
-  <form action="../login/index.php" method="post">
-    <table >
-      <tr><td><label>Email: </label> </td>
-        <td><input id="login" type="email" name="email"></td></tr>
-      <tr><td><label>Password:</label> </td>
-        <td><input id ="login" type="password" name="password" size="15"></td></tr>
-      <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
-      <tr><td colspan="2"><input class="login-button" type="submit" name="login" value="Login"></td>
-      </tr>
-    </table>
-  </form>
-  <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<p><a href = "../">Back </a></p>
-  </div></body>
->>>>>>> c9bb35f9844893f7adef843772e0081e20944107
 </html>

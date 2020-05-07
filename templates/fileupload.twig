@@ -25,14 +25,6 @@
                         <input type="checkbox" name="access" value="0">
                         Only accessible for registered users
                     </td>
-<<<<<<< HEAD
-                <tr><td><label>Title: </label>
-                        <br><input type="text" name="title" required maxlength=30></td></tr>
-                <tr><td><label>Description: </label>
-                        <br><textarea name="description" rows="2" cols="20" maxlength=255 placeholder="Max 255 characters" ></textarea></td>
-            <tr><td><br><label>Catalog:</label>
-                    <br><select name="catalogId">
-=======
                 <tr>
                     <td>
                         <label>Title: </label>
@@ -49,7 +41,6 @@
                     <td>
                         <label>Catalog:</label>
                         <br><select name="catalogId">
->>>>>>> master
                         <option value="1"> Main </option>
                         {% if catalogsList %}
                             {% for catalog in catalogsList %}
@@ -66,14 +57,6 @@
                         <input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
                         <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<<<<<<< HEAD
-                    </td></tr>
-
-            <tr><td style="text-align: center;">
-                <button type="submit" name="post_file" value="Post">Upload File</button>
-            </td>
-            </tr>
-=======
                     </td>
                 </tr>
                 <tr>
@@ -81,7 +64,6 @@
                         <button type="submit" name="post_file" value="Post">Upload File</button>
                     </td>
                 </tr>
->>>>>>> master
             </table>
         </form>
         </div>
@@ -91,10 +73,6 @@
         <br><a href="{{rel}}register/" class="button-white">Register </a>
         <a href="{{rel}}login/" class="button-white">Login page </a>
     {% endif %}
-<<<<<<< HEAD
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" style="width:10%"></a></p>
-=======
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
->>>>>>> master
 </body>
 </html>
