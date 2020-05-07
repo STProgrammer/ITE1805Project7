@@ -13,14 +13,12 @@
     {% endfor %}
     {% for message in session.getFlashBag.get('message', []) %}
         <p>{{ message }}</p>
-        <p><a href = "./">Back </a></p>
     {% endfor %}
 </div>
 <h1>Catalog details</h1>
 {% if catalog %}
     <div class = "show-data">
         <table>
-        <tr>
             <tr>
                 <td>
                     Catalog name:
@@ -37,14 +35,22 @@
                     {{ catalog.getOwner() }}
                 </td>
             </tr>
-        <tr>
-            <td>
-                In which catalog is this in:
-            </td>
-            <td>
-                {{ archive.getCatalogPath(catalog.getParentId()) }}
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    Upload date:
+                </td>
+                <td>
+                    {{ catalog.getDate() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    In which catalog is this in:
+                </td>
+                <td>
+                    {{ archive.getCatalogPath(catalog.getParentId()) }}
+                </td>
+            </tr>
         </table>
     </div>
 
@@ -58,6 +64,6 @@
         <input type="submit" name="Delete_catalog" value="Delete catalog" class="delete" />
     </form>
 {% endif %}
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
 </body>
 </html>

@@ -37,7 +37,7 @@ $archive = new FileArchive($db, $request, $session);
         if ($session->get('loggedin') && $user = $session->get('User')) {
             $catalogsList = $archive->getCatalogsByOwner($user->getUsername());
             echo $twig->render('fileupload.twig', array('user' => $user,
-                'rel' => $rel, 'catalogsList' => $catalogsList));
+                'rel' => $rel, 'catalogsList' => $catalogsList, 'archive' => $archive));
         }
         else {
             echo $twig->render('fileupload.twig', array('user' => $user, 'rel' => $rel));

@@ -5,6 +5,7 @@
     <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
     <title>Register User</title>
 </head>
+<body>
 <script>
     var check = function() {
         var pass1 = document.getElementById("password").value;
@@ -24,16 +25,14 @@
         return false;
     }
 
-   function validate(){
+    function validate(){
         var pass1 = document.getElementById("password").value;
         var pass2 = document.getElementById("password2").value;
         return check();
     }
 
 </script>
-<body>
 {% include 'login2.twig' %}
-<div>
 <h1>Register user</h1>
 <div class = "form">
 <form method="post" id="register_form" onsubmit="return validate();">
@@ -62,11 +61,12 @@
     <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
         <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
-    <br><input type="submit" name="register" id="reg_btn" value="Register"></form>
+    <br><input type="submit" name="register" id="reg_btn" value="Register">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="../script.js"></script>
 </div>
+</form>
 </div>
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
 </body>
 </html>

@@ -88,14 +88,12 @@
           </div>
           <div class="overview">
               {% if parentId %}
-              <a href="./?catalogid={{ parentId }}"><img src="Images/iconfinder_Close_1493281.svg" width=5% alt="one up catalog"></a>
+                  <a href="./?catalogid={{ parentId }}"><img src="Images/iconfinder_Close_1493281.svg" width="50" alt="one up catalog"></a>
               {% endif %}
-
               <a id="catalogpath">
                   Catalog path: {{ catalogPath }}
               </a>
               <div class="file-list">
-
                   {% if elements %}
               {% for element in elements %}
                   {% if element.isFile == 0 %}
@@ -112,7 +110,7 @@
                               {% if element.Type == 'image/jpeg' or  element.Type == 'image/pjpeg' or element.Type == 'image/png' or element.Type == 'image/gif'%}
                                   <a href="{{rel}}?id={{element.id}}"><img src="{{rel}}thumbnail.php?id={{element.id}}" alt="thumbnail"/></a>
                               {% elseif element.Type == 'application/msword' or element.Type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
-                                  <a href="{{rel}}?id={{element.id}}"><img src=Images/iconfinder_word_272702.png" alt="icon_word" /></a>
+                                  <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_word_272702.png" alt="icon_word" /></a>
                               {% elseif element.Type == 'application/mspowerpoint' %}
                                   <a href="{{rel}}?id={{element.id}}"><img src="Images/iconfinder_powerpoint_272700.png" alt="icon_powerpoint" /></a>
                               {% elseif element.Type == 'application/vnd.ms-excel' or element.Type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}

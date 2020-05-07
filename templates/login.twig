@@ -19,22 +19,37 @@
 <div class = "form">
 <form action="../login/index.php" method="post">
   <table>
-    <tr><td><label>Email: </label> </td>
-      <td><input type="email" name="email"></td></tr>
-    <tr><td><label>Password:</label> </td>
-      <td><input type="password" name="password" size="15"></td></tr>
-    <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
-    <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
+    <tr>
+      <td>
+        <label>Email: </label>
+      </td>
+      <td>
+        <input type="email" name="email">
+      </td>
     </tr>
     <tr>
       <td>
-        <a href="{{rel}}register/" class="button-white">Register </a>
+        <label>Password:</label>
+      </td>
+      <td>
+        <input type="password" name="password" size="15">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
+        <input type="submit" name="login" value="Login">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="../register/" class="button-white">Register </a>
       </td>
     </tr>
   </table>
 </form>
 </div>
 <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="../Images/BackBtn.svg" alt="Back" width="100"></a></p>
 </body>
 </html>

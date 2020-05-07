@@ -39,7 +39,7 @@
         <tr>
             <td>
                 <label>Description: </label>
-                <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea>
+                <br><textarea name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea>
             </td>
         </tr>
         <tr>
@@ -51,7 +51,7 @@
             </td>
         </tr>
         <tr>
-            <td align="middle">
+            <td>
                 <input type="hidden" value="{{ getMac("Edit file") }}" name="XSRFPreventionToken">
                 <input type="submit" name="edit_file" value="Edit" />
             </td>
@@ -59,6 +59,6 @@
     </table>
 </form>
 </div>
-<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
 </body>
 </html>
