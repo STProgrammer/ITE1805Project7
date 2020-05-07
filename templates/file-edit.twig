@@ -8,38 +8,57 @@
 <body>
 {% include 'login2.twig' %}
 <h1>Change file details</h1>
+<div class = "form">
 <form method="post">
-    <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
-    <table border="1" cellspacing="0" cellpadding="5" width="400">
+    <table>
+        <tr>
+            <td>
+                <label>Title: </label>
+                <br><input type="text" name="title" required maxlength=45 value="{{ file.getTitle() }}">
+            </td>
+        </tr>
         <tr>
             <td>
                 <input type="checkbox" name="access" value="0" {% if file.getAccess == 1 %} checked {% endif %}>
                 Only accessible for registered users
             </td>
-        <tr><td><label>Title: </label>
-               <br><input type="text" name="title" required maxlength=45 value="{{ file.getTitle() }}"></td></tr>
-        <tr><td><br><label>Catalog:</label>
-        <br><select name="catalogId">
-            <option value="1"> Main </option>
-            {% if catalogsList %}
-                {% for catalog in catalogsList %}
-                    <option value="{{ catalog.catalogId }}" {% if catalog.catalogId == file.getCatalogId() %} selected {% endif %}>{{ archive.getCatalogPath(catalog.catalogId) }} </option>
-                {% endfor %}
-            {% endif %}
-        </select>
-        <tr><td><label>Description: </label>
-                <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea></table></td>
-    <tr><td><label>Tags: </label>
-            <input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3"></td></tr>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
-    <input type="hidden" value="{{ getMac("Edit file") }}" name="XSRFPreventionToken">
-    <td colspan="2" width="400" align="middle">
-        <input type="submit" name="edit_file" value="Edit" />
-    </td>
-    </tr>
+        </tr>
+        <tr>
+            <td>
+                <label>Catalog:</label>
+                <br><select name="catalogId">
+                    <option value="1"> Main </option>
+                    {% if catalogsList %}
+                        {% for catalog in catalogsList %}
+                            <option value="{{ catalog.catalogId }}" {% if catalog.catalogId == file.getCatalogId() %} selected {% endif %}>{{ archive.getCatalogPath(catalog.catalogId) }} </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Description: </label>
+                <br><textarea type="text" name="description" rows="2" cols="20" maxlength=255>{{ file.getDescription() }}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Tags: </label>
+                <br><input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
+            </td>
+        </tr>
+        <tr>
+            <td align="middle">
+                <input type="hidden" value="{{ getMac("Edit file") }}" name="XSRFPreventionToken">
+                <input type="submit" name="edit_file" value="Edit" />
+            </td>
+        </tr>
     </table>
-    <p><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" id="back"></a></p>
 </form>
+</div>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

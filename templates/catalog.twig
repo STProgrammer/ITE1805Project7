@@ -17,14 +17,36 @@
     {% endfor %}
 </div>
 {% if catalog %}
-    <h1>
-        Catalog name: {{ catalog.getCatalogName() }}
-    </h1>
-    <ul>
-        <li>
-            Catalog owner: {{ catalog.getOwner() }}
-        </li>
-    </ul>
+    <div class = "show-data">
+        <table>
+        <tr>
+            <tr>
+                <td>
+                    Catalog name
+                </td>
+                <td>
+                    {{ catalog.getCatalogName() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Catalog owner:
+                </td>
+                <td>
+                    {{ catalog.getOwner() }}
+                </td>
+            </tr>
+        <tr>
+            <td>
+                In which catalog is this in:
+            </td>
+            <td>
+                {{ archive.getCatalogPath(catalog.getCatalogId()) }}
+            </td>
+        </tr>
+        </table>
+    </div>
+
 {% endif %}
 {% if isOwner %}
     <p><a href="catalog-edit/?id={{catalog.getCatalogId}}" class="button-white" >Edit catalog</a></p>
@@ -35,6 +57,6 @@
         <input type="submit" name="Delete_catalog" value="Delete catalog" class="delete" />
     </form>
 {% endif %}
-<p><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" id="back"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

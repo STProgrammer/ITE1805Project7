@@ -16,6 +16,7 @@
     {% endfor %}
   {% endif %}
 </div>
+<div class = "form">
 <form action="../login/index.php" method="post">
   <table>
     <tr><td><label>Email: </label> </td>
@@ -32,7 +33,8 @@
     </tr>
   </table>
 </form>
+</div>
 <p>Logg inn med email: "aka160@post.uit.no" & passord: "test"</p>
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

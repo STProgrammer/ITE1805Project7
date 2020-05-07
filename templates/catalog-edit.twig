@@ -8,18 +8,29 @@
 <body>
 {% include 'login2.twig' %}
 <h1>Change catalog details</h1>
+<div class = "form">
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
-    <table border="1" cellspacing="0" cellpadding="5" width="400">
+    <table>
         <tr>
             <td>
+                <label>Catalog name: </label>
+            </td>
+            <td>
+                <input type="text" name="catalogName" required maxlength=45 value="{{ catalog.getCatalogName() }}">
+            </td>
+        <tr>
+            <td colspan="2">
                 <input type="checkbox" name="access" value="0" {% if catalog.getAccess == 1 %} checked {% endif %}>
                 Only accessible for registered users
             </td>
-        <tr><td><label>Catalog name: </label>
-                <input type="text" name="catalogName" required maxlength=45 value="{{ catalog.getCatalogName() }}"></td></tr>
-        <tr><td><br><label>Catalog:</label>
-                <br><select name="catalogId">
+        </tr>
+        <tr>
+            <td>
+                <label>Catalog:</label>
+            </td>
+            <td>
+                <select name="catalogId">
                     <option value="1"> Main </option>
                     {% if catalogsList %}
                         {% for catalogdata in catalogsList %}
@@ -27,13 +38,18 @@
                         {% endfor %}
                     {% endif %}
                 </select>
-    <input type="hidden" value="{{ getMac("Edit catalog") }}" name="XSRFPreventionToken">
-    <td colspan="2" width="400" align="middle">
-        <input type="submit" name="edit_catalog" value="Edit" />
-    </td>
-    </tr>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="400" align="middle">
+                <input type="hidden" value="{{ getMac("Edit catalog") }}" name="XSRFPreventionToken">
+                <button type="submit" name="edit_catalog" value="Edit" />Change</button>
+            </td>
+        </tr>
     </table>
 </form>
-<p><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" id="back"></a></p>
+</div>
+<!-- Lille "onclick" koden er tatt fra https://stackoverflow.com/questions/8814472/how-to-make-an-html-back-link-->
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

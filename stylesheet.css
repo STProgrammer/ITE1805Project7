@@ -127,15 +127,15 @@ a.button-white  {
     margin: 1px;
 }
 
+#comment-form table, #comment-form td, #comment-form tr {
+    border: 1px;
+    height: fit-content;
+}
 
-input.comment-delete {
+input.comment {
+    font-size: 0.9em;
     margin: 2px;
-    padding: 0.3em;
-    background-color: red;
-    border-top: solid #FF7777;
-    border-right: solid darkred;
-    border-bottom: solid darkred;
-    border-left: solid #FF7777;
+    padding: 0.2em;
 }
 
 .comment-date {
@@ -163,17 +163,23 @@ input.comment-delete {
     vertical-align: bottom;
 }
 
+.form {
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 0.5em;
+    display: inline-block;
+    background: rgba(00, 64, 00, 0.5);
+
+}
+
 /*SEARCH*/
 
 .search {
     float: right;
     width: 45em;
     height: fit-content;
-    background: midnightblue;
-    border-radius: 0.5em;
-    padding: 1em;
-    margin: 1em;
-    display: inline-block;
 }
 
 .search-form table {
@@ -243,9 +249,6 @@ input.comment-delete {
 
 .edit-user-form {
     float: left;
-    width: fit-content;
-    height: fit-content;
-    background: midnightblue;
     border-radius: 0.2em;
     padding: 0.5em;
     margin: 1em;

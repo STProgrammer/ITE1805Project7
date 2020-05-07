@@ -14,6 +14,6 @@
         exit();
 
     } else {
-        echo $twig->render('register.twig', array('script' => $homedir));
+        echo $twig->render('register.twig', array('script' => $homedir, 'rel' => $rel));
     }
 ?>

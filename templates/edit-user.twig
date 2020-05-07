@@ -33,7 +33,7 @@
 </script>
 {% include 'login2.twig' %}
 {% if isUser %}
-    <div class = "edit-user-form">
+    <div class = "form edit-user-form">
 <form method="post">
     <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
     <table border="1">
@@ -52,7 +52,7 @@
     </table>
 </form>
     </div>
-<div class = "edit-user-form">
+<div class = "form edit-user-form">
     <p><form method="post">
     <label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="">
@@ -62,7 +62,7 @@
 </div>
 {% endif %}
 {% if isUser or user.isAdmin() %}
-<div class = "edit-user-form">
+<div class = "form edit-user-form">
     <p><form method="post" onsubmit="return validate();">
         <label>Change password: </label>
         <br><input type="password" name="password" id="password" required placeholder="Password" maxlength=60 value="" onkeyup='check();'>
@@ -74,14 +74,13 @@
     </form></p>
 </div>
 
-<div class = "edit-user-form">
+<div class = "form edit-user-form">
     <p><form method="post" onsubmit="return confirm('Are you sure to delete the user? (Can\'t be reversed');">
     <input type="hidden" value="{{ getMac("Delete") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="Delete_user" value="Delete user" class="delete" />
 </form></p>
 </div>
-
     {% endif %}
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

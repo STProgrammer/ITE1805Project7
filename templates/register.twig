@@ -32,7 +32,10 @@
 
 </script>
 <body>
+{% include 'login2.twig' %}
+<div>
 <h1>Register user</h1>
+<div class = "form">
 <form method="post" id="register_form" onsubmit="return validate();">
     <label>Username:</label>
     <div id="error_msg"></div>
@@ -46,6 +49,7 @@
     <br><input type="text" name="firstname" value="" placeholder="First name" maxlength=45 required id="firstname" />
     <br><label>Last name:</label>
     <br><input type="text" name="lastname" value="" placeholder="Last name" maxlength=45 required id="lastname" />
+    </div>
         <div>
     <br><label>Epost:</label>
     <br><input type="email" name="email" value="" placeholder="Email" maxlength=45 required id="email" />
@@ -59,8 +63,10 @@
         <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="register" id="reg_btn" value="Register"></form>
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="../script.js"></script>
+</div>
+</div>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

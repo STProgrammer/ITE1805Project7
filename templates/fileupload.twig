@@ -11,10 +11,10 @@
 {% include 'login2.twig' %}
     <p>Upload new file to the database: </p>
     {% if user %}
+        <div class="form">
         <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="5365536" required />
-            <table border="1" cellspacing="0" cellpadding="5" width=
-            "400">
+            <table>
                 <tr>
                     <td>
                         <input name="image" type="file" />
@@ -44,19 +44,19 @@
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
                         <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
                     </td></tr>
-
-            <td colspan="2" width="400" align="middle">
-                <input type="submit" name="post_file" value="Post" />
+            <td align="middle">
+                <button type="submit" name="post_file" value="Post" />Upload File</button>
             </td>
             </tr>
             </table>
         </form>
+        </div>
 
     {% else %}
         <p>You must log in to upload new file</p>
         <br><a href="{{rel}}register/" class="button-white">Register </a>
         <a href="{{rel}}login/" class="button-white">Login page </a>
     {% endif %}
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

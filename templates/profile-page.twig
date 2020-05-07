@@ -35,6 +35,6 @@
 {% if isOwner or user.isAdmin() %}
     <p><a href="edit-user/?username={{userData['username']}}" class="button-white">Edit user</a></p>
 {% endif %}
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 </body>
 </html>

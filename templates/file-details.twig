@@ -22,48 +22,79 @@
     {% if file %}
     <pre>
         </pre>
-    <div id="filliste">
-        <ul>
-            {% if file.getType() == 'image/jpeg' or  file.getType() == 'image/pjpeg' or file.getType() == 'image/png' or file.getType() == 'image/gif'%}
-                <a href="../?id={{file.getFileId}}"><img src="../thumbnail.php?id={{file.getFileId}}" alt="{{file.getTitle}}" /></a>
-            {% else %}
-                    <li>
-                        {{file.getDate}}&nbsp;<a href="../?id={{file.getFileId}}">{{file.getFilename()}}</a>
-                    </li>
-            {% endif %}
-            <li>
-                Title: {{ file.getTitle() }}
-            </li>
-            <li>
-                Type: {{ file.getType() }}
-            </li>
-            <li>
-                Size: {{ file.getSize() / 1000 }} kilo bytes
-            </li>
-            <li>
-                Author: {{ file.getOwner() }}
-            </li>
-            <li>
-                Catalog Path: {{ file.getCatalogName() }}
-            </li>
-            <li>
-                Description: {{ file.getDescription() }}
-            </li>
-            <li>
-                Tags: <p id="tags"></p>
-            </li>
-                <script>
-                    <!-- koden er tatt fra http://jsfiddle.net/UH5U9/3/ found in StackOverflow
-                        https://stackoverflow.com/questions/10022781/generate-search-links-for-comma-separated-words -->
-                    var tags = "{{ file.getTags() }}";
-                    tags = tags.split(', ');
-                    var temp = '';
-                    for (var i = 0; i < tags.length; i++) {
-                        temp = temp + '<a class="tag button-white" href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
-                    }
-                    document.getElementById("tags").innerHTML = temp;
-                </script>
-        </ul>
+    <div class = "show-data">
+        <table>
+            <tr>
+                <td>
+                    {% if file.getType() == 'image/jpeg' or  file.getType() == 'image/pjpeg' or file.getType() == 'image/png' or file.getType() == 'image/gif'%}
+                        <a href="../?id={{file.getFileId}}"><img src="../thumbnail.php?id={{file.getFileId}}" alt="{{file.getTitle}}" /></a>
+                    {% else %}
+                        <li>
+                            {{file.getDate}}&nbsp;<a href="../?id={{file.getFileId}}">{{file.getFilename()}}</a>
+                        </li>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Title:
+                </td>
+                <td>
+                    {{ file.getTitle() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Type:
+                </td>
+                <td>
+                    {{ file.getType() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Size:
+                </td>
+                <td>
+                    {{ file.getSize() / 1000 }} kilo bytes
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Catalog path:
+                </td>
+                <td>
+                    {{ file.getCatalogName() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Description:
+                </td>
+                <td>
+                    {{ file.getDescription() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tags:
+                </td>
+                <td>
+                    <p id="tags"></p>
+                    <script>
+                        <!-- koden er tatt fra http://jsfiddle.net/UH5U9/3/ found in StackOverflow
+                            https://stackoverflow.com/questions/10022781/generate-search-links-for-comma-separated-words -->
+                                var tags = "{{ file.getTags() }}";
+                        tags = tags.split(', ');
+                        var temp = '';
+                        for (var i = 0; i < tags.length; i++) {
+                            temp = temp + '<a class="tag button-white" href="../?tag=' + tags[i] + '">' + tags[i] + '</a>' + '&nbsp; &nbsp;';
+                        }
+                        document.getElementById("tags").innerHTML = temp;
+                    </script>
+                </td>
+            </tr>
+        </table>
     </div>
         {% if isOwner %}
             <p><a href="file-edit/?id={{file.getFileId}}" class="button-white">Edit file</a></p>
@@ -84,7 +115,7 @@
                 <form method="post" id="delete_comment">
                     <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
                     <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
-                    <input type="submit" name="Delete_comment" value="Delete comment" class="comment-delete" />
+                    <input type="submit" name="Delete_comment" value="Delete comment" class="delete comment" />
                 </form></div></p>
             {% else %}</div></p>
             {% endif %}
@@ -92,15 +123,30 @@
         {% endfor %}
 
         {% if user %}
+            <div class = "form">
             <form  method="post">
-            <label>Comment: </label>
-                <input type="hidden" value="{{ getMac("Post comment") }}" name="XSRFPreventionToken">
-            <br><textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
-               <br><input type="submit" name="comment" value="Comment" />
+                <table id="comment-form">
+                    <tr>
+                        <td>
+                            <label>Add comment: </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <textarea type="text" name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" name="comment" value="Comment" class="button-white comment" />
+                        </td>
+                    </tr>
+                </table>
             </form>
+            </div>
             {% endif %}
 {% endif %}
-<p id="back"><a href = "../"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
+<p id="back"><a href = "../" onclick="location.href = document.referrer; return false;"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="10%"></a></p>
 
 </body>
 </html>
