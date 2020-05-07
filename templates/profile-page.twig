@@ -15,21 +15,36 @@
         <p>{{ message }}</p>
     {% endfor %}
 </div>
+<h2>Details for {{ userData['username'] }}</h2>
 {% if userData %}
-    <h1>
-        User details
-    </h1>
-    <ul>
-        <li>
-            Username: {{ userData['username'] }}
-        </li>
-        <li>
-            Full name: {{ userData['firstname'] }} {{ userData['lastname']  }}
-        </li>
-        <li>
-            User type: {% if user.isAdmin() %} Admin {% else %} General user {% endif %}
-        </li>
-    </ul>
+    <div class = "show-data">
+        <table>
+            <tr>
+                <td>
+                    Username:
+                </td>
+                <td>
+                    {{ userData['username'] }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Full name:
+                </td>
+                <td>
+                    {{ userData['firstname'] }} {{ userData['lastname']  }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    User type:
+                </td>
+                <td>
+                    {% if user.isAdmin() %} Admin {% else %} General user {% endif %}
+                </td>
+            </tr>
+        </table>
+</div>
 {% endif %}
 
 {% if isOwner or user.isAdmin() %}

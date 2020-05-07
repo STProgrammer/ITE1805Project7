@@ -42,7 +42,8 @@ if(ctype_digit($request->query->get('id')))
     // just show the details
     else {
         echo $twig->render('catalog.twig', array('catalog' => $catalog, 'user' => $user,
-            'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner));
+            'request' => $request, 'session' => $session, 'rel' => $rel, 'isOwner' => $isOwner,
+            'archive' => $archive));
     }
 }
 

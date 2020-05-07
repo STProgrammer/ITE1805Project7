@@ -111,6 +111,11 @@ a.button-white  {
 
 /*COMMENT*/
 
+.comment {
+    font-size: 1em;
+    margin: 1px;
+}
+
 .comment-text {
     background-color: #555555;
     text-align: left;
@@ -120,11 +125,6 @@ a.button-white  {
     font-size: 1em;
     margin: 2px;
     padding: 0.4em;
-}
-
-.comment {
-    font-size: 1em;
-    margin: 1px;
 }
 
 #comment-form table, #comment-form td, #comment-form tr {
@@ -171,7 +171,16 @@ input.comment {
     border-radius: 0.5em;
     display: inline-block;
     background: rgba(00, 64, 00, 0.5);
+}
 
+.show-data {
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 0.5em;
+    display: inline-block;
+    background: rgba(64, 64, 00, 0.5);
 }
 
 /*SEARCH*/
