@@ -19,7 +19,7 @@
           {% for message in session.getFlashBag.get('message', []) %}
               <p>{{ message }}</p>
           {% endfor %}
-          <p><a href = "./">Back </a></p>
+          <p id="back"><a href = "./"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
           {% else %}
       </div>
           <h1>
@@ -45,11 +45,9 @@
                                       </td>
                                       <td>
                                           <label for="from-date">Start date range:</label>
-                                          <br><input type="date" id="from-date" name="from-date"
-                                                     min="2020-03-01">
+                                          <br><input type="date" id="from-date" name="from-date">
                                           <br><label for="to-date">End date range:</label>
-                                          <br><input type="date" id="to-date" name="to-date"
-                                                     min="2020-03-01">
+                                          <br><input type="date" id="to-date" name="to-date">
                                       </td>
                                   </tr>
                               </table>
@@ -65,7 +63,7 @@
                                   </tr>
                                   <tr>
                                       <td>
-                                          <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3">
+                                          <br><input type="text" name="tags" data-role="tagsinput" placeholder="tag1,tag2,tag3" required>
                                           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                                           <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
                                           <br><button type="submit" name="search" value="tagssearch">Search</button>

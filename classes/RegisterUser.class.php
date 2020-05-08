@@ -205,6 +205,7 @@ class RegisterUser
         }
     }
 
+
     public function deleteUser($username) {
         try
         {

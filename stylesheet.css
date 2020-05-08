@@ -12,6 +12,8 @@ body {
     max-width: 70em;
     line-height: 1.5em;
     padding-bottom: 8em;
+    word-break: break-all;
+    hyphens: auto;
 }
 
 h1 {
@@ -40,8 +42,7 @@ a:hover {
 }*/
 
 .flash-notice {
-    color: mediumvioletred;
-
+    color: red;
 }
 
 button, input[type="submit"], .button-white {
@@ -89,20 +90,6 @@ table, tr, td {
     border: 3px solid transparent;
 }
 
-
-/*.button-white {
-    background-color: white;
-    border: black 1px solid;
-    color: black;
-    padding: 0.3em 0.3em;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1em;
-    margin: 1em 1em;
-    cursor: pointer;
-}*/
-
 a.button-white  {
     color: white;
     text-decoration: none;
@@ -112,8 +99,11 @@ a.button-white  {
 /*COMMENT*/
 
 .comment {
-    font-size: 1em;
     margin: 1px;
+    background-color: rgba(00, 50, 64, 0.5);
+    padding: 0.5em;
+    width: fit-content;
+    height: fit-content;
 }
 
 .comment-text {
@@ -225,12 +215,12 @@ input.comment {
     border-style: solid;
     border-width: 30px 30px 30px 30px;
     border-image-repeat:stretch stretch;
-    border-image-source: url("Images/greenframe.svg");
    border-image-slice: 100;
     border-image-repeat: repeat;
     display: block;
     margin: 0.5em;
     padding: 0.5em;
+    border-image-source: url("Images/greenframe.svg");
 }
 
 .element-box {

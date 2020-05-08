@@ -73,7 +73,7 @@
                     Upload date:
                 </td>
                 <td>
-                    {{ file.getDate() }}
+                    {{ file.getUploadedDate() }}
                 </td>
             </tr>
             <tr>
@@ -82,6 +82,14 @@
                 </td>
                 <td>
                     {{ file.getCatalogName() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Views or downloads:
+                </td>
+                <td>
+                    {{ file.getImpressions() }}
                 </td>
             </tr>
             <tr>
@@ -122,7 +130,7 @@
             <input type="submit" name="Delete_file" value="Delete file" class="delete" />
             </form>
             {% endif %}
-        <div class = "show data">
+        <div class = comment>
         <h3>Comments:</h3>
         {% if comments %}
         {% for comment in comments %}

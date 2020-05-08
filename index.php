@@ -46,12 +46,12 @@
             $searchQuery = $request->query->get('query');
             $elements = $archive->searchFiles($searchQuery);
             if (!$session->get('loggedin')) {
-                $elements = $archive->getOnlyPublicFiles($files);
+                $elements = $archive->getOnlyPublicFiles($elements);
             }
             $sizeOfList = sizeof($elements);
             $totalPages = ($sizeOfList == 0) ? 1 : ceil($sizeOfList / $nrOfElementsPerPage);
             $pagination = range(1, $totalPages, 1);
-            $files = array_slice($elements, $offset, $nrOfElementsPerPage);
+            $elements = array_slice($elements, $offset, $nrOfElementsPerPage);
             echo $twig->render('index.twig', array('elements' => $elements, 'user' => $user,
                 'session' => $session, 'request' => $request, 'rel' => $rel, 'pagination' => $pagination));
         }
@@ -62,7 +62,7 @@
         $tag = $request->query->get('tag');
         $elements = $archive->searchFilesByTag($tag);
         if (!$session->get('loggedin')) {
-            $files = $archive->getOnlyPublicFiles($files);
+            $elements = $archive->getOnlyPublicFiles($elements);
         }
         $sizeOfList = sizeof($elements);
         $totalPages = ($sizeOfList == 0) ? 1 : ceil($sizeOfList / $nrOfElementsPerPage);

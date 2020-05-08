@@ -1,6 +1,7 @@
 <?php
 
     require_once('../includes.php');
+    require_once ('../login.php');
     include('process.php');
 
     $reguser = new RegisterUser($db, $request, $session);
@@ -14,6 +15,6 @@
         exit();
 
     } else {
-        echo $twig->render('register.twig', array('script' => $homedir, 'rel' => $rel));
+        echo $twig->render('register.twig', array('script' => $homedir, 'rel' => $rel, 'user' => $user));
     }
 ?>

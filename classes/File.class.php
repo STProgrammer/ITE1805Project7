@@ -9,7 +9,7 @@ class File
     private $type;
     private $tags;
     private $description;
-    private $upLoadedDate;
+    private $uploadedDate;
     private $title;
     private $size;
     private $catalogId;
@@ -126,17 +126,17 @@ class File
     /**
      * @return mixed
      */
-    public function getUpLoadedDate()
+    public function getUploadedDate()
     {
-        return $this->upLoadedDate;
+        return $this->uploadedDate;
     }
 
     /**
-     * @param mixed $upLoadedDate
+     * @param mixed $uploadedDate
      */
-    public function setUpLoadedDate($upLoadedDate)
+    public function setUploadedDate($uploadedDate)
     {
-        $this->upLoadedDate = $upLoadedDate;
+        $this->uploadedDate = $uploadedDate;
     }
 
     /**

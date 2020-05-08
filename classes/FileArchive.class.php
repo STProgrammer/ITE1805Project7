@@ -660,6 +660,7 @@ class FileArchive {
 
     // Search files by tags with OR condition (search files containing "tag1" or "tag2" or "tag3" or ... )
     public function searchByTagsWithOrCondition($tagsStr) {
+        if ($tagsStr == "") {return array();}
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
         $placeHolder = ":" . str_replace(",", ", :", $tagsStr);
@@ -682,6 +683,7 @@ class FileArchive {
 
     // Search files by tags with AND condition (search files containing both "tag1" and "tag2" and "tag3" and ...)
     public function searchByTagsWithAndCondition($tagsStr) {
+        if ($tagsStr == "") {return array();}
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
         $placeHolder = ":" . str_replace(",", ", :", $tagsStr);

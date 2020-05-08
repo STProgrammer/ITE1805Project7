@@ -2,7 +2,8 @@
 //logg out
 if ($request->request->has('logout') && XsrfProtection::verifyMac("Logout")) {
     $session->clear();
-    header("Location: .");
+    $referer = $request->server->get('HTTP_REFERER');
+    header('location: '.$referer);
     exit();
 }
 
@@ -15,7 +16,8 @@ elseif ($request->request->has('login')) {
     if(XsrfProtection::verifyMac("Login") && User::login($db, $request, $session)) {
         $user = $session->get('User');
         if ($session->get('loggedin') && $user->verifyUser($request)) {
-            header("Location: .");
+            $referer = $request->server->get('HTTP_REFERER');
+            header('location: '.$referer);
             exit();
         }
     } //if login submitted but failed to login
