@@ -283,24 +283,7 @@ class FileArchive {
 
 
     // Get Catalogs
-    public function getCatalogs(int $catalogId)
-    {
-        $allCatalogs = null;
-        try
-        {
-            $stmt = $this->db->prepare("SELECT * FROM Catalogs where parentId = :catalogId order by catalogName;");
-            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
-            $stmt->execute();
-            $allCatalogs = $stmt->fetchAll();
-        }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
-        // bruk av data i video src
-        //<source src="data:video/mp4;base64,{{ fil.kode }}">
-        //foreach ($alleFiler as &$encode) {
-        //    $encode['kode'] = base64_encode($encode['kode']);
-        //}
-        return $allCatalogs;
-    }
+
 
     //Get catalogs by owner (get all catalogs of the user)
     public function getCatalogsByOwner(string $owner) : array
@@ -314,11 +297,6 @@ class FileArchive {
             $allCatalogs = $stmt->fetchAll();
         }
         catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
-        // bruk av data i video src
-        //<source src="data:video/mp4;base64,{{ fil.kode }}">
-        //foreach ($alleFiler as &$encode) {
-        //    $encode['kode'] = base64_encode($encode['kode']);
-        //}
         return $allCatalogs;
     }
 
@@ -328,7 +306,6 @@ class FileArchive {
 
     //SAVE FILE ON DATABASE (taken from Knut Collin)
     public function saveFile(string $owner) : int {
-
         $fileTags = $this->request->files->get('image');
         $file = $fileTags->getPathname();
         $name = $fileTags->getClientOriginalName();
@@ -380,54 +357,7 @@ class FileArchive {
 
     }  // END FILE SAVE
 
-    //Koden modifisert fra https://stackoverflow.com/questions/18805497/php-resize-image-on-upload
-    private function saveThumbnail($data, $id) {
-        $maxDimW = 60;
-        $maxDimH = 60;
-        //reducing image to 5%, max 60 60.
-        $fileTags = $this->request->files->get('image');
-        $file = $fileTags->getPathname();
-        $size = getimagesize($file);
-        $width = $size[0] / 20;
-        $height = $size[0] / 20;
-        if ($width > $maxDimW) $width = 60;
-        if ($height > $maxDimH) $height = 60;
-        $src = imagecreatefromstring($data);
-        $dst = imagecreatetruecolor( $width, $height );
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $size[0], $size[1] );
-        $data = file_get_contents($dst);
-        try
-        {
-            $stmt = $this->db->prepare("INSERT INTO Thumbnails (fileId, data) VALUES (:fileId, :data);");
-            $stmt->bindParam(':fileId', $id, PDO::PARAM_INT);
-            $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
-            $stmt->execute();
-            $thumb = $stmt->fetchAll();
-        }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", "Thumb".$e->getMessage()); return; }
-    }
 
-
-
-    // Show overview of all files, taken from Knut Collin
-    public function getFilesOverview(int $catalogId)
-    {
-        $allFiles = null;
-        try
-        {
-            $stmt = $this->db->prepare("SELECT * FROM Files where catalogId = :catalogId order by title;");
-            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
-            $stmt->execute();
-            $allFiles = $stmt->fetchAll();
-        }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return; }
-        // bruk av data i video src
-        //<source src="data:video/mp4;base64,{{ fil.kode }}">
-        //foreach ($alleFiler as &$encode) {
-        //    $encode['kode'] = base64_encode($encode['kode']);
-        //}
-        return $allFiles;
-    }     //END FILES OVERVIEW
 
 
     //GET OVERVIEW OF FILES AND CATALOGS
@@ -704,35 +634,6 @@ class FileArchive {
         return $filesByTags;
     } //* END SEARCH BY MULTIPLE TAGS WITH AND CONDITION
 
-
-    //Search by multiple tags with OR condition
-    public function searchByMultipleTags($tagsStr) {
-        $tagsStr = $this->fixTagsString($tagsStr);
-        $tags = explode(',', $tagsStr);
-        $tags = array_unique($tags);
-        $tags = array_filter($tags);
-        $files = array();
-        foreach($tags as $tag) {
-            $temp = $this->searchFilesByTag($tag);
-            $files = array_merge($files, $temp);
-        }
-        return $files;
-    } //* END SEARCH BY MULTIPLE TAGS OR CONDITION
-
-
-    //Search by multiple tags with AND condition
-    public function searchByMultipleTagsAndCondition($tagsStr) {
-        $tagsStr = $this->fixTagsString($tagsStr);
-        $tags = explode(',', $tagsStr);
-        $tags = array_unique($tags);
-        $tags = array_filter($tags);
-        $files = array();
-        foreach($tags as $tag) {
-            $temp = $this->searchFilesByTag($tag);
-            $files = array_merge($files, $temp);
-        }
-        return $files;
-    } //* END SEARCH BY MULTIPLE TAGS OR CONDITION
 
 
 
