@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 09, 2020 at 12:37 AM
+-- Generation Time: May 09, 2020 at 02:35 AM
 -- Server version: 10.2.31-MariaDB-log
 -- PHP Version: 7.4.4
 
@@ -18,15 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-DROP VIEW IF EXISTS `stud_v20_karagoz`.`Elements`, `stud_v20_karagoz`.`FilesWithTagsView`;
+-- Drop tables first
 
+DROP VIEW IF EXISTS `stud_v20_karagoz`.`Elements`, `stud_v20_karagoz`.`FilesWithTagsView`;
 DROP TABLE IF EXISTS `stud_v20_karagoz`.`commentsAudit`, `stud_v20_karagoz`.`Action`,
 `stud_v20_karagoz`.`FilesAndTags`, `stud_v20_karagoz`.`Tags`, `stud_v20_karagoz`.`Comments`; 
-
 DROP TABLE IF EXISTS `stud_v20_karagoz`.`Files`;
-
 DROP TABLE IF EXISTS `stud_v20_karagoz`.`Catalogs`;
-
 DROP TABLE IF EXISTS `stud_v20_karagoz`.`Users`;
 
 --
@@ -71,7 +69,19 @@ CREATE TABLE `Catalogs` (
 --
 
 INSERT INTO `Catalogs` (`catalogId`, `parentId`, `catalogName`, `date`, `access`, `owner`) VALUES
-(1, NULL, 'main', '2020-04-19', 1, 'donald');
+(1, NULL, 'Main', '2020-04-19', 1, NULL);
+
+--
+-- Triggers `Catalogs`
+--
+DELIMITER $$
+CREATE TRIGGER `Prevent_main_delete` BEFORE DELETE ON `Catalogs` FOR EACH ROW BEGIN
+    IF old.catalogId = 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'May not delete main catalog';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -83,7 +93,7 @@ CREATE TABLE `Comments` (
   `commentId` int(11) NOT NULL,
   `comment` tinytext NOT NULL,
   `date` datetime NOT NULL,
-  `username` varchar(45) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
   `fileId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -183,7 +193,7 @@ CREATE TABLE `Files` (
   `uploadedDate` date NOT NULL,
   `title` varchar(30) NOT NULL,
   `size` varchar(10) NOT NULL,
-  `catalogId` int(11) DEFAULT 1,
+  `catalogId` int(11) NOT NULL DEFAULT 1,
   `owner` varchar(45) NOT NULL,
   `impressions` int(11) NOT NULL DEFAULT 0,
   `access` tinyint(4) NOT NULL DEFAULT 1,
@@ -198,7 +208,7 @@ CREATE TABLE `Files` (
 
 CREATE TABLE `FilesAndTags` (
   `fileId` int(11) NOT NULL,
-  `tag` varchar(45) DEFAULT NULL
+  `tag` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -231,30 +241,6 @@ CREATE TABLE `Tags` (
   `tag` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `Tags`
---
-
-INSERT INTO `Tags` (`tag`) VALUES
-('animal'),
-('atom'),
-('bab'),
-('cpt'),
-('fyrstikk'),
-('h'),
-('icon'),
-('jpg'),
-('pic'),
-('picture'),
-('tag1'),
-('tag2'),
-('tag3'),
-('tag4'),
-('tat'),
-('tttt'),
-('txt'),
-('txt2');
-
 -- --------------------------------------------------------
 
 --
@@ -268,7 +254,7 @@ CREATE TABLE `Users` (
   `firstname` varchar(45) DEFAULT NULL,
   `lastname` varchar(45) DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `verCode` varchar(60) DEFAULT NULL,
+  `verCode` varchar(60) NOT NULL,
   `verified` tinyint(4) NOT NULL DEFAULT 0,
   `admin` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
