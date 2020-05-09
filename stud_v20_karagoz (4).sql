@@ -18,6 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+DROP VIEW IF EXISTS `stud_v20_karagoz`.`Elements`, `stud_v20_karagoz`.`FilesWithTagsView`;
+
+DROP TABLE IF EXISTS `stud_v20_karagoz`.`commentsAudit`, `stud_v20_karagoz`.`Action`,
+`stud_v20_karagoz`.`FilesAndTags`, `stud_v20_karagoz`.`Tags`, `stud_v20_karagoz`.`Comments`; 
+
+DROP TABLE IF EXISTS `stud_v20_karagoz`.`Files`;
+
+DROP TABLE IF EXISTS `stud_v20_karagoz`.`Catalogs`;
+
+DROP TABLE IF EXISTS `stud_v20_karagoz`.`Users`;
+
 --
 -- Database: `stud_v20_karagoz`
 --
