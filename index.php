@@ -38,8 +38,6 @@
     }
 
 
-
-
     //Search made
     elseif($request->query->get('search') == "search")
         {

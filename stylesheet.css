@@ -12,6 +12,7 @@ body {
     max-width: 70em;
     line-height: 1.5em;
     padding: 1em 1em 4em 4em;
+    word-break: normal;
 }
 
 h1 {
@@ -41,6 +42,10 @@ a:hover {
 
 .flash-notice {
     color: red;
+}
+
+.top-login {
+    float: left;
 }
 
 button, input[type="submit"], .button-white {
@@ -102,7 +107,6 @@ a.button-white  {
     padding: 0.5em;
     width: fit-content;
     height: fit-content;
-    word-break: break-all;
 }
 
 .comment-text {
@@ -259,7 +263,6 @@ input.comment {
 
 #back {
     clear: both;
-    float: end;
 }
 
 

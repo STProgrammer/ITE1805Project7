@@ -19,7 +19,6 @@
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Session\Session;
-    use Symfony\Bridge\Twig;
 
     $request = Request::createFromGlobals();
 

@@ -156,30 +156,6 @@
             No comments
             {% endif %}
             </div>
-<!--
-                        {% if comment['username'] == user.getUsername() or user.isAdmin() == 1 %}
-                            <form method="post" id="delete_comment">
-                                <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
-                                <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
-                                <input type="submit" name="Delete_comment" value="Delete comment" class="delete comment" />
-                            </form>
-                        {% else %}
-                        {% endif %}</div>
-                </td>
-            </tr><div class="comment"><div class="comment-text">
-                    <a href="{{rel}}profile-page/?username={{ comment.username }}">{{ comment['username'] }}</a>
-                {{ comment['comment'] }}
-            <br> <span class="comment-date">{{ comment['date'] }}</span></div>
-            {% if comment['username'] == user.getUsername() or user.isAdmin() == 1 %}
-                <form method="post" id="delete_comment">
-                    <input type="hidden" value="{{ getMac("Delete comment") }}" name="XSRFPreventionToken">
-                    <input type="hidden" value="{{comment['commentId']}}" name="commentid" />
-                    <input type="submit" name="Delete_comment" value="Delete comment" class="delete comment" />
-                </form>
-            {% else %}
-            {% endif %}</div>
-            </table>
-        </div>-->
 
         {% if user %}
             <div class = "form">
@@ -192,7 +168,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <textarea name="commenttext" rows="3" cols="25" maxlength=65535 ></textarea>
+                            <textarea name="commenttext" rows="3" cols="25" maxlength=255></textarea>
                         </td>
                     </tr>
                     <tr>

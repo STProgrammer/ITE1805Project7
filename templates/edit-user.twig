@@ -6,6 +6,7 @@
     <title>Edit user</title>
 </head>
 <body>
+{% include 'login2.twig' %}
 <h1>Change user details</h1>
 <script>
     var check = function() {
@@ -31,7 +32,6 @@
         return pass1 == pass2;
     }
 </script>
-{% include 'login2.twig' %}
 {% if isUser %}
     <div class = "form edit-user-form">
 <form method="post">
