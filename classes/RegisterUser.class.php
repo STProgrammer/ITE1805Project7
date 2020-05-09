@@ -96,11 +96,15 @@ class RegisterUser
 
 
     public function getUserData($username){
-        $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
-        $stmt->execute();
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            return $row;
+        try {
+            $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+            $stmt->execute();
+            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                return $row;
+            }
+        } catch (Exception $e) {
+            $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
         }
     }
 
