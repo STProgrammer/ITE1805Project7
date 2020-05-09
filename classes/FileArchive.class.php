@@ -117,22 +117,6 @@ class FileArchive {
         catch (Exception $e) { return "Failed to show catalog path" . $e->getMessage(); }
     }
 
-  /*  public function getCatalogPath($catalogId) : String {
-        if ($catalogId <= 1 ) {
-            return "Main";
-        }
-        try {
-            $stmt = $this->db->prepare("SELECT catalogName, parentId FROM Catalogs WHERE catalogId = :catalogId;");
-            $stmt->bindParam(':catalogId', $catalogId, PDO::PARAM_INT);
-            $stmt->execute();
-            $row = $stmt->fetch();
-            $parentId = $row['parentId'];
-            $catalogPath = $this->getCatalogPath($parentId) . " / " . $row['catalogName'];
-            return $catalogPath;
-        }
-        catch (Exception $e) { return "Failed to show catalog path" . $e->getMessage(); }
-    }
-*/
 
     //Check if catalog is public or not, if a catalog is not public, all it's son are not public
     private function isCatalogAccessible($id) : bool {
@@ -374,11 +358,6 @@ class FileArchive {
             $allElements = $stmt->fetchAll();
         }
         catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", $e->getMessage()); return; }
-        // bruk av data i video src
-        //<source src="data:video/mp4;base64,{{ fil.kode }}">
-        //foreach ($alleFiler as &$encode) {
-        //    $encode['kode'] = base64_encode($encode['kode']);
-        //}
         return $allElements;
     }     //END FILES AND CATALOGS OVERVIEW
 
@@ -649,11 +628,6 @@ class FileArchive {
             $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
         }
         catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
-        // bruk av data i video src
-        //<source src="data:video/mp4;base64,{{ fil.kode }}">
-        //foreach ($alleFiler as &$encode) {
-        //    $encode['kode'] = base64_encode($encode['kode']);
-        //}
         return $totalPages;
     }
 
