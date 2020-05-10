@@ -35,8 +35,7 @@
 </script>
 {% if isUser %}
     <div class = "form edit-user-form">
-<form method="post">
-    <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
+<form method="post" id="edit-user">
     <table>
         <tr>
             <th>Change user details;
@@ -70,7 +69,7 @@
 </form>
     </div>
 <div class = "form edit-user-form">
-    <form method="post">
+    <form method="post" id="change-email">
     <label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="{{ user.getEmail() }}">
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">

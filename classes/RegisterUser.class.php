@@ -240,6 +240,8 @@ class RegisterUser
         }
     }
 
+
+
     private function isEmailAvailable($newEmail) {
         $email = $this->session->get('User')->getEmail();
         if ($email == $newEmail) {
@@ -271,15 +273,12 @@ class RegisterUser
             $stmt->execute();
             if ($stmt->rowCount()==1) {
                 $this->notifyUser( "User deleted", "");
-                return true;
             } else {
                 $this->notifyUser( "Failed to delete user!", "");
-                return false;
             }
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete user!", $e->getMessage() . PHP_EOL);
-            return false;
         }
     }
 }

@@ -15,9 +15,9 @@
     <form action="index.php" method="post">
         <table id="loginform_top">
             <tr><td><label>Email: </label> </td>
-                <td><input type="text" name="email" class="rounded_input"></td>
+                <td><input type="email" name="email" class="rounded_input" placeholder="email" required id="email"></td>
                 <td><label>Password:</label> </td>
-                <td><input type="password" name="password" size="15" class="rounded_input"></td>
+                <td><input type="password" name="password" size="15" class="rounded_input" placeholder="password" required id="password"></td>
             <td>
                 <input type="hidden" value="{{ getMac("Login") }}" name="XSRFPreventionToken">
                 <button type="submit" name="login"  value="Login">Sign in</button>
