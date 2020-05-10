@@ -10,27 +10,28 @@
 <h1>Change user details</h1>
 <script>
     var check = function() {
-        if (document.getElementById('password').value != "" ||
-            document.getElementById('password2').value != "") {
-            if (document.getElementById('password').value ==
-                document.getElementById('password2').value) {
+        var pass1 = document.getElementById("password").value;
+        var pass2 = document.getElementById("password2").value;
+        if (pass1 != "" && pass2 != "") {
+            if (pass1 === pass2) {
                 document.getElementById('message').style.color = 'green';
                 document.getElementById('message').innerHTML = 'matching';
+                return true;
             } else {
                 document.getElementById('message').style.color = 'red';
                 document.getElementById('message').innerHTML = 'not matching';
+                return false;
             }
         }
         else document.getElementById('message').innerHTML = '';
+        return false;
     }
+
     function validate(){
-        var pass1 = document.getElementById("password").value;
-        var pass2 = document.getElementById("password2").value;
-        if (pass1 != pass2) {
-            alert("Passwords don't match!")
-        }
-        return pass1 == pass2;
+        return check();
     }
+
+
 </script>
 {% if isUser %}
     <div class = "form edit-user-form">
@@ -71,7 +72,7 @@
 <div class = "form edit-user-form">
     <form method="post">
     <label>Change email: </label>
-    <br><input type="email" name="email" required maxlength=45 value="">
+    <br><input type="email" name="email" required maxlength=45 value="{{ user.getEmail() }}">
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="change_email" value="Change" />
 </form>

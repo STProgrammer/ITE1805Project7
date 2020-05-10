@@ -8,7 +8,7 @@ if (isset($_POST['username_check'])) {
     try {
         $username = $_POST['username'];
         $stmt = $db->prepare("SELECT count(*) as cntUser FROM Users WHERE username = :username");
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $count = $stmt->fetchColumn();
         if($count > 0){
@@ -25,7 +25,7 @@ if (isset($_POST['email_check'])) {
     try {
         $email = $_POST['email'];
         $stmt = $db->prepare("SELECT count(*) as cntUser FROM Users WHERE email = :email");
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $count = $stmt->fetchColumn();
         if($count > 0) {

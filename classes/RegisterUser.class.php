@@ -145,6 +145,11 @@ class RegisterUser
         $lastname = $this->request->request->get('lastname');
         $verified = $this->request->request->get('verified');
 
+        if (!$this->isUsernameAvailable($username, $newUsername)) {
+            $this->notifyUser("Failed to edit, username was already taken", "");
+            return;
+        }
+
         if ($verified == null) $verified = 1;
 
         try {
@@ -166,6 +171,28 @@ class RegisterUser
             $this->notifyUser("Failed to change user details", $e->getMessage() . PHP_EOL);
         }
     }
+
+    private function isUsernameAvailable($username, $newUsername) {
+        if ($username == $newUsername) {
+            return true;
+        }
+        else {
+            try {
+                $stmt = $this->dbase->prepare("SELECT count(*) as cntUser FROM Users WHERE username = :newUsername");
+                $stmt->bindParam(':newUsername', $newUsername, PDO::PARAM_STR);
+                $stmt->execute();
+                $count = $stmt->fetchColumn();
+                if($count > 0){
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (Exception $e) {
+                $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+            }
+        }
+    }
+
 
     public function changePassword($password, $username) : bool {
         if ($password == "") {return false;}
@@ -190,6 +217,10 @@ class RegisterUser
 
 
     public function changeEmail($email, $username) {
+        if (!$this->isEmailAvailable($email)) {
+            $this->notifyUser("Failed to change because email was already taken", '');
+            return;
+        }
         try {
             $sth = $this->dbase->prepare("update Users set email = :email, verified = 0 where username = :username");
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
@@ -206,6 +237,28 @@ class RegisterUser
         } catch (Exception $e) {
             $this->notifyUser("Failed to change email!", $e->getMessage() . PHP_EOL);
             return false;
+        }
+    }
+
+    private function isEmailAvailable($newEmail) {
+        $email = $this->session->get('User')->getEmail();
+        if ($email == $newEmail) {
+            return true;
+        }
+        else {
+            try {
+                $stmt = $this->dbase->prepare("SELECT count(*) as cntUser FROM Users WHERE email = :newEmail");
+                $stmt->bindParam(':newEmail', $newEmail, PDO::PARAM_STR);
+                $stmt->execute();
+                $count = $stmt->fetchColumn();
+                if($count > 0){
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (Exception $e) {
+                $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+            }
         }
     }
 
