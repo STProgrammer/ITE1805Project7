@@ -60,9 +60,14 @@ $('document').ready(function(){
 			}
 		});
 	});
-	$("#register_form").submit(function(e){
-		if (!email_state || !username_state){
+	$("#edit-user").submit(function(e){
+		if (!username_state){
 			e.preventDefault();
+		}
+	});
+	$("#change-email").submit(function(f){
+		if (!email_state){
+			f.preventDefault();
 		}
 	});
 });

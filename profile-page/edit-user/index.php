@@ -4,6 +4,8 @@ require_once '../../includes.php';
 
 require_once "../../login.php";
 
+include("process.php");
+
 $regUser = new RegisterUser($db, $request, $session);
 
 //Since only logged in users can edit data, we check if user is logged in, verify user etc. all at once

@@ -4,9 +4,9 @@ require_once '../includes.php';
 
 //Denne koden er tatt og litt modifisert fra https://codewithawa.com/posts/check-if-user-already-exists-without-submitting-form
 
-if (isset($_POST['username_check'])) {
+if ($request->request->has('username_check')) {
     try {
-        $username = $_POST['username'];
+        $username = $request->request->get('username');
         $stmt = $db->prepare("SELECT count(*) as cntUser FROM Users WHERE username = :username");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
@@ -21,9 +21,9 @@ if (isset($_POST['username_check'])) {
     }
     exit();
 }
-if (isset($_POST['email_check'])) {
+if ($request->request->has('email_check')) {
     try {
-        $email = $_POST['email'];
+        $email = $request->request->get('email');
         $stmt = $db->prepare("SELECT count(*) as cntUser FROM Users WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();

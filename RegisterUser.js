@@ -65,14 +65,4 @@ $('document').ready(function(){
 			e.preventDefault();
 		}
 	});
-	$("#edit-user").submit(function(e){
-		if (!username_state){
-			e.preventDefault();
-		}
-	});
-	$("#change-email").submit(function(e){
-		if (!email_state){
-			e.preventDefault();
-		}
-	});
 });

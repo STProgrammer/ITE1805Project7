@@ -44,7 +44,8 @@
         <tr>
             <td>
                 <label>User name:</label>
-                <br><input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}">
+                <br><input type="text" name="username" required maxlength=45 value="{{ user.getUsername() }}" id="username">
+                <span></span>
             </td>
         </tr>
         <tr>
@@ -71,7 +72,8 @@
 <div class = "form edit-user-form">
     <form method="post" id="change-email">
     <label>Change email: </label>
-    <br><input type="email" name="email" required maxlength=45 value="{{ user.getEmail() }}">
+    <br><input type="email" name="email" required maxlength=45 value="{{ user.getEmail() }}" id="email">
+        <span></span>
     <input type="hidden" value="{{ getMac("change email") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="change_email" value="Change" />
 </form>
@@ -98,5 +100,7 @@
 </div>
     {% endif %}
 <p id="back"><a href = "javascript:history.back()"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="../../ChangeUser.js"></script>
 </body>
 </html>
