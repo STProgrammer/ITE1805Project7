@@ -43,6 +43,10 @@ class FileArchive {
         $tags = array_unique($tags);
         $tags = array_filter($tags);
         try {
+            // First remove all tags of the file
+            $stmt = $this->db->prepare("DELETE FROM FilesAndTags where fileId = :fileId;");
+            $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
+            $stmt->execute();
             $stmt = $this->db->prepare("INSERT IGNORE INTO Tags (tag) VALUES (:tag);");
             if(is_array($tags)){
                 foreach ($tags as $tag) {
@@ -57,10 +61,20 @@ class FileArchive {
                     $stmt->bindParam(':fileid', $fileId, PDO::PARAM_INT);
                     $stmt->execute();
                 }
+                $this->removeUnusedTags();
             }
         } catch (Exception $e) { $this->notifyUser("Failed to add tags", $e->getMessage()); return false;}
         return true;
     } //* END ADD TAGS
+
+    private function removeUnusedTags() {
+        try {
+            $stmt = $this->db->query("delete Tags from Tags left join FilesAndTags on Tags.tag = FilesAndTags.tag where FilesAndTags.tag IS NULL;");
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->notifyUser("Something went wrong", $e->getMessage());
+        }
+    }
 
 
     //Get tags
@@ -258,6 +272,7 @@ class FileArchive {
                 $this->notifyUser( "Failed to delete catalog", "");
                 $result = false;
             }
+            $this->removeUnusedTags();
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete catalog", $e->getMessage() . PHP_EOL);
@@ -464,6 +479,7 @@ class FileArchive {
             } else {
                 $this->notifyUser('Failed to change file details', "");
             }
+            $this->removeUnusedTags();
         } catch (Exception $e) {
             $this->notifyUser('Failed to change file details', $e->getMessage() . PHP_EOL);
         }
@@ -472,9 +488,6 @@ class FileArchive {
 
     // Delete file
     public function deleteFile($id) : bool {
-        $result = false;
-        $this->session->remove('strHeader');
-        $this->session->remove('strMessage');
         try
         {
             $stmt = $this->db->prepare("DELETE FROM Files WHERE fileId = :id");
@@ -487,6 +500,7 @@ class FileArchive {
                 $this->notifyUser( "Failed to delete file", "");
                 $result = false;
             }
+            $this->removeUnusedTags();
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete file", $e->getMessage() . PHP_EOL);
