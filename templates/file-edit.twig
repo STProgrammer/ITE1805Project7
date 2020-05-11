@@ -59,13 +59,14 @@
                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
                         prefetch: {
-                            url: '../../tags.json',
+                            url: '../../tags.json?t=' + Math.random(),
                             filter: function(list) {
                                 return $.map(list, function(tags) {
                                     return { name: tags }; });
                             }
                         }
                     });
+                    tags.clearPrefetchCache();
                     tags.initialize();
 
                     $('#tags').tagsinput({

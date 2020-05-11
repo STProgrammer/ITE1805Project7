@@ -7,6 +7,8 @@
     //Håndterer login
     require_once "login.php";
 
+    require_once "fetchtags.php";
+
     // opprett nytt filarkiv
     $archive = new FileArchive($db, $request, $session);
 
