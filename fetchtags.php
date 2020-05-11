@@ -8,6 +8,6 @@ $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 $jsonData = json_encode($tags);
 
-file_put_contents('tags.json', $jsonData);
+file_put_contents($rel.'tags.json', $jsonData);
 
 ?>

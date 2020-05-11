@@ -40,9 +40,17 @@
                     User type:
                 </td>
                 <td>
-                    {% if user.isAdmin() %} Admin {% else %} General user {% endif %}
+                    {% if userData['admin'] == 1 %} Admin {% else %} General user {% endif %}
                 </td>
-            </tr>
+            </tr>{% if userData['admin'] == 1 %}
+            <tr>
+                <td>
+                    Email:
+                </td>
+                <td>
+                    {{ userData['email'] }}
+                </td>
+            </tr> {% endif %}
         </table>
 </div>
 {% endif %}
