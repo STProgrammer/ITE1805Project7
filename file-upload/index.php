@@ -7,6 +7,8 @@ define('FILENAME_TAG', 'image');
 //Håndterer login
 require_once "../login.php";
 
+require_once "../fetchtags.php";
+
 $archive = new FileArchive($db, $request, $session);
 
 

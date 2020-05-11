@@ -6,6 +6,7 @@ define('FILENAME_TAG', 'image');
 
 require_once '../../login.php';
 
+require_once "../../fetchtags.php";
 
 $archive = new FileArchive($db, $request, $session);
 

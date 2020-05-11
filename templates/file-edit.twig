@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="../../stylesheet.css" />
+    <link rel="stylesheet" href="../../js/examples/assets/app.css">
+    <link rel="stylesheet" href="../../js/dist/bootstrap-tagsinput.css">
+
     <title>Edit file</title>
 </head>
 <body>
@@ -45,9 +48,36 @@
         <tr>
             <td>
                 <label>Tags: </label>
-                <br><input type="text" name="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
+                <br><input type="text" name="tags" id="tags" data-role="tagsinput" value="{{ file.getTags }}" placeholder="tag1,tag2,tag3">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script src="{{ rel }}js/dist/bootstrap-tagsinput.min.js"></script>
+                <script src="{{ rel }}typeahead.bundle.js"></script>
+                <script>
+                    //Koden er kopiert og tilpasset fra https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
+                    // Initializing the typeahead
+                    var tags = new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        prefetch: {
+                            url: '../../tags.json',
+                            filter: function(list) {
+                                return $.map(list, function(tags) {
+                                    return { name: tags }; });
+                            }
+                        }
+                    });
+                    tags.initialize();
+
+                    $('#tags').tagsinput({
+                        trimValue: true,
+                        typeaheadjs: {
+                            name: 'tags',
+                            displayKey: 'name',
+                            valueKey: 'name',
+                            source: tags.ttAdapter()
+                        }
+                    });
+                </script>
             </td>
         </tr>
         <tr>

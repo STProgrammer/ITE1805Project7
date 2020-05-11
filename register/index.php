@@ -8,7 +8,6 @@
 
     $userData = array();
 
-
     if ($request->request->has('register') && XsrfProtection::verifyMac("Register")) {
         $reguser->registerUser();
         header("Location: ../?registereduser=1");
