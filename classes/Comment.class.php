@@ -28,7 +28,7 @@ class Comment
     }
 
     //Add comment
-    public function addComment($username, $fileId) {
+    public function addComment(string $username, int $fileId) {
 
         $comment = $this->request->request->get('commenttext');
 
@@ -46,7 +46,7 @@ class Comment
 
 
     //Get comments made to a file
-    public function getComments ($fileId) {
+    public function getComments (int $fileId) {
         try {
             $stmt = $this->db->prepare("SELECT * FROM Comments WHERE fileId = :fileId;");
             $stmt->bindParam(':fileId', $fileId, PDO::PARAM_INT);
@@ -60,7 +60,7 @@ class Comment
 
 
     // Get comment object
-    public function getCommentObject ($commentId) {
+    public function getCommentObject (int $commentId) {
         try {
             $stmt = $this->db->prepare("SELECT * FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
@@ -74,7 +74,7 @@ class Comment
 
 
     //Check if user owns the comment or not
-    public function checkOwner ($username, $commentId) {
+    public function checkOwner (string $username, int $commentId) {
         try {
             $stmt = $this->db->prepare("SELECT username FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);
@@ -92,7 +92,7 @@ class Comment
 
 
     // Delete comment
-    public function deleteComment($commentId) {
+    public function deleteComment(int $commentId) {
         try {
             $stmt = $this->db->prepare("DELETE FROM Comments WHERE commentId = :commentId;");
             $stmt->bindParam(':commentId', $commentId, PDO::PARAM_INT);

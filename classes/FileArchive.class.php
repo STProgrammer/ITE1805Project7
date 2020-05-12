@@ -16,7 +16,7 @@ class FileArchive {
 
     //* NOTIFY USER
 
-    private function notifyUser(String $strHeader, String $strMessage)
+    private function notifyUser(string $strHeader, string $strMessage)
     {
         $this->session->getFlashBag()->add('header', $strHeader);
         $this->session->getFlashBag()->add('message', $strMessage);
@@ -79,7 +79,7 @@ class FileArchive {
 
 
     //Get tags
-    private function getTags(int $id) : String {
+    private function getTags(int $id) : string {
         try {
             $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -92,7 +92,7 @@ class FileArchive {
     } //end get tags
 
     //Increase impression when file is viewed or downloaded
-    private function increaseImpression($id, $impressions) {
+    private function increaseImpression(int $id, int $impressions) {
         try
         {
             $impressions++;
@@ -116,7 +116,7 @@ class FileArchive {
     /// //////////////////////////////////////////////////////////////////////////
 
     //Get catalog path string e.g. "main / catalog1 / subcatalog"
-    public function getCatalogPath($catalogId) : String {
+    public function getCatalogPath(int $catalogId) : string {
         if ($catalogId <= 1 ) {
             return "Main";
         }
@@ -161,7 +161,7 @@ class FileArchive {
 
 
     //Can user show the catalog?
-    public function showCatalog($id) {
+    public function showCatalog($id) : bool {
         if (!$this->isCatalogAccessible($id)) {
             if (($user = $this->session->get('User')) && $this->session->get('loggedin')
             && $user->verifyUser($this->request)) {
@@ -201,7 +201,7 @@ class FileArchive {
 
 
     // Edit catalog
-    public function editCatalog($catalogId)
+    public function editCatalog(int $catalogId)
     {
         $catalogName = $this->request->request->get('catalogName');
         $access = $this->request->request->get('access');
@@ -209,7 +209,6 @@ class FileArchive {
         if ($access == null) $access = 1;
         if (!$this->canUserAddToThisCatalog($parentId)) {
             $this->notifyUser('User can\'t add to this catalog', '');
-            return false;
         }
         try {
             $sth = $this->db->prepare("update Catalogs set catalogName = :catalogName, access = :access, parentId = :parentId where catalogId = :catalogId");
@@ -230,7 +229,7 @@ class FileArchive {
 
 
     //Check if user can add to this catalog
-    private function canUserAddToThisCatalog ($catalogId) {
+    private function canUserAddToThisCatalog (int $catalogId) {
         if ($catalogId <= 1) return true;
         $user = $this->session->get('User');
         $catalog = $this->getCatalogObject($catalogId);
@@ -238,7 +237,7 @@ class FileArchive {
     }
 
     // Get catalog object
-    public function getCatalogObject ($id) : Catalog {
+    public function getCatalogObject (int $id) : Catalog {
         try
         {
             $stmt = $this->db->prepare("SELECT * FROM Catalogs WHERE catalogId = :id");
@@ -259,8 +258,7 @@ class FileArchive {
 
 
     //Delete catalog
-    public function deleteCatalog($id) : bool {
-        $result = false;
+    public function deleteCatalog(int $id) : bool {
         try
         {
             $stmt = $this->db->prepare("DELETE FROM Catalogs WHERE CatalogId = :id");
@@ -268,17 +266,18 @@ class FileArchive {
             $stmt->execute();
             if ($stmt->rowCount()==1) {
                 $this->notifyUser( "Catalog deleted", "");
-                $result = true;
+                return true;
             } else {
                 $this->notifyUser( "Failed to delete catalog", "");
-                $result = false;
+                return false;
             }
             $this->removeUnusedTags();
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete catalog", $e->getMessage() . PHP_EOL);
+            return false;
         }
-        return $result;
+        return false;
     }  //END DELETE CATALOG
 
 
@@ -361,9 +360,8 @@ class FileArchive {
 
 
     //GET OVERVIEW OF FILES AND CATALOGS
-    public function getOverview(int $catalogId, int $offset, int $nrOfElementsPerPage)
+    public function getOverview(int $catalogId, int $offset, int $nrOfElementsPerPage) : array
     {
-        $allElements = null;
         try
         {
             $stmt = $this->db->prepare("SELECT * FROM Elements where Catalog = :catalogId order by isFile, Title LIMIT :offset, :nrOfElementsPerPage;");
@@ -373,14 +371,15 @@ class FileArchive {
             $stmt->execute();
             $allElements = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", $e->getMessage()); return; }
+        catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", $e->getMessage());
+        return array(); }
         return $allElements;
     }     //END FILES AND CATALOGS OVERVIEW
 
 
 
     //Show a file from the database
-    public function showFile($id)
+    public function showFile(int $id) : bool
     {
         try
         {
@@ -428,7 +427,7 @@ class FileArchive {
 
 
     //Show thumbnail, delvis modifisert fra https://stackoverflow.com/questions/21709098/resizing-and-then-displaying-blob-element-from-database
-    public function showThumbnail($id) {
+    public function showThumbnail(int $id) : bool {
         try {
             $stmt = $this->db->prepare("SELECT type, impressions, filename, data FROM Files WHERE fileId = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -455,7 +454,7 @@ class FileArchive {
 
 
     //EDIT file
-    public function editFile($fileId)
+    public function editFile(int $fileId)
     {
         $title = $this->request->request->get('title', FILTER_SANITIZE_STRING);
         $description = $this->request->request->get('description', FILTER_SANITIZE_STRING);
@@ -464,7 +463,6 @@ class FileArchive {
         $catalogId = $this->request->request->get('catalogId');
         if (!$this->canUserAddToThisCatalog($catalogId)) {
             $this->notifyUser('User can\'t add to this catalog', '');
-            return false;
         }
         if ($access == null) $access = 1;
         try {
@@ -488,7 +486,7 @@ class FileArchive {
 
 
     // Delete file
-    public function deleteFile($id) : bool {
+    public function deleteFile(int $id) : bool {
         try
         {
             $stmt = $this->db->prepare("DELETE FROM Files WHERE fileId = :id");
@@ -496,23 +494,24 @@ class FileArchive {
             $stmt->execute();
             if ($stmt->rowCount()==1) {
                 $this->notifyUser( "File deleted", "");
-                $result = true;
+                return true;
             } else {
                 $this->notifyUser( "Failed to delete file", "");
-                $result = false;
+                return false;
             }
             $this->removeUnusedTags();
         }
         catch (Exception $e) {
             $this->notifyUser( "Failed to delete file", $e->getMessage() . PHP_EOL);
+            return false;
         }
-        return $result;
+        return false;
     }  //END DELETE FILE
 
 
 
     // Get file object
-    public function getFileObject ($id) : File {
+    public function getFileObject (int $id) : File {
         try
         {
             $stmt = $this->db->prepare("SELECT Files.*, Catalogs.catalogName FROM `Files` INNER JOIN Catalogs ON Catalogs.catalogId = Files.catalogId WHERE Files.fileId = :id;");
@@ -537,7 +536,8 @@ class FileArchive {
 
 
     // Search files
-    public function searchFiles($searchQuery) {
+    public function searchFiles(string $searchQuery) : array {
+        $filesByTags = array();
         $searchQuery = str_replace('%','\\%', $searchQuery);
         $searchQuery = "%".$searchQuery."%";
         $fromDate = $this->request->query->get('from-date');
@@ -561,14 +561,15 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong when searching", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong when searching", $e->getMessage()); return array();}
         return $allFiles;
     } //End search files
 
 
 
     // Search files bu tag
-    public function searchFilesByTag($tag) {
+    public function searchFilesByTag(string $tag) : array {
+        $allFiles = array();
         try
         {
             $stmt = $this->db->prepare("SELECT * FROM FilesWithTagsView WHERE tag = :tag;");
@@ -576,14 +577,15 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("En feil oppstod", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("En feil oppstod", $e->getMessage()); return array();}
         return $allFiles;
     } //* END SEARCH BY TAG
 
 
 
     // Search files by tags with OR condition (search files containing "tag1" or "tag2" or "tag3" or ... )
-    public function searchByTagsWithOrCondition($tagsStr) {
+    public function searchByTagsWithOrCondition(string $tagsStr) : array {
+        $filesByTags = array();
         if ($tagsStr == "") {return array();}
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
@@ -600,13 +602,14 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return array();}
         return $filesByTags;
     } //* END SEARCH BY MULTIPLE TAGS WITH OR CONDITION
 
 
     // Search files by tags with AND condition (search files containing both "tag1" and "tag2" and "tag3" and ...)
-    public function searchByTagsWithAndCondition($tagsStr) {
+    public function searchByTagsWithAndCondition(string $tagsStr) : array {
+        $filesByTags = array();
         if ($tagsStr == "") {return array();}
         $tagsStr = $this->fixTagsString($tagsStr);
         $tagsArray = explode(",", $tagsStr);
@@ -624,7 +627,7 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return array();}
         return $filesByTags;
     } //* END SEARCH BY MULTIPLE TAGS WITH AND CONDITION
 
@@ -632,7 +635,7 @@ class FileArchive {
 
 
     //Get total number of pages (used in pagination, depending on nr of elements)
-    public function totalNrOfPages($nrOfElementsPerPage, $catalogId) : int {
+    public function totalNrOfPages(int $nrOfElementsPerPage, int $catalogId) : int {
         $totalPages = 1;
         try
         {
@@ -642,7 +645,7 @@ class FileArchive {
             $totalRows = $stmt->fetch();
             $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return 0;}
         return $totalPages;
     }
 

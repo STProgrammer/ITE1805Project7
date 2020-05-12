@@ -35,11 +35,6 @@ a:hover {
     color: lightyellow;
 }
 
-/*.content {
-    margin: auto;
-    max-width: 900px;
-}*/
-
 .flash-notice {
     color: red;
 }
@@ -50,11 +45,6 @@ a:hover {
 
 button, input[type="submit"], .button-white {
 
-   /* background-color: blue;
-    border-top: solid #80c3e6;
-    border-right: solid darkblue;
-    border-bottom: solid darkblue;
-    border-left: solid #80c3e6;*/
     background-color: green;
     border-top: solid lightgreen;
     border-right: solid #004200;
@@ -136,6 +126,8 @@ input.comment {
     color: lightgrey;
 }
 
+/* TAGS */
+
 .tag {
     font-size: 0.8em;
      border-radius: 1em;
@@ -155,6 +147,8 @@ input.comment {
     position: relative;
     vertical-align: bottom;
 }
+
+/*TWO BASIC FORMS */
 
 .form {
     width: fit-content;

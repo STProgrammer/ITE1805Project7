@@ -52,7 +52,7 @@ class User {
     }
 
 
-    public static function login(PDO $db,  $request,  $session) {
+    public static function login(PDO $db,  \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session) {
         $email = $request->request->get('email');
         $stmt = $db->prepare("SELECT username, password, username, firstname, lastname, date, verified, admin FROM Users WHERE email=:email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);

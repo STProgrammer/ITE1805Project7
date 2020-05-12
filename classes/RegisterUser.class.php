@@ -41,7 +41,7 @@ class RegisterUser
             $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
             $sth->bindParam(':lastname',  $lastname, PDO::PARAM_STR);
             $sth->execute();
-            if ($this->sendEmail($email)) { $this->notifyUser("User registered, check your email for verification", "");}
+            if ($this->sendEmail($email)) { $this->notifyUser("User registered", "");}
             else {$this->notifyUser("Failed to send email to verify!", ""); }
         } catch (Exception $e) {
             $this->notifyUser("Failed to register user!",$e->getMessage() . PHP_EOL);
@@ -50,7 +50,7 @@ class RegisterUser
 
 
 
-    public function sendEmail($email) : bool {
+    public function sendEmail(string $email) : bool {
         $ch = curl_init();
         //Koden for å hente URL adresse er tatt og modifisert fra https://www.javatpoint.com/how-to-get-current-page-url-in-php
         if($this->request->server->get('HTTPS') === 'on')
@@ -89,6 +89,8 @@ class RegisterUser
         return true;
     } //END send Email
 
+
+
     public function verifyUser() : bool {
         $timeLimit = 86400;  //86,400 seconds is one day
 
@@ -124,7 +126,7 @@ class RegisterUser
     }
 
 
-    public function getUserData($username){
+    public function getUserData(string $username) {
         try {
             $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -168,7 +170,7 @@ class RegisterUser
         return $allUsers;
     }*/
 
-    public function editUser($username) : bool {
+    public function editUser(string $username) : bool {
         $newUsername = $this->request->request->get('username');
         $firstname = $this->request->request->get('firstname');
         $lastname = $this->request->request->get('lastname');
@@ -204,7 +206,7 @@ class RegisterUser
         }
     }
 
-    private function isUsernameAvailable($username, $newUsername) : bool {
+    private function isUsernameAvailable(string $username, string $newUsername) : bool {
         if ($username == $newUsername) {
             return true;
         }
@@ -227,7 +229,7 @@ class RegisterUser
     }
 
 
-    public function changePassword($password, $username) : bool {
+    public function changePassword(string $password, string $username) : bool {
         if ($password == "") {return false;}
         $hash = password_hash($password, PASSWORD_DEFAULT);
         try {
@@ -249,7 +251,7 @@ class RegisterUser
     }
 
 
-    public function changeEmail($email, $username) : bool {
+    public function changeEmail(string $email, string $username) : bool {
         if (!$this->isEmailAvailable($email)) {
             $this->notifyUser("Failed to change because email was already taken", '');
             return false;
@@ -275,7 +277,7 @@ class RegisterUser
 
 
 
-    private function isEmailAvailable($newEmail) : bool {
+    private function isEmailAvailable(string $newEmail) : bool {
         $email = $this->session->get('User')->getEmail();
         if ($email == $newEmail) {
             return true;
@@ -298,7 +300,7 @@ class RegisterUser
     }
 
 
-    public function deleteUser($username) {
+    public function deleteUser(string $username) {
         try
         {
             $stmt = $this->dbase->prepare("DELETE FROM Users WHERE username = :username");
