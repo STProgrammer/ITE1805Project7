@@ -19,10 +19,21 @@ elseif ($request->request->has('logout') && XsrfProtection::verifyMac("Logout"))
     exit();
 }
 
-//Email sent for verification
-elseif ($request->request->has('verify')&& XsrfProtection::verifyMac("send-email")) {
+//Email changed for verification
+elseif ($request->request->get('change-email') == 'change-email' && XsrfProtection::verifyMac("change-email")
+&& $session->get('loggedin')) {
     $email = $request->request->get('email');
     $regUser->changeEmail($email, $session->get('User')->getUsername());
+    $session->clear();
+    header("Location: ../?emailchange=1");
+    exit();
+}
+
+//Email sent for verification
+elseif ($request->request->get('send-email') == 'send-email' && XsrfProtection::verifyMac("send-email")
+&& $session->has('User')) {
+    $email = $session->get('User')->getEmail();
+    $regUser->sendEmail($email);
     $session->clear();
     header("Location: ../?emailsent=1");
     exit();

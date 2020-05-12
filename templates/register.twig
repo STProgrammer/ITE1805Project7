@@ -9,7 +9,7 @@
 <script>
     //Delvis modifisert fra https://stackoverflow.com/questions/21727317/how-to-check-confirm-password-field-in-form-without-reloading-page
     var check = function() {
-        var pass1 = document.getElementById("password").value;
+        var pass1 = document.getElementById("password1").value;
         var pass2 = document.getElementById("password2").value;
         if (pass1 != "" && pass2 != "") {
             if (pass1 === pass2) {
@@ -50,12 +50,12 @@
     </div>
     <div>
     <br><label>Epost:</label>
-    <br><input type="email" name="email" value="" placeholder="Email" maxlength=45 required id="email" />
+    <br><input type="email" name="email" value="" placeholder="Email" maxlength=45 required id="register-email" />
         <span></span>
     </div>
     <div>
     <br><label>Password: </label>
-    <br><input type="password" name="password"  required id="password" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
+    <br><input type="password" name="password"  required id="password1" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
     <br><label>Confirm password:</label>
     <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
         <span id='message'></span>

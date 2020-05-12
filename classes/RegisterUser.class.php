@@ -62,12 +62,14 @@ class RegisterUser
         // Append the requested resource location to the URL
         $url .= dirname($this->request->server->get('PHP_SELF'));
         $url .= "/verify.php";
+        $timestamp = time();
 
         $id = md5(uniqid(rand(), 1));
         try{
-            $sth = $this->dbase->prepare("update Users set verCode = :id, verified = 0 where email = :email;");
+            $sth = $this->dbase->prepare("update Users set verCode = :id, verified = 0, timestamp = :timestamp where email = :email;");
             $sth->bindParam(':email', $email, PDO::PARAM_STR);
             $sth->bindParam(':id',  $id, PDO::PARAM_STR);
+            $sth->bindParam(':timestamp', $timestamp, PDO::PARAM_INT);
             $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->notifyUser("Email sent","");
@@ -88,21 +90,33 @@ class RegisterUser
     } //END send Email
 
     public function verifyUser() : bool {
+        $timeLimit = 86400;  //86,400 seconds is one day
 
         if($id = $this->request->query->get('id')) {
-            try{
-                $sth = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
+            try {
+                $sth = $this->dbase->prepare("select timestamp from Users where vercode = :id");
                 $sth->bindParam(':id', $id, PDO::PARAM_STR);
                 $sth->execute();
-                if($sth->rowCount() == 1) {
-                    $this->notifyUser("Email verified", "");
-                    return true;
-                }
-                else {
-                    $this->notifyUser("Failed to verify email", "");
+                $timestamp = $sth->fetchColumn();
+                if (time() - $timestamp > $timeLimit) {
+                    $this->notifyUser("Verification code has expired", "");
                     return false;
+                } else {
+                    $sth = $this->dbase->prepare("update Users set verified = 1 where verCode = :id");
+                    $sth->bindParam(':id', $id, PDO::PARAM_STR);
+                    $sth->execute();
+                    if($sth->rowCount() == 1) {
+                        $this->notifyUser("Email verified", "");
+                        return true;
+                    }
+                    else {
+                        $this->notifyUser("Failed to verify email", "");
+                        return false;
+                    }
                 }
-            } catch (Exception $e){
+
+
+            } catch (Exception $e) {
                 $this->notifyUser("Failed to verify email", "");
                 return false;
             }
@@ -113,13 +127,13 @@ class RegisterUser
     public function getUserData($username){
         try {
             $stmt = $this->dbase->prepare("SELECT email, username, firstname, lastname, date, verified, admin FROM Users WHERE username=:username");
-            $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 return $row;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to get user data", $e->getMessage() . PHP_EOL);
         }
     }
 

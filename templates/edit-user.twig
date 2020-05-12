@@ -73,8 +73,8 @@
     <form method="post" id="change-email" action="../../register/verify.php">
     <label>Change email: </label>
     <br><input type="email" name="email" required maxlength=45 value="{{ user.getEmail() }}" id="email">
-    <input type="hidden" value="{{ getMac("send-email") }}" name="XSRFPreventionToken">
-    <br><button type="submit" name="verify" value="verify">Change</button>
+    <input type="hidden" value="{{ getMac("change-email") }}" name="XSRFPreventionToken">
+    <br><button type="submit" name="change-email" value="change-email">Change</button>
         <br>PS! When you submit you need to verify your email again (even if your email not changed)
 </form>
 </div>

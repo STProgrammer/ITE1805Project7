@@ -32,8 +32,8 @@ $('document').ready(function(){
 			}
 		});
 	});
-	$('#email').on('blur', function(){
-		var email = $('#email').val();
+	$('#register-email').on('blur', function(){
+		var email = $('#register-email').val();
 		if (email == '') {
 			email_state = false;
 			return;
@@ -48,20 +48,21 @@ $('document').ready(function(){
 			success: function(response){
 				if (response == 'taken' ) {
 					email_state = false;
-					$('#email').parent().removeClass();
-					$('#email').parent().addClass("form_error");
-					$('#email').siblings("span").text('Sorry... Email already taken');
+					$('#register-email').parent().removeClass();
+					$('#register-email').parent().addClass("form_error");
+					$('#register-email').siblings("span").text('Sorry... Email already taken');
 				}else if (response == 'not_taken') {
 					email_state = true;
-					$('#email').parent().removeClass();
-					$('#email').parent().addClass("form_success");
-					$('#email').siblings("span").text('Email available');
+					$('#register-email').parent().removeClass();
+					$('#register-email').parent().addClass("form_success");
+					$('#register-email').siblings("span").text('Email available');
 				}
 			}
 		});
 	});
 	$("#register-form").submit(function(e){
 		if (!email_state || !username_state){
+			alert("Please correct the information!")
 			e.preventDefault();
 		}
 	});

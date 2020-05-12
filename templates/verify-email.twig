@@ -24,15 +24,27 @@
 {% endif %} -->
 
 {% if user %}
-<div class = "form">
 <h2>Your email adress is not verified. </h2>
+    <br>Check your inbox or send verification email again.
+<div class = "form">
+    <form method="post">
+        <table>
+            <tr>
+                <td>
+                    Send verification email again:
+                    <br><input type="hidden" value="{{ getMac("send-email") }}" name="XSRFPreventionToken">
+                    <button type="submit" name="send-email" value="send-email">Send email</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
 <form method="post">
     <table>
         <tr>
             <td>
-                <br>Check your inbox or send verification email again.
                 <br>You can change your email adress
-                <br>below too if you had typed your email wrong.
+                <br>You have to verify your email again, email will be sent
             </td>
         </tr>
         <tr>
@@ -47,8 +59,8 @@
         </tr>
         <tr>
             <td>
-                <input type="hidden" value="{{ getMac("send-email") }}" name="XSRFPreventionToken">
-                <button type="submit" name="verify" value="verify">Send email</button>
+                <input type="hidden" value="{{ getMac("change-email") }}" name="XSRFPreventionToken">
+                <button type="submit" name="change-email" value="change-email">Change email</button>
             </td>
         </tr>
     </table>
