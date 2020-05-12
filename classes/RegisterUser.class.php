@@ -72,7 +72,7 @@ class RegisterUser
             $sth->bindParam(':timestamp', $timestamp, PDO::PARAM_INT);
             $sth->execute();
             if ($sth->rowCount() == 1) {
-                $this->notifyUser("Email sent","");
+                $this->notifyUser("Email sent, check your inbox for verification","");
             } else {
                 $this->notifyUser("Failed to send verification email, email not found","");
                 return false;
@@ -168,7 +168,7 @@ class RegisterUser
         return $allUsers;
     }*/
 
-    public function editUser($username) {
+    public function editUser($username) : bool {
         $newUsername = $this->request->request->get('username');
         $firstname = $this->request->request->get('firstname');
         $lastname = $this->request->request->get('lastname');
@@ -176,7 +176,7 @@ class RegisterUser
 
         if (!$this->isUsernameAvailable($username, $newUsername)) {
             $this->notifyUser("Failed to edit, username was already taken", "");
-            return;
+            return false;
         }
 
         if ($verified == null) $verified = 1;
@@ -193,15 +193,18 @@ class RegisterUser
                 $this->session->get('User')->setLastName($lastname);
                 $this->session->get('User')->setUsername($newUsername);
                 $this->notifyUser('User details changed', '');
+                return true;
             } else {
                 $this->notifyUser('Failed to change user details', "");
+                return false;
             }
         } catch (Exception $e) {
             $this->notifyUser("Failed to change user details", $e->getMessage() . PHP_EOL);
+            return false;
         }
     }
 
-    private function isUsernameAvailable($username, $newUsername) {
+    private function isUsernameAvailable($username, $newUsername) : bool {
         if ($username == $newUsername) {
             return true;
         }
@@ -218,6 +221,7 @@ class RegisterUser
                 }
             } catch (Exception $e) {
                 $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+                return false;
             }
         }
     }
@@ -245,7 +249,7 @@ class RegisterUser
     }
 
 
-    public function changeEmail($email, $username) {
+    public function changeEmail($email, $username) : bool {
         if (!$this->isEmailAvailable($email)) {
             $this->notifyUser("Failed to change because email was already taken", '');
             return false;
@@ -271,7 +275,7 @@ class RegisterUser
 
 
 
-    private function isEmailAvailable($newEmail) {
+    private function isEmailAvailable($newEmail) : bool {
         $email = $this->session->get('User')->getEmail();
         if ($email == $newEmail) {
             return true;

@@ -253,11 +253,10 @@ input.comment {
 }
 
 .edit-user-form {
-    float: left;
+    display: block;
     border-radius: 0.2em;
     padding: 0.5em;
     margin: 1em;
-    display: inline-block;
 }
 
 

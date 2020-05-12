@@ -23,8 +23,9 @@ elseif ($request->request->has('logout') && XsrfProtection::verifyMac("Logout"))
 elseif ($request->request->get('change-email') == 'change-email' && XsrfProtection::verifyMac("change-email")
 && $session->get('loggedin')) {
     $email = $request->request->get('email');
-    $regUser->changeEmail($email, $session->get('User')->getUsername());
-    $session->clear();
+    if ($regUser->changeEmail($email, $session->get('User')->getUsername())) {
+        $session->clear();
+    }
     header("Location: ../?emailchange=1");
     exit();
 }

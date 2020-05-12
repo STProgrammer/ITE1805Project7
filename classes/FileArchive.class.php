@@ -134,7 +134,7 @@ class FileArchive {
 
 
     //Check if catalog is public or not, if a catalog is not public, all it's son are not public
-    private function isCatalogAccessible($id) : bool {
+    private function isCatalogAccessible(int $id) : bool {
         if ($id <= 1) {
             return true;
         }

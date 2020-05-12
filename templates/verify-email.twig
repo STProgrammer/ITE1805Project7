@@ -54,13 +54,13 @@
         </tr>
         <tr>
             <td>
-                <input type="email" name="email" placeholder="email" value="{{ user.getEmail() }}" required id="email">
+                <input type="email" name="email" placeholder="email" value="{{ user.getEmail() }}" required id="change-email-input">
             </td>
         </tr>
         <tr>
             <td>
                 <input type="hidden" value="{{ getMac("change-email") }}" name="XSRFPreventionToken">
-                <button type="submit" name="change-email" value="change-email">Change email</button>
+                <button type="submit" name="change-email" value="change-email" id="change-email">Change email</button>
             </td>
         </tr>
     </table>
