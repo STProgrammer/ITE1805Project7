@@ -67,7 +67,7 @@ class RegisterUser
             if ($sth->rowCount() == 1) {
                 $this->notifyUser("Email sent","");
             } else {
-                $this->notifyUser("Failed to send verification email, email wrong","");
+                $this->notifyUser("Failed to send verification email, email not found","");
                 return false;
             }
         } catch (Exception $e) {
@@ -241,7 +241,7 @@ class RegisterUser
                 $this->notifyUser("Email changed", '');
                 return true;
             } else {
-                $this->notifyUser("Failed to change email!", "");
+                $this->notifyUser("Email not changed!", "");
                 return false;
             }
         } catch (Exception $e) {

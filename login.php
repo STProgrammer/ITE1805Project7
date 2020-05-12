@@ -10,7 +10,10 @@ if ($request->request->has('logout') && XsrfProtection::verifyMac("Logout")) {
 // if logged in
 if ($session->has('loggedin')) {
     $user = $session->get('User'); // get the user data
-    
+    if ($user->isVerified() == 0) {
+        header("location: ".$rel."register/verify.php?do=verification");
+        exit();
+    }
 }
 // if login submitted
 elseif ($request->request->has('login')) {

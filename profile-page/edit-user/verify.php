@@ -6,6 +6,6 @@ $regUser = new RegisterUser($db, $request, $session);
 
 $verified = $regUser->verifyUser();
 
-echo $twig->render('verifyEmail.twig', array('verified'=>$verified, 'rel' => $rel));
+echo $twig->render('verify-email.twig', array('verified'=>$verified, 'rel' => $rel));
 
 ?>
