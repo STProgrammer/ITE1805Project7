@@ -1,5 +1,5 @@
 <?php
-
+/*Koden er tatt fra forelesningsnotater i ite1805 */
 class XsrfProtection
 {
     public function __construct()

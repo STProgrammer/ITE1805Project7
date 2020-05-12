@@ -63,7 +63,7 @@ class FileArchive {
                 }
                 $this->removeUnusedTags();
             }
-        } catch (Exception $e) { $this->notifyUser("Failed to add tags", $e->getMessage()); return false;}
+        } catch (Exception $e) { $this->notifyUser("Failed to add tags", ""); return false;}
         return true;
     } //* END ADD TAGS
 
@@ -73,7 +73,7 @@ class FileArchive {
             $stmt = $this->db->query("delete Tags from Tags left join FilesAndTags on Tags.tag = FilesAndTags.tag where FilesAndTags.tag IS NULL;");
             $stmt->execute();
         } catch (Exception $e) {
-            $this->notifyUser("Something went wrong", $e->getMessage());
+            $this->notifyUser("Something went wrong", "");
         }
     }
 
@@ -105,7 +105,7 @@ class FileArchive {
             }
         }
         catch(Exception $e) {
-            $this->notifyUser("Something went wrong", $e->getMessage());
+            $this->notifyUser("Something went wrong", "");
         }
     }
 
@@ -129,7 +129,7 @@ class FileArchive {
             $catalogPath = $this->getCatalogPath($parentId) . " / " . $row['catalogName'];
             return $catalogPath;
         }
-        catch (Exception $e) { return "Failed to show catalog path" . $e->getMessage(); }
+        catch (Exception $e) { return "Failed to show catalog path" . ""; }
     }
 
 
@@ -156,7 +156,7 @@ class FileArchive {
                 return false;
             }
         }
-        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Something went wrong", ""); }
     } //* END IsCatalogAccessible
 
 
@@ -164,7 +164,7 @@ class FileArchive {
     public function showCatalog($id) : bool {
         if (!$this->isCatalogAccessible($id)) {
             if (($user = $this->session->get('User')) && $this->session->get('loggedin')
-            && $user->verifyUser($this->request)) {
+                && $user->verifyUser($this->request)) {
                 return true;
             } else {$this->notifyUser("Access denied, login to view catalog", ""); return false;}
         } else {
@@ -196,7 +196,7 @@ class FileArchive {
             $this->notifyUser("New catalog added !", "");
             return $id;
         }
-        catch(Exception $e) { $this->notifyUser("Failed to add catalog", $e->getMessage()); return 0; }
+        catch(Exception $e) { $this->notifyUser("Failed to add catalog", ""); return 0; }
     }  //* END Add catalog
 
 
@@ -223,7 +223,7 @@ class FileArchive {
                 $this->notifyUser('Failed to change catalog details', "");
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to change catalog details", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change catalog details", "" . PHP_EOL);
         }
     }  //END EDIT CATALOG
 
@@ -251,7 +251,7 @@ class FileArchive {
                 return new Catalog();
             }
         }
-        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage());
+        catch(Exception $e) { $this->notifyUser("Something went wrong", "");
             return new Catalog();}
 
     }
@@ -274,7 +274,7 @@ class FileArchive {
             $this->removeUnusedTags();
         }
         catch (Exception $e) {
-            $this->notifyUser( "Failed to delete catalog", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete catalog", "" . PHP_EOL);
             return false;
         }
         return false;
@@ -295,7 +295,7 @@ class FileArchive {
             $stmt->execute();
             $allCatalogs = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
+        catch (Exception $e) { $this->notifyUser("Something went wrong", ""); }
         return $allCatalogs;
     }
 
@@ -339,12 +339,12 @@ class FileArchive {
                 $stmt->bindParam(':owner', $owner, PDO::PARAM_STR);
                 $stmt->execute();
                 $id = intval($this->db->lastInsertId());
-    //            if (exif_imagetype($file)) {$this->saveThumbnail($data, $id);}
+                //            if (exif_imagetype($file)) {$this->saveThumbnail($data, $id);}
                 $this->addTags($tagsStr, $id);
                 $this->notifyUser("File uploaded", "");
                 return $id;
             }
-            catch(Exception $e) { $this->notifyUser("Failed to upload file", $e->getMessage()); return 0; }
+            catch(Exception $e) { $this->notifyUser("Failed to upload file", ""); return 0; }
         }
         else {
             //require_once ("hode.php");
@@ -371,8 +371,8 @@ class FileArchive {
             $stmt->execute();
             $allElements = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", $e->getMessage());
-        return array(); }
+        catch (Exception $e) { $this->notifyUser("Failed to load files and catalogs", "");
+            return array(); }
         return $allElements;
     }     //END FILES AND CATALOGS OVERVIEW
 
@@ -420,7 +420,7 @@ class FileArchive {
             }
         }
         catch(Exception $e) {
-            $this->notifyUser("Something went wrong", $e->getMessage());
+            $this->notifyUser("Something went wrong", "");
             return false;
         }
     }  //END SHOW FILE
@@ -447,7 +447,7 @@ class FileArchive {
             }
         }
         catch(Exception $e) {
-            $this->notifyUser("Failed to show thumbnail", $e->getMessage());
+            $this->notifyUser("Failed to show thumbnail", "");
             return false;
         }
     }
@@ -480,7 +480,7 @@ class FileArchive {
             }
             $this->removeUnusedTags();
         } catch (Exception $e) {
-            $this->notifyUser('Failed to change file details', $e->getMessage() . PHP_EOL);
+            $this->notifyUser('Failed to change file details', "");
         }
     }  // END EDIT FILE
 
@@ -502,7 +502,7 @@ class FileArchive {
             $this->removeUnusedTags();
         }
         catch (Exception $e) {
-            $this->notifyUser( "Failed to delete file", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete file", "" . PHP_EOL);
             return false;
         }
         return false;
@@ -529,7 +529,7 @@ class FileArchive {
                 return new File();
             }
         }
-        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage());
+        catch(Exception $e) { $this->notifyUser("Something went wrong", "");
             return new File(); }
     } //END GET FILE OBJECT
 
@@ -561,7 +561,7 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong when searching", $e->getMessage()); return array();}
+        catch (Exception $e) { $this->notifyUser("Something went wrong when searching", ""); return array();}
         return $allFiles;
     } //End search files
 
@@ -577,7 +577,7 @@ class FileArchive {
             $stmt->execute();
             $allFiles = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("En feil oppstod", $e->getMessage()); return array();}
+        catch (Exception $e) { $this->notifyUser("En feil oppstod", ""); return array();}
         return $allFiles;
     } //* END SEARCH BY TAG
 
@@ -602,7 +602,7 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return array();}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", ""); return array();}
         return $filesByTags;
     } //* END SEARCH BY MULTIPLE TAGS WITH OR CONDITION
 
@@ -627,7 +627,7 @@ class FileArchive {
             $stmt->execute();
             $filesByTags = $stmt->fetchAll();
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return array();}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", ""); return array();}
         return $filesByTags;
     } //* END SEARCH BY MULTIPLE TAGS WITH AND CONDITION
 
@@ -645,7 +645,7 @@ class FileArchive {
             $totalRows = $stmt->fetch();
             $totalPages = ($totalRows['0'] == 0) ? 1 : ceil($totalRows['0'] / $nrOfElementsPerPage);
         }
-        catch (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); return 0;}
+        catch (Exception $e) { $this->notifyUser("Something went wrong", ""); return 0;}
         return $totalPages;
     }
 

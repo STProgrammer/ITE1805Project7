@@ -1,4 +1,5 @@
 <?php
+/*Koden er tatt fra Knut Collin*/
 class Db {
     private static $db = null;
     private $host = "kark.uit.no";

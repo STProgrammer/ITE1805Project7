@@ -54,24 +54,28 @@ class User {
 
     public static function login(PDO $db,  \Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Session\Session $session) {
         $email = $request->request->get('email');
-        $stmt = $db->prepare("SELECT username, password, username, firstname, lastname, date, verified, admin FROM Users WHERE email=:email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-        {
-            if (password_verify($request->request->get('password'), $row['password'])) {
-                $session->set('loggedin', true);
-                $ip = $request->server->get('REMOTE_ADDR');
-                $browser = $request->server->get('HTTP_USER_AGENT');
-                $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
-                return true;
-            } else {
+        try {
+            $stmt = $db->prepare("SELECT username, password, username, firstname, lastname, date, verified, admin FROM Users WHERE email=:email");
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+            {
+                if (password_verify($request->request->get('password'), $row['password'])) {
+                    $session->set('loggedin', true);
+                    $ip = $request->server->get('REMOTE_ADDR');
+                    $browser = $request->server->get('HTTP_USER_AGENT');
+                    $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
+                    return true;
+                } else {
+                    $session->getFlashBag()->add('header', "Wrong username or password");
+                    return false;
+                }
+            }  else {
                 $session->getFlashBag()->add('header', "Wrong username or password");
                 return false;
             }
-        }  else {
-            $session->getFlashBag()->add('header', "Wrong username or password");
-            return false;
+        } catch (Exception $e) {
+            $session->getFlashBag()->add('header', "Failed to login because of MySQL error");
         }
     }
 }

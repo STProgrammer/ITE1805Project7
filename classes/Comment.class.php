@@ -41,7 +41,7 @@ class Comment
             $stmt->execute();
             $this->notifyUser("Comment added", "");
         }
-        catch(Exception $e) { $this->notifyUser("Failed to add comment", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Failed to add comment", ""); }
     }
 
 
@@ -55,7 +55,7 @@ class Comment
                 return $comments;
             }
         }
-        catch(Exception $e) { $this->NotifyUser("Failed to load comments", $e->getMessage()); }
+        catch(Exception $e) { $this->NotifyUser("Failed to load comments",""); }
     }
 
 
@@ -69,7 +69,7 @@ class Comment
                 return $comment;
             } else { $this->notifyUser("Something went wrong", ""); }
         }
-        catch(Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Something went wrong", ""); }
     }
 
 
@@ -86,8 +86,8 @@ class Comment
                 return false;
             }
         } catch
-            (Exception $e) { $this->notifyUser("Something went wrong", $e->getMessage()); }
-            return false;
+        (Exception $e) { $this->notifyUser("Something went wrong", ""); }
+        return false;
     }
 
 
@@ -105,7 +105,7 @@ class Comment
                 return false;
             }
         }
-        catch(Exception $e) { $this->notifyUser("Failed to delete comment", $e->getMessage()); }
+        catch(Exception $e) { $this->notifyUser("Failed to delete comment", ""); }
 
     }
 

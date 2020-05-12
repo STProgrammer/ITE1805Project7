@@ -44,7 +44,7 @@ class RegisterUser
             if ($this->sendEmail($email)) { $this->notifyUser("User registered", "");}
             else {$this->notifyUser("Failed to send email to verify!", ""); }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to register user!",$e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to register user!","");
         }
     }
 
@@ -78,7 +78,7 @@ class RegisterUser
                 return false;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to send verification email",$e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to send verification email","");
             return false;
         }
         curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
@@ -135,7 +135,7 @@ class RegisterUser
                 return $row;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to get user data", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to get user data", "");
         }
     }
 
@@ -154,7 +154,7 @@ class RegisterUser
                 return new User();
             }
         }
-        catch(Exception $e) { $this->notifyUser("Something went wrong!", $e->getMessage());
+        catch(Exception $e) { $this->notifyUser("Something went wrong!", "");
             return new User();}
     }
 
@@ -165,7 +165,7 @@ class RegisterUser
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             $allUsers = $stmt->fetchAll();
-        }  catch (Exception $e) { $this->notifyUser("Something went wrong!", $e->getMessage()); return; }
+        }  catch (Exception $e) { $this->notifyUser("Something went wrong!", ""); return; }
 
         return $allUsers;
     }*/
@@ -201,7 +201,7 @@ class RegisterUser
                 return false;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to change user details", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change user details", "");
             return false;
         }
     }
@@ -222,7 +222,7 @@ class RegisterUser
                     return true;
                 }
             } catch (Exception $e) {
-                $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+                $this->notifyUser("Something went wrong", "");
                 return false;
             }
         }
@@ -245,7 +245,7 @@ class RegisterUser
                 return false;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to change password", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change password", "");
             return false;
         }
     }
@@ -270,7 +270,7 @@ class RegisterUser
                 return false;
             }
         } catch (Exception $e) {
-            $this->notifyUser("Failed to change email!", $e->getMessage() . PHP_EOL);
+            $this->notifyUser("Failed to change email!", "");
             return false;
         }
     }
@@ -294,7 +294,7 @@ class RegisterUser
                     return true;
                 }
             } catch (Exception $e) {
-                $this->notifyUser("Something went wrong", $e->getMessage() . PHP_EOL);
+                $this->notifyUser("Something went wrong", "");
             }
         }
     }
@@ -313,7 +313,7 @@ class RegisterUser
             }
         }
         catch (Exception $e) {
-            $this->notifyUser( "Failed to delete user!", $e->getMessage() . PHP_EOL);
+            $this->notifyUser( "Failed to delete user!", "");
         }
     }
 }
