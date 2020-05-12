@@ -60,16 +60,11 @@ class User {
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
             if (password_verify($request->request->get('password'), $row['password'])) {
-                if ($row['verified'] == 1) {
-                    $session->set('loggedin', true);
-                    $ip = $request->server->get('REMOTE_ADDR');
-                    $browser = $request->server->get('HTTP_USER_AGENT');
-                    $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
-                    return true;
-                } else {
-                    $session->getFlashBag()->add('header', "User not verified, please check your email");
-                    return false;
-                }
+                $session->set('loggedin', true);
+                $ip = $request->server->get('REMOTE_ADDR');
+                $browser = $request->server->get('HTTP_USER_AGENT');
+                $session->set('User', new User($request->request->get('email'), $ip, $browser, $row));
+                return true;
             } else {
                 $session->getFlashBag()->add('header', "Wrong username or password");
                 return false;
