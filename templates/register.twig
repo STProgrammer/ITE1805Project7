@@ -55,9 +55,9 @@
     </div>
     <div>
     <br><label>Password: </label>
-    <br><input type="password" name="password"  required id="password1" placeholder="Password" maxlength=60 value="" onkeyup='check();'>
+    <br><input type="password" name="password"  required id="password1" placeholder="Password" minlength=8 maxlength=60 value="" onkeyup='check();'>
     <br><label>Confirm password:</label>
-    <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" maxlength=60 value="" onkeyup='check();'/>
+    <br><input type="password" name="password2" required id="password2" placeholder="Confirm Password" minlength=8 maxlength=60 value="" onkeyup='check();'/>
         <span id='message'></span>
     <input type="hidden" value="{{ getMac("Register") }}" name="XSRFPreventionToken">
     <br><input type="submit" name="register" id="reg_btn" value="Register">
