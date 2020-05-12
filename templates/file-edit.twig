@@ -12,7 +12,7 @@
 {% include 'login2.twig' %}
 <h1>Change file details</h1>
 <div class = "form">
-<form method="post">
+<form method="post" id ="edit-file">
     <table>
         <tr>
             <td>
@@ -77,6 +77,10 @@
                             valueKey: 'name',
                             source: tags.ttAdapter()
                         }
+                    });
+                    //Kode tatt fra https://stackoverflow.com/questions/11235622/jquery-disable-form-submit-on-enter
+                    $('#edit-file').on('keypress', function(e) {
+                        return e.which !== 13;
                     });
                 </script>
             </td>

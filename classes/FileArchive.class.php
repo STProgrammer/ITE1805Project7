@@ -16,7 +16,7 @@ class FileArchive {
 
     //* NOTIFY USER
 
-    private function notifyUser($strHeader, $strMessage)
+    private function notifyUser(String $strHeader, String $strMessage)
     {
         $this->session->getFlashBag()->add('header', $strHeader);
         $this->session->getFlashBag()->add('message', $strMessage);
@@ -67,6 +67,7 @@ class FileArchive {
         return true;
     } //* END ADD TAGS
 
+
     private function removeUnusedTags() {
         try {
             $stmt = $this->db->query("delete Tags from Tags left join FilesAndTags on Tags.tag = FilesAndTags.tag where FilesAndTags.tag IS NULL;");
@@ -78,7 +79,7 @@ class FileArchive {
 
 
     //Get tags
-    private function getTags($id) {
+    private function getTags(int $id) : String {
         try {
             $stmt = $this->db->prepare("SELECT tag FROM FilesAndTags WHERE fileId = :id;");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);

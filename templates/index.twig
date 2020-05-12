@@ -9,7 +9,6 @@
           File archive - showing files from the database
       </title>
   </head>
-  <!-- Denne Javascript koden er modifisert fra https://stackoverflow.com/questions/5413899/search-and-replace-specific-query-string-parameter-value-in-javascript-->
   <body>
       {% include 'login2.twig' %}
       <div class = "content">
@@ -53,7 +52,7 @@
                           </form>
                       </td>
                       <td>
-                          <form method = "get">
+                          <form method = "get" id="tagssearch">
                               <table class="search-form">
                                   <tr>
                                       <th colspan="2">
@@ -91,6 +90,10 @@
                                                       valueKey: 'name',
                                                       source: tags.ttAdapter()
                                                   }
+                                              });
+                                              //Kode tatt fra https://stackoverflow.com/questions/11235622/jquery-disable-form-submit-on-enter
+                                              $('#tagssearch').on('keypress', function(e) {
+                                                  return e.which !== 13;
                                               });
                                           </script>
                                           <br><button type="submit" name="search" value="tagssearch">Search</button>

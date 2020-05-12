@@ -14,7 +14,7 @@
     <h1>Upload new file: </h1>
     {% if user %}
         <div class="form">
-        <form enctype="multipart/form-data" method="post">
+        <form enctype="multipart/form-data" method="post" id="file-upload">
             <input type="hidden" name="MAX_FILE_SIZE" value="5365536" />
             <table>
                 <tr>
@@ -86,6 +86,10 @@
                                         valueKey: 'name',
                                         source: tags.ttAdapter()
                                     }
+                                });
+                                //Kode tatt fra https://stackoverflow.com/questions/11235622/jquery-disable-form-submit-on-enter
+                                $('#file-upload').on('keypress', function(e) {
+                                    return e.which !== 13;
                                 });
                         </script>
 

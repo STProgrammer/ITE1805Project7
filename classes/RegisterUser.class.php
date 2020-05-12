@@ -14,11 +14,14 @@ class RegisterUser
         $this->session = $session;
     }
 
+
+
     private function notifyUser($strHeader, $strMessage)
     {
         $this->session->getFlashBag()->add('header', $strHeader);
         $this->session->getFlashBag()->add('message', $strMessage);
     }
+
 
     //Register user
     public function registerUser ()
@@ -37,13 +40,15 @@ class RegisterUser
             $sth->bindParam(':username', $username, PDO::PARAM_STR);
             $sth->bindParam(':firstname', $firstname, PDO::PARAM_STR);
             $sth->bindParam(':lastname',  $lastname, PDO::PARAM_STR);
-            $sth->execute() or exit();
+            $sth->execute();
             if ($this->sendEmail($email)) { $this->notifyUser("User registered, check your email for verification", "");}
             else {$this->notifyUser("Failed to send email to verify!", ""); }
         } catch (Exception $e) {
             $this->notifyUser("Failed to register user!",$e->getMessage() . PHP_EOL);
         }
     }
+
+
 
     public function sendEmail($email) : bool {
         $ch = curl_init();
@@ -63,7 +68,7 @@ class RegisterUser
             $sth = $this->dbase->prepare("update Users set verCode = :id, verified = 0 where email = :email;");
             $sth->bindParam(':email', $email, PDO::PARAM_STR);
             $sth->bindParam(':id',  $id, PDO::PARAM_STR);
-            $sth->execute() or exit();
+            $sth->execute();
             if ($sth->rowCount() == 1) {
                 $this->notifyUser("Email sent","");
             } else {
@@ -80,7 +85,7 @@ class RegisterUser
         $output = curl_exec($ch);
         curl_close($ch);
         return true;
-    }
+    } //END send Email
 
     public function verifyUser() : bool {
 
