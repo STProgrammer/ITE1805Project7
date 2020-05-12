@@ -25,8 +25,8 @@
 
 {% if user %}
 <h2>Your email adress is not verified. </h2>
-    <br>Check your inbox or send verification email again.
 <div class = "form">
+    <br>Check your inbox or send verification email again.
     <form method="post">
         <table>
             <tr>
@@ -65,8 +65,7 @@
         </tr>
     </table>
 </form>
-    <label>Log out:</label>
-    <br><form action="index.php" method="post">
+    <form action="index.php" method="post">
         <input type="hidden" value="{{ getMac("Logout") }}" name="XSRFPreventionToken">
         <input type="submit" name="logout" value="Logout">
     </form>
