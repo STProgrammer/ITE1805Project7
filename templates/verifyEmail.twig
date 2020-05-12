@@ -2,19 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="{{rel}}../stylesheet.css" />
+    <link type="text/css" rel="stylesheet" href="{{rel}}stylesheet.css" />
     <title>Email verification</title>
 </head>
 <body>
-<a href="{{ rel }}../"><img src="{{rel}}../Images/SiteTitle.svg" alt="Project7Drive" height="80"></a>
-{% if verified %}
+<a href="{{ rel }}"><img src="{{rel}}Images/SiteTitle.svg" alt="Project7Drive" height="80"></a>
+<div class="flash-notice">
+    {% if session.getFlashBag.has('header') %}
+        {% for header in session.getFlashBag.get('header', []) %}
+            <h3>{{ header }}</h3>
+        {% endfor %}
+    {% endif %}
+</div>
+<!--{% if verified %}
     <h1>Congratulations!</h1>
     <p>Your account has been activated successfully</p>
     <p><a href="{{rel}}../login/">click here and login</a></p>
 {% else %}
     <h1>oops...</h1>
     <p>Account activation failed, please try again.</p>
-{% endif %}
-<p id="back"><a href = "{{rel}}"><img src="{{rel}}../Images/BackBtn.svg" alt="Back" width="100"></a></p>
+{% endif %} -->
+<div class = "form">
+<h2>Send verification email again</h2>
+<form method="post">
+    <table>
+        <tr><td><label>Email: </label> </td>
+            <td><input type="email" name="email" placeholder="email" required id="email"></td>
+            <td>
+                <input type="hidden" value="{{ getMac("Send-email") }}" name="XSRFPreventionToken">
+                <button type="submit" name="verify"  value="verify">Send email</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</div>
+<p id="back"><a href = "{{rel}}"><img src="{{rel}}Images/BackBtn.svg" alt="Back" width="100"></a></p>
 </body>
 </html>

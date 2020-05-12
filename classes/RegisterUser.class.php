@@ -45,7 +45,7 @@ class RegisterUser
         }
     }
 
-    private function sendEmail($email) : bool {
+    public function sendEmail($email) : bool {
         $ch = curl_init();
         //Koden for å hente URL adresse er tatt og modifisert fra https://www.javatpoint.com/how-to-get-current-page-url-in-php
         if($this->request->server->get('HTTPS') === 'on')
@@ -56,19 +56,24 @@ class RegisterUser
         $url .= $this->request->server->get('HTTP_HOST');
         // Append the requested resource location to the URL
         $url .= dirname($this->request->server->get('PHP_SELF'));
-        $url .= "/verify.php/";
+        $url .= "/verify.php";
 
         $id = md5(uniqid(rand(), 1));
         try{
-            $sth = $this->dbase->prepare("update Users set verCode = :id where email = :email;");
+            $sth = $this->dbase->prepare("update Users set verCode = :id, verified = 0 where email = :email;");
             $sth->bindParam(':email', $email, PDO::PARAM_STR);
             $sth->bindParam(':id',  $id, PDO::PARAM_STR);
             $sth->execute() or exit();
+            if ($sth->rowCount() == 1) {
+                $this->notifyUser("Email sent","");
+            } else {
+                $this->notifyUser("Failed to send verification email, email wrong","");
+                return false;
+            }
         } catch (Exception $e) {
             $this->notifyUser("Failed to send verification email",$e->getMessage() . PHP_EOL);
             return false;
         }
-
         curl_setopt($ch, CURLOPT_URL, "https://kark.uit.no/internett/php/mailer/mailer.php?address=".$email."&url=".$url ."?id=". $id);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -85,13 +90,18 @@ class RegisterUser
                 $sth->bindParam(':id', $id, PDO::PARAM_STR);
                 $sth->execute();
                 if($sth->rowCount() == 1) {
+                    $this->notifyUser("Email verified", "");
                     return true;
                 }
-                else {return false; }
+                else {
+                    $this->notifyUser("Failed to verify email", "");
+                    return false;
+                }
             } catch (Exception $e){
+                $this->notifyUser("Failed to verify email", "");
                 return false;
             }
-        }
+        } return false;
     }
 
 
@@ -219,7 +229,7 @@ class RegisterUser
     public function changeEmail($email, $username) {
         if (!$this->isEmailAvailable($email)) {
             $this->notifyUser("Failed to change because email was already taken", '');
-            return;
+            return false;
         }
         try {
             $sth = $this->dbase->prepare("update Users set email = :email, verified = 0 where username = :username");

@@ -79,6 +79,7 @@ if ($request->query->has('username') && ($user = $session->get('User'))
     elseif ($request->request->get('change_email') == "Change") {
         if (($isUser) && XsrfProtection::verifyMac("change email")) {
             $email = $request->request->get('email');
+            $password = $request->requestget('password');
             //Logout after email change
             if ($regUser->changeEmail($email, $username)) {
                  $session->clear();
