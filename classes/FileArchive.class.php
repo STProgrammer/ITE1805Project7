@@ -101,11 +101,11 @@ class FileArchive {
             $stmt->bindParam(':impr', $impressions, PDO::PARAM_INT);
             $stmt->execute();
             if(!$stmt->rowCount() == 1) {
-                $this->notifyUser("Failed to update views", '');
+                $this->notifyUser("Something went wrong", '');
             }
         }
         catch(Exception $e) {
-            $this->notifyUser("Failed to update views", "");
+            $this->notifyUser("Something went wrong", "");
         }
     }
 
