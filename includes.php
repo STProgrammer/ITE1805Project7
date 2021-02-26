@@ -3,7 +3,7 @@
     $homedir = __DIR__ . '/';
 
     //Generate relative path string "../" or "../../" depending on where it's loaded
-    $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos($_SERVER['REQUEST_URI'],"ite1805project7"));
+    $rel = substr( dirname($_SERVER['PHP_SELF']), strrpos($_SERVER['REQUEST_URI'],"ite1805project7Copy"));
     $rel = str_replace('/', '../', $rel);  //Turn "/" into "../"
     $rel = preg_replace('~[^\.\.\/]*~', '', $rel);  //Remove all except "../"
  //   $rel = $rel . (basename($_SERVER['SCRIPT_FILENAME']) == "index.php" ? "" :"../");
